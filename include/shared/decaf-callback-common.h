@@ -97,9 +97,9 @@ typedef enum{
 
 typedef struct _DECAF_Block_Begin_Params
 {
-    CPUState *cs;
-    TranslationBlock* tb;
-} DECAF_Block_Begin_Params;
+  CPUState* cs;
+  TranslationBlock* tb;
+}DECAF_Block_Begin_Params;
 
 typedef struct _DECAF_Tlb_Exec_Params
 {
@@ -117,67 +117,65 @@ typedef struct _DECAF_Opcode_Range_Params
 
 typedef struct _DECAF_Block_End_Params
 {
-    CPUState *cs;
-    TranslationBlock* tb;
-    //THIS IS A PC value - NOT EIP!!!!
-    gva_t cur_pc;
-    gva_t next_pc;
+  CPUState* cs;
+  TranslationBlock* tb;
+  //THIS IS A PC value - NOT EIP!!!!
+  gva_t cur_pc;
+  gva_t next_pc;
 } DECAF_Block_End_Params;
 
 typedef struct _DECAF_Insn_Begin_Params
 {
-    CPUState *cs;
+  CPUState* cs;
 } DECAF_Insn_Begin_Params;
 
 typedef struct _DECAF_Insn_End_Params
 {
-    CPUState *cs;
+  CPUState* cs;
 } DECAF_Insn_End_Params;
-
 typedef struct _DECAF_Mem_Read_Params
 {
 	gva_t vaddr;
 	gpa_t paddr;
 	DATA_TYPE dt;
 	unsigned long value;
-} DECAF_Mem_Read_Params;
 
+}DECAF_Mem_Read_Params;
 typedef struct _DECAF_Mem_Write_Params
 {
 	gva_t vaddr;
 	gpa_t paddr;
 	DATA_TYPE dt;
 	unsigned long value;
-} DECAF_Mem_Write_Params;
-
+}DECAF_Mem_Write_Params;
 typedef struct _DECAF_EIP_Check_Params
 {
 	gva_t source_eip;
 	gva_t target_eip;
     gva_t target_eip_taint;
-} DECAF_EIP_Check_Params;
-
+}DECAF_EIP_Check_Params;
 typedef struct _DECAF_Keystroke_Params
 {
 	int32_t keycode;
 	uint32_t *taint_mark;//mark if this keystroke should be monitored
-} DECAF_Keystroke_Params;
+
+}DECAF_Keystroke_Params;
 
 typedef struct _DECAF_Nic_Rec_Params
 {
-	const uint8_t *buf;
+	uint8_t *buf;
 	int32_t size;
 	int32_t cur_pos;
 	int32_t start;
 	int32_t stop;
-} DECAF_Nic_Rec_Params;
+}DECAF_Nic_Rec_Params;
 
 typedef struct _DECAF_Nic_Send_Params
 {
 	uint32_t addr;
 	int size;
-	const uint8_t *buf;
-} DECAF_Nic_Send_Params;
+	uint8_t *buf;
+}DECAF_Nic_Send_Params;
 
 typedef struct _DECAF_Read_Taint_Mem
 {
@@ -185,23 +183,17 @@ typedef struct _DECAF_Read_Taint_Mem
 	gpa_t paddr;
 	uint32_t size;
 	uint8_t *taint_info;
-} DECAF_Read_Taint_Mem;
 
-typedef struct _DECAF_Write_Taint_Mem
+}DECAF_Read_Taint_Mem;
+
+typedef struct _DECAF_Read_Write_Mem
 {
 	gva_t vaddr;
 	gpa_t paddr;
 	uint32_t size;
 	uint8_t *taint_info;
-} DECAF_Write_Taint_Mem;
+}DECAF_Write_Taint_Mem;
 
-#ifdef CONFIG_TCG_LLVM
-typedef struct _DECAF_Block_Trans_Params
-{
-	struct TranslationBlock *tb;
-	struct TCGContext *tcg_ctx;
-}DECAF_Block_Trans_Params;
-#endif /* CONFIG_TCG_LLVM */
 //LOK: A dummy type
 typedef struct _DECAF_Callback_Params
 {

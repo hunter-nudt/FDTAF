@@ -35,7 +35,7 @@ ERST
 
     {
         .name       = "unload_plugin",
-        .args_type  = "",
+        .args_type  = "name:S",
         .params     = "",
         .help       = "Unload the current plugin",
         .cmd        = do_unload_plugin,
@@ -78,6 +78,32 @@ ERST
         .params     = "pid",
         .help       = "list modules im a process",
         .cmd        = do_list_modules_by_pid,
+    },
+
+SRST
+``list_modules_by_pid`` [*cmd*]
+  list modules im a process
+ERST
+
+    {
+        .name       = "enable_taint",
+        .args_type  = "",
+        .params     = "",
+        .help       = "enable taint in system",
+        .cmd        = do_enable_tainting_internal,
+    },
+
+SRST
+``list_modules_by_pid`` [*cmd*]
+  list modules im a process
+ERST
+
+    {
+        .name       = "disable_taint",
+        .args_type  = "",
+        .params     = "",
+        .help       = "disable taint in system",
+        .cmd        = do_disable_tainting_internal,
     },
 
 SRST

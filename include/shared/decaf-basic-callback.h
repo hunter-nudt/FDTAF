@@ -31,7 +31,7 @@ http://code.google.com/p/decaf-platform/
 #ifndef BASIC_CALLBACK_H
 #define BASIC_CALLBACK_H
 
-#include <sys/queue.h>
+#include "qemu/queue.h"
 #include "shared/decaf-types-common.h"
 
 #ifdef __cplusplus
@@ -44,10 +44,10 @@ typedef void (*basic_callback_func_t) (void* params);
 typedef struct basic_callback_entry{
         int *enabled;
         basic_callback_func_t callback;
-        LIST_ENTRY(basic_callback_entry) link;
+        QLIST_ENTRY(basic_callback_entry) link;
 }basic_callback_entry_t;
 
-typedef LIST_HEAD(basic_callback_list_head, basic_callback_entry) basic_callback_t; 
+typedef QLIST_HEAD(basic_callback_list_head, basic_callback_entry) basic_callback_t; 
 
 basic_callback_t* basic_callback_new(void);
 

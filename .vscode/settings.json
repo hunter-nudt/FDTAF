@@ -161,6 +161,16 @@
             "decaf-vmi-msg-warpper.h": "c",
             "console.h": "c",
             "ops_sse_header.h": "c",
-            "replay.h": "c"
+            "replay.h": "c",
+            "qapi-types-machine.h": "c",
+            "queue.h": "c",
+            "decaf-main-internal.h": "c",
+            "cpu_models.h": "c",
+            "cpu_features.h": "c",
+            "hw_accel.h": "c",
+            "*.def": "c",
+            "config-file.h": "c",
+            "ram_addr.h": "c",
+            "decaf-taint-tcg.h": "c"
       }
 }

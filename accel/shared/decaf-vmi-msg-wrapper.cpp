@@ -7,9 +7,9 @@
 #include <map>
 using namespace std;
 
-#define MODULE_NAME_SIZE 32
+#define MODULE_NAME_SIZE 64
 #define MODULE_FULLNAME_SIZE 256
-#define PROCESS_NAME_SIZE 16
+#define PROCESS_NAME_SIZE 64
 
 int vmi_locate_module_by_pc(gva_t eip, gva_t cr3, char proc[], modinfo_t *tm)
 {
@@ -182,7 +182,7 @@ void vmi_list_processes(void)
 
 	for (iter = process_map.begin(); iter != process_map.end(); iter++) {
 		proc = iter->second;
-		printf("%d\tcr3=0x%08x\t%s\n", proc->pid, proc->cr3, proc->name);
+		printf("%d\tcr3=0x%016x\t%s\n", proc->pid, proc->cr3, proc->name);
 	}
 
 }

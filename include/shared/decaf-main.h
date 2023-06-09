@@ -44,12 +44,6 @@ extern "C"
 #define BLOCK_LEVEL 1
 #define ALL_CACHE 2
 
-
-void do_load_plugin_internal(Monitor *mon, const char *plugin_path);
-int do_load_plugin(Monitor *mon, const QDict *qdict, QObject **ret_data);
-int do_unload_plugin(Monitor *mon, const QDict *qdict, QObject **ret_data);
-
-
 /*************************************************************************
  * The Virtual Machine control
  *************************************************************************/
@@ -58,6 +52,7 @@ void decaf_stop_vm(void);
 // Unpause the guest system
 void decaf_start_vm(void);
 
+CPUState *decaf_get_current_cpu(void);
 
 /*************************************************************************
  * Functions for accessing the guest's memory
@@ -195,7 +190,7 @@ extern void do_send_key(const char *string);
 void vmi_init(void);
 // int test_find_linux(CPUState *cs);
 
-CPUState *decaf_get_current_cpu(void);
+
 
 #ifdef __cplusplus
 }

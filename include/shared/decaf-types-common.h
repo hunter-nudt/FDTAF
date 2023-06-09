@@ -111,13 +111,6 @@ typedef int DECAF_errno_t;
  */
 #define PARAMETER_ERROR (-107)
 
-#ifndef LIST_FOREACH_SAFE
-#define LIST_FOREACH_SAFE(var, head, field, tvar)                           \
-          for ((var) = LIST_FIRST((head));                                  \
-              (var) && ((tvar) = LIST_NEXT((var), field), 1);               \
-              (var) = (tvar))
-#endif
-
 #ifdef __cplusplus
 }
 #endif

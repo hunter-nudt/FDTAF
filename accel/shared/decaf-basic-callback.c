@@ -7,13 +7,6 @@
 
 #include "shared/decaf-basic-callback.h"
 
-#ifndef LIST_FOREACH_SAFE
-#define LIST_FOREACH_SAFE(var, head, field, tvar)                           \
-        for ((var) = LIST_FIRST((head));                                    \
-            (var) && ((tvar) = LIST_NEXT((var), field), 1);                 \
-            (var) = (tvar))
-#endif
-
 basic_callback_t* basic_callback_new(void)
 {
     basic_callback_t* pList = (basic_callback_t*)malloc(sizeof(basic_callback_t));
@@ -21,7 +14,7 @@ basic_callback_t* basic_callback_new(void)
     {
         return (NULL);
     }
-    LIST_INIT(pList);
+    QLIST_INIT(pList);
     return (pList);
 }
 
@@ -31,7 +24,7 @@ DECAF_errno_t basic_callback_init(basic_callback_t* pList)
     {
         return (NULL_POINTER_ERROR);
     }
-    LIST_INIT(pList);
+    QLIST_INIT(pList);
     return (0);
 }
 
@@ -42,9 +35,9 @@ DECAF_errno_t basic_callback_clear(basic_callback_t* pList)
     {
         return (NULL_POINTER_ERROR);
     }
-    while (!LIST_EMPTY(pList))
+    while (!QLIST_EMPTY(pList))
     {
-        LIST_REMOVE(LIST_FIRST(pList), link);
+        QLIST_REMOVE(QLIST_FIRST(pList), link);
         free(cb_struct);
     }
     return (0);
@@ -71,7 +64,7 @@ void basic_callback_dispatch(basic_callback_t* pList, void* params)
     }
 
     //FIXME: not thread safe
-    LIST_FOREACH_SAFE(cb_struct, pList, link, cb_temp) 
+    QLIST_FOREACH_SAFE(cb_struct, pList, link, cb_temp) 
     {
         if(!cb_struct->enabled || *cb_struct->enabled)
             cb_struct->callback(params);
@@ -100,7 +93,7 @@ DECAF_handle basic_callback_register(
     cb_struct->callback = cb_func;
     cb_struct->enabled = cb_cond;
 
-    LIST_INSERT_HEAD(pList, cb_struct, link);
+    QLIST_INSERT_HEAD(pList, cb_struct, link);
 
     return (DECAF_handle)cb_struct;
 }
@@ -114,12 +107,12 @@ DECAF_errno_t basic_callback_unregister(basic_callback_t* pList, DECAF_handle ha
     }
 
     //FIXME: not thread safe
-    LIST_FOREACH_SAFE(cb_struct, pList, link, cb_temp) 
+    QLIST_FOREACH_SAFE(cb_struct, pList, link, cb_temp) 
     {
         if((DECAF_handle)cb_struct != handle)
             continue;
 
-        LIST_REMOVE(cb_struct, link);
+        QLIST_REMOVE(cb_struct, link);
         free(cb_struct);
         return 0;
     }

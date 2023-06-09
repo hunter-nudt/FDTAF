@@ -53,13 +53,6 @@ http://code.google.com/p/decaf-platform/
 #define POP_ALL() ;
 #endif // AWH
 
-#ifndef LIST_FOREACH_SAFE
-#define LIST_FOREACH_SAFE(var, head, field, tvar)                       \
-        for ((var) = LIST_FIRST((head));                                \
-            (var) && ((tvar) = LIST_NEXT((var), field), 1);             \
-            (var) = (tvar))
-#endif
-
 // LOK: The callback logic is separated into two parts
 //  1. the interface between QEMU and callback
 //    this is invoked during translation time
@@ -157,17 +150,17 @@ typedef struct callback_struct{
 	OCB_t ocb_type;
 
 	DECAF_callback_func_t callback;
-	LIST_ENTRY(callback_struct) link;
-} callback_struct_t;
+	QLIST_ENTRY(callback_struct) link;
+} callback_struct;
 
 // Each type of callback has its own callback_list
 // The callback list is used to maintain the list of registered callbacks
 // as well as their conditions. In essense, this data structure
 // is used for interfacing with the user (stage 2)
-static LIST_HEAD(callback_list_head, callback_struct) callback_list_heads[DECAF_LAST_CB];
+static QLIST_HEAD(callback_list_head, callback_struct) callback_list_heads[DECAF_LAST_CB];
 
 //Aravind - Serialized callbacks. 000 to 1ff, 1xx == 0fxx (for two byte opcodes)
-static callback_struct_t* instructionCallbacks[0x200] = {0};
+static callback_struct* instructionCallbacks[0x200] = {0};
 
 /***********************************************************************************************/
 //Aravind - Function to register cb handlers for instruction ranges
@@ -184,7 +177,7 @@ DECAF_handle decaf_register_opcode_range_callback (
 		return DECAF_NULL_HANDLE;
 	}
 
-	callback_struct_t * cb_struct = (callback_struct_t *)g_malloc(sizeof(callback_struct_t));
+	callback_struct * cb_struct = (callback_struct *)g_malloc(sizeof(callback_struct));
 	if (cb_struct == NULL)
 	{
 	  return (DECAF_NULL_HANDLE);
@@ -207,7 +200,7 @@ DECAF_handle decaf_register_opcode_range_callback (
 		instructionCallbacks[i] = cb_struct;
 	}
 
-	LIST_INSERT_HEAD(&callback_list_heads[DECAF_OPCODE_RANGE_CB], cb_struct, link);
+	QLIST_INSERT_HEAD(&callback_list_heads[DECAF_OPCODE_RANGE_CB], cb_struct, link);
 
 	//Flush the tb
   	register_decaf_flush_translation_cache(ALL_CACHE, 0);
@@ -218,10 +211,10 @@ DECAF_handle decaf_register_opcode_range_callback (
 //Function to unregister opcode range callbacks
 DECAF_errno_t decaf_unregister_opcode_range_callback(DECAF_handle handle)
 {
-	callback_struct_t *cb_struct, *cb_next;
+	callback_struct *cb_struct, *cb_next;
 	int i;
 
-	LIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_OPCODE_RANGE_CB], link, cb_next) {
+	QLIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_OPCODE_RANGE_CB], link, cb_next) {
 		if((DECAF_handle)cb_struct != handle)
 			continue;
 
@@ -233,7 +226,7 @@ DECAF_errno_t decaf_unregister_opcode_range_callback(DECAF_handle handle)
 			instructionCallbacks[i] = NULL;
 		}
 
-		LIST_REMOVE(cb_struct, link);
+		QLIST_REMOVE(cb_struct, link);
 
 		g_free(cb_struct);
 
@@ -250,7 +243,7 @@ DECAF_handle decaf_register_optimized_block_begin_callback(
     gva_t addr,
     OCB_t type)
 {
-    callback_struct_t * cb_struct = (callback_struct_t *)g_malloc(sizeof(callback_struct_t));
+    callback_struct * cb_struct = (callback_struct *)g_malloc(sizeof(callback_struct));
     if (cb_struct == NULL) {
         return (DECAF_NULL_HANDLE);
     }
@@ -323,19 +316,19 @@ DECAF_handle decaf_register_optimized_block_begin_callback(
     }
 
     //insert it into the list
-    LIST_INSERT_HEAD(&callback_list_heads[DECAF_BLOCK_BEGIN_CB], cb_struct, link);
+    QLIST_INSERT_HEAD(&callback_list_heads[DECAF_BLOCK_BEGIN_CB], cb_struct, link);
     return ((DECAF_handle)cb_struct);
 }
 
 DECAF_errno_t decaf_unregister_optimized_block_begin_callback(DECAF_handle handle)
 {
-	callback_struct_t *cb_struct, *cb_next;
+	callback_struct *cb_struct, *cb_next;
 
 	// to unregister the callback, we have to first find the
 	// callback and its conditions and then remove it from the
 	// corresonding hashtable
 
-	LIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_BLOCK_BEGIN_CB], link, cb_next) {
+	QLIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_BLOCK_BEGIN_CB], link, cb_next) {
 		if((DECAF_handle)cb_struct != handle)
 			continue;
 
@@ -389,7 +382,7 @@ DECAF_errno_t decaf_unregister_optimized_block_begin_callback(DECAF_handle handl
 		}
 
 		//now that we cleaned up the hashtables - we should remove the callback entry
-		LIST_REMOVE(cb_struct, link);
+		QLIST_REMOVE(cb_struct, link);
 		//and free the struct
 		g_free(cb_struct);
 
@@ -404,7 +397,7 @@ DECAF_handle decaf_register_optimized_block_end_callback(
 		gva_t from,
 		gva_t to)
 {
-	callback_struct_t * cb_struct = (callback_struct_t *)g_malloc(sizeof(callback_struct_t));
+	callback_struct * cb_struct = (callback_struct *)g_malloc(sizeof(callback_struct));
 	if (cb_struct == NULL)
 	{
 		return (DECAF_NULL_HANDLE);
@@ -468,19 +461,19 @@ DECAF_handle decaf_register_optimized_block_end_callback(
 	}
 
 	//insert into the list
-	LIST_INSERT_HEAD(&callback_list_heads[DECAF_BLOCK_END_CB], cb_struct, link);
+	QLIST_INSERT_HEAD(&callback_list_heads[DECAF_BLOCK_END_CB], cb_struct, link);
 	return ((DECAF_handle)cb_struct);
 }
 
 int decaf_unregister_optimized_block_end_callback(DECAF_handle handle)
 {
-    callback_struct_t *cb_struct, *cb_next;
+    callback_struct *cb_struct, *cb_next;
 
     // to unregister the callback, we have to first find the
     // callback and its conditions and then remove it from the
     // corresonding hashtable
 
-    LIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_BLOCK_END_CB], link, cb_next) {
+    QLIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_BLOCK_END_CB], link, cb_next) {
         if((DECAF_handle)cb_struct != handle)
         continue;
 
@@ -520,7 +513,7 @@ int decaf_unregister_optimized_block_end_callback(DECAF_handle handle)
         }
 
         //we can now remove the entry
-        LIST_REMOVE(cb_struct, link);
+        QLIST_REMOVE(cb_struct, link);
         //and free the struct
         g_free(cb_struct);
         return 0;
@@ -535,7 +528,7 @@ DECAF_handle decaf_register_match_block_end_callback( //for the nbench plugin
     gva_t to)
 {
 
-    callback_struct_t * cb_struct = (callback_struct_t *)g_malloc(sizeof(callback_struct_t));
+    callback_struct * cb_struct = (callback_struct *)g_malloc(sizeof(callback_struct));
     if (cb_struct == NULL)
     {
         return (DECAF_NULL_HANDLE);
@@ -594,7 +587,7 @@ DECAF_handle decaf_register_match_block_end_callback( //for the nbench plugin
     }
 
     //insert into the list
-    LIST_INSERT_HEAD(&callback_list_heads[DECAF_BLOCK_END_CB], cb_struct, link);
+    QLIST_INSERT_HEAD(&callback_list_heads[DECAF_BLOCK_END_CB], cb_struct, link);
     return ((DECAF_handle)cb_struct);
 }
 
@@ -619,7 +612,7 @@ DECAF_handle decaf_register_callback(
 
     //if we are here then that means its either insn begin or end - this is the old logic no changes
 
-    callback_struct_t * cb_struct = (callback_struct_t *)g_malloc(sizeof(callback_struct_t));
+    callback_struct * cb_struct = (callback_struct *)g_malloc(sizeof(callback_struct));
 
     if(cb_struct == NULL)
         return (DECAF_NULL_HANDLE);
@@ -632,11 +625,11 @@ DECAF_handle decaf_register_callback(
 	    goto insert_callback; //Should not flush for tlb callbacks since they don't go into tb.
 
 // AVB ,Do we need a flush here?
-    if(LIST_EMPTY(&callback_list_heads[cb_type]))
+    if(QLIST_EMPTY(&callback_list_heads[cb_type]))
         register_decaf_flush_translation_cache(ALL_CACHE, 0);
 
 insert_callback:
-    LIST_INSERT_HEAD(&callback_list_heads[cb_type], cb_struct, link);
+    QLIST_INSERT_HEAD(&callback_list_heads[cb_type], cb_struct, link);
     return (DECAF_handle)cb_struct;
 }
 
@@ -651,20 +644,20 @@ int decaf_unregister_callback(DECAF_callback_type_t cb_type, DECAF_handle handle
         return (decaf_unregister_optimized_block_end_callback(handle));
     }
 
-    callback_struct_t *cb_struct, *cb_next;
+    callback_struct *cb_struct, *cb_next;
     //FIXME: not thread safe
-    LIST_FOREACH_SAFE(cb_struct, &callback_list_heads[cb_type], link, cb_next) {
+    QLIST_FOREACH_SAFE(cb_struct, &callback_list_heads[cb_type], link, cb_next) {
         if((DECAF_handle)cb_struct != handle)
             continue;
 
-        LIST_REMOVE(cb_struct, link);
+        QLIST_REMOVE(cb_struct, link);
         g_free(cb_struct);
 
         if(cb_type == DECAF_TLB_EXEC_CB) {
             goto done;
         }
 
-        if(LIST_EMPTY(&callback_list_heads[cb_type])) {
+        if(QLIST_EMPTY(&callback_list_heads[cb_type])) {
             register_decaf_flush_translation_cache(ALL_CACHE, 0);
         }
 done:
@@ -678,7 +671,7 @@ void decaf_callback_init(void)
     int i;
 
     for(i=0; i<DECAF_LAST_CB; i++)
-        LIST_INIT(&callback_list_heads[i]);
+        QLIST_INIT(&callback_list_heads[i]);
 
     pOBBTable = counting_hashtable_new();
     pOBBPageTable = counting_hashtable_new();
@@ -699,7 +692,7 @@ void decaf_callback_init(void)
 // for the block begin and block end callbacks
 int decaf_is_callback_needed(DECAF_callback_type_t cb_type)
 {
-    return !LIST_EMPTY(&callback_list_heads[cb_type]);
+    return !QLIST_EMPTY(&callback_list_heads[cb_type]);
 }
 
 int decaf_is_callback_needed_for_opcode(int op)
@@ -763,7 +756,7 @@ int decaf_is_block_end_callback_needed(gva_t from, gva_t to)
 
 void helper_decaf_invoke_block_begin_callback(CPUState* cs, TranslationBlock* tb)
 {
-    static callback_struct_t *cb_struct, *cb_next;
+    static callback_struct *cb_struct, *cb_next;
     static DECAF_Callback_Params params;
 
     if ((cs == NULL) || (tb == NULL))
@@ -777,7 +770,7 @@ void helper_decaf_invoke_block_begin_callback(CPUState* cs, TranslationBlock* tb
     PUSH_ALL()
 
     //FIXME: not thread safe
-    LIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_BLOCK_BEGIN_CB], link, cb_next){
+    QLIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_BLOCK_BEGIN_CB], link, cb_next){
         // If it is a global callback or it is within the execution context,
         // invoke this callback
         if(!cb_struct->enabled || *cb_struct->enabled){
@@ -814,7 +807,7 @@ void helper_decaf_invoke_block_begin_callback(CPUState* cs, TranslationBlock* tb
 
 void helper_decaf_invoke_block_end_callback(CPUState *cs, TranslationBlock *tb, gva_t from)
 {
-    static callback_struct_t *cb_struct, *cb_next;
+    static callback_struct *cb_struct, *cb_next;
     static DECAF_Callback_Params params;
 
     if (cs == NULL) return;
@@ -840,7 +833,7 @@ void helper_decaf_invoke_block_end_callback(CPUState *cs, TranslationBlock *tb, 
 #endif
 
     //FIXME: not thread safe
-    LIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_BLOCK_END_CB], link, cb_next) {
+    QLIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_BLOCK_END_CB], link, cb_next) {
         // If it is a global callback or it is within the execution context,
         // invoke this callback
         if(!cb_struct->enabled || *cb_struct->enabled)
@@ -868,7 +861,7 @@ void helper_decaf_invoke_block_end_callback(CPUState *cs, TranslationBlock *tb, 
 
 void helper_decaf_invoke_insn_begin_callback(CPUState *cs)
 {
-	static callback_struct_t *cb_struct, *cb_next;
+	static callback_struct *cb_struct, *cb_next;
 	static DECAF_Callback_Params params;
 
 	if (cs == 0) return;
@@ -876,7 +869,7 @@ void helper_decaf_invoke_insn_begin_callback(CPUState *cs)
 	params.ib.cs = cs;
     PUSH_ALL()
 	//FIXME: not thread safe
-	LIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_INSN_BEGIN_CB], link, cb_next) {
+	QLIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_INSN_BEGIN_CB], link, cb_next) {
 		// If it is a global callback or it is within the execution context,
 		// invoke this callback
         params.cbhandle = (DECAF_handle)cb_struct;
@@ -888,14 +881,14 @@ void helper_decaf_invoke_insn_begin_callback(CPUState *cs)
 
 void helper_decaf_invoke_insn_end_callback(CPUState *cs)
 {
-	static callback_struct_t *cb_struct, *cb_next;
+	static callback_struct *cb_struct, *cb_next;
     static DECAF_Callback_Params params;
 
 	if (cs == 0) return;
 	params.ie.cs = cs;
     PUSH_ALL()
 	//FIXME: not thread safe
-	LIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_INSN_END_CB], link,cb_next) {
+	QLIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_INSN_END_CB], link,cb_next) {
 		// If it is a global callback or it is within the execution context,
 		// invoke this callback
 	    params.cbhandle = (DECAF_handle)cb_struct;
@@ -907,7 +900,7 @@ void helper_decaf_invoke_insn_end_callback(CPUState *cs)
 
 void helper_decaf_invoke_eip_check_callback(gva_t source_eip, gva_t target_eip, gva_t target_eip_taint)
 {
-	static callback_struct_t *cb_struct, *cb_next;
+	static callback_struct *cb_struct, *cb_next;
 	static DECAF_Callback_Params params;
 
 	params.ec.source_eip = source_eip;
@@ -915,7 +908,7 @@ void helper_decaf_invoke_eip_check_callback(gva_t source_eip, gva_t target_eip, 
     params.ec.target_eip_taint = target_eip_taint;
     PUSH_ALL()
 	//FIXME: not thread safe
-	LIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_EIP_CHECK_CB], link, cb_next)
+	QLIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_EIP_CHECK_CB], link, cb_next)
 	{
 		// If it is a global callback or it is within the execution context,
 		// invoke this callback
@@ -933,7 +926,7 @@ void helper_decaf_invoke_opcode_range_callback(
 		decaf_target_ulong next_eip,
 		uint32_t op)
 {
-	callback_struct_t *cb_struct = instructionCallbacks[op];
+	callback_struct *cb_struct = instructionCallbacks[op];
 	if(cb_struct == NULL || cs == NULL)
 		return;
 
@@ -986,7 +979,7 @@ void helper_decaf_invoke_opcode_range_callback(
 
 void decaf_invoke_tlb_exec_callback(CPUState *cs, gva_t vaddr)
 {
-    callback_struct_t *cb_struct, *cb_next;
+    callback_struct *cb_struct, *cb_next;
     DECAF_Callback_Params params;
 
     if ((cs == NULL) || (vaddr == 0)) {
@@ -994,7 +987,7 @@ void decaf_invoke_tlb_exec_callback(CPUState *cs, gva_t vaddr)
     }
     params.tx.cs = cs;
     params.tx.vaddr = vaddr;
-    LIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_TLB_EXEC_CB], link, cb_next) {
+    QLIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_TLB_EXEC_CB], link, cb_next) {
         if(!cb_struct->enabled || *cb_struct->enabled) {
             cb_struct->callback(&params);
         }
@@ -1002,9 +995,9 @@ void decaf_invoke_tlb_exec_callback(CPUState *cs, gva_t vaddr)
 }
 
 
-void helper_decaf_invoke_nic_rec_callback(const uint8_t * buf,int size,int cur_pos,int start,int stop)
+void helper_decaf_invoke_nic_rec_callback(uint8_t * buf, int size, int cur_pos, int start, int stop)
 {
-	static callback_struct_t *cb_struct, *cb_next;
+	static callback_struct *cb_struct, *cb_next;
 	static DECAF_Callback_Params params;
 	params.nr.buf = buf;
 	params.nr.size = size;
@@ -1013,7 +1006,7 @@ void helper_decaf_invoke_nic_rec_callback(const uint8_t * buf,int size,int cur_p
 	params.nr.stop = stop;
     PUSH_ALL()
 	//FIXME: not thread safe
-	LIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_NIC_REC_CB], link, cb_next)
+	QLIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_NIC_REC_CB], link, cb_next)
 	{
 		// If it is a global callback or it is within the execution context,
 		// invoke this callback
@@ -1025,16 +1018,16 @@ void helper_decaf_invoke_nic_rec_callback(const uint8_t * buf,int size,int cur_p
     POP_ALL()
 }
 
-void helper_decaf_invoke_nic_send_callback(uint32_t addr,int size, const uint8_t *buf)
+void helper_decaf_invoke_nic_send_callback(uint32_t addr, int size, uint8_t *buf)
 {
-	static callback_struct_t *cb_struct, *cb_next;
+	static callback_struct *cb_struct, *cb_next;
 	static DECAF_Callback_Params params;
 	params.ns.addr = addr;
 	params.ns.size = size;
 	params.ns.buf = buf;
     PUSH_ALL() // AWH
 	//FIXME: not thread safe
-	LIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_NIC_SEND_CB], link, cb_next)
+	QLIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_NIC_SEND_CB], link, cb_next)
 	{
 		// If it is a global callback or it is within the execution context,
 		// invoke this callback
@@ -1045,18 +1038,18 @@ void helper_decaf_invoke_nic_send_callback(uint32_t addr,int size, const uint8_t
     POP_ALL() // AWH
 }
 
-void helper_decaf_invoke_mem_read_callback(gva_t virt_addr,gpa_t phy_addr, unsigned long value, DATA_TYPE data_type)
+void helper_decaf_invoke_mem_read_callback(gva_t vaddr, ram_addr_t paddr, unsigned long value, DATA_TYPE data_type)
 {
-    static callback_struct_t *cb_struct, *cb_next;
+    static callback_struct *cb_struct, *cb_next;
     static DECAF_Callback_Params params;
-    params.mr.dt=data_type;
-    params.mr.paddr=phy_addr;
-    params.mr.vaddr=virt_addr;
+    params.mr.dt = data_type;
+    params.mr.paddr = paddr;
+    params.mr.vaddr = vaddr;
     params.mr.value = value;
     //if (cpu_single_cs == 0) return;
     PUSH_ALL()
     //FIXME: not thread safe
-    LIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_MEM_READ_CB], link, cb_next)
+    QLIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_MEM_READ_CB], link, cb_next)
     {
         // If it is a global callback or it is within the execution context,
         // invoke this callback
@@ -1068,19 +1061,19 @@ void helper_decaf_invoke_mem_read_callback(gva_t virt_addr,gpa_t phy_addr, unsig
     POP_ALL()
 }
 
-void helper_decaf_invoke_mem_write_callback(gva_t virt_addr,gpa_t phy_addr,unsigned long value, DATA_TYPE data_type)
+void helper_decaf_invoke_mem_write_callback(gva_t vaddr, ram_addr_t paddr, unsigned long value, DATA_TYPE data_type)
 {
-	static callback_struct_t *cb_struct, *cb_next;
+	static callback_struct *cb_struct, *cb_next;
 	static DECAF_Callback_Params params;
-	params.mw.dt=data_type;
-	params.mw.paddr=phy_addr;
-	params.mw.vaddr=virt_addr;
+	params.mw.dt = data_type;
+    params.mw.paddr = paddr;
+	params.mw.vaddr = vaddr;
     params.mw.value = value;
     PUSH_ALL()
 	//if (cpu_single_cs == 0) return;
 
 	//FIXME: not thread safe
-	LIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_MEM_WRITE_CB], link, cb_next)
+	QLIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_MEM_WRITE_CB], link, cb_next)
 	{
 		// If it is a global callback or it is within the execution context,
 		// invoke this callback
@@ -1091,16 +1084,16 @@ void helper_decaf_invoke_mem_write_callback(gva_t virt_addr,gpa_t phy_addr,unsig
     POP_ALL()
 }
 
-void helper_decaf_invoke_keystroke_callback(int keycode,uint32_t *taint_mark)
+void helper_decaf_invoke_keystroke_callback(int keycode, uint32_t *taint_mark)
 {
-	static callback_struct_t *cb_struct, *cb_next;
+	static callback_struct *cb_struct, *cb_next;
 	static DECAF_Callback_Params params;
 	params.ks.keycode=keycode;
 	params.ks.taint_mark=taint_mark;
 	//if (cpu_single_cs == 0) return;
 
 	//FIXME: not thread safe
-	LIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_KEYSTROKE_CB], link, cb_next)
+	QLIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_KEYSTROKE_CB], link, cb_next)
 	{
 		// If it is a global callback or it is within the execution context,
 		// invoke this callback
@@ -1111,17 +1104,17 @@ void helper_decaf_invoke_keystroke_callback(int keycode,uint32_t *taint_mark)
 	}
 }
 
-void helper_decaf_invoke_read_taint_mem(gva_t vaddr,gpa_t paddr,uint32_t size,uint8_t *taint_info)
+void helper_decaf_invoke_read_taint_mem(gva_t vaddr, ram_addr_t paddr, uint32_t size, uint8_t *taint_info)
 {
-	static callback_struct_t *cb_struct, *cb_next;
+	static callback_struct *cb_struct, *cb_next;
 	static DECAF_Callback_Params params;
-	params.rt.paddr = paddr;
 	params.rt.vaddr = vaddr;
+    params.rt.paddr = paddr;
 	params.rt.size = size;
 	params.rt.taint_info = taint_info;
     PUSH_ALL()
 	//FIXME: not thread safe
-	LIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_READ_TAINTMEM_CB], link, cb_next)
+	QLIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_READ_TAINTMEM_CB], link, cb_next)
 	{
 		// If it is a global callback or it is within the execution context,
 		// invoke this callback
@@ -1132,9 +1125,9 @@ void helper_decaf_invoke_read_taint_mem(gva_t vaddr,gpa_t paddr,uint32_t size,ui
     POP_ALL()
 }
 
-void helper_decaf_invoke_write_taint_mem(gva_t vaddr,gpa_t paddr,uint32_t size,uint8_t *taint_info)
+void helper_decaf_invoke_write_taint_mem(gva_t vaddr, ram_addr_t paddr, uint32_t size, uint8_t *taint_info)
 {
-	static callback_struct_t *cb_struct, *cb_next;
+	static callback_struct *cb_struct, *cb_next;
 	static DECAF_Callback_Params params;
 	params.wt.paddr = paddr;
 	params.wt.vaddr = vaddr;
@@ -1142,7 +1135,7 @@ void helper_decaf_invoke_write_taint_mem(gva_t vaddr,gpa_t paddr,uint32_t size,u
 	params.wt.taint_info = taint_info;
     PUSH_ALL()
 	//FIXME: not thread safe
-	LIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_WRITE_TAINTMEM_CB], link, cb_next)
+	QLIST_FOREACH_SAFE(cb_struct, &callback_list_heads[DECAF_WRITE_TAINTMEM_CB], link, cb_next)
 	{
 		// If it is a global callback or it is within the execution context,
 		// invoke this callback

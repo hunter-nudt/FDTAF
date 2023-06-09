@@ -233,11 +233,13 @@ typedef struct CPUARMTBFlags {
 } CPUARMTBFlags;
 
 typedef struct CPUARMState {
+    uint8_t taint_temps[8];
     /* Regs for current mode.  */
     uint32_t regs[16];
 
-    target_ulong tempidx;   /* added for DECAF */
-    target_ulong tempidx2;  /* added for DECAF */
+#ifdef CONFIG_TCG_TAINT
+    uint32_t taint_regs[16];
+#endif /* CONFIG_TCG_TAINT */
 
     /* 32/64 switch only happens when taking and returning from
      * exceptions so the overlap semantics are taken care of then

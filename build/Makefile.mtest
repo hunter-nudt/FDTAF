@@ -1,0 +1,1894 @@
+
+SPEED = quick
+
+# $1 = environment, $2 = test command, $3 = test name, $4 = dir
+.test-human-tap = $1 $(if $4,(cd $4 && $2),$2) -m $(SPEED) < /dev/null | ./scripts/tap-driver.pl --test-name="$3" $(if $(V),,--show-failures-only)
+.test-human-exitcode = $1 $(PYTHON) scripts/test-driver.py $(if $4,-C$4) $(if $(V),--verbose) -- $2 < /dev/null
+.test-tap-tap = $1 $(if $4,(cd $4 && $2),$2) < /dev/null | sed "s/^[a-z][a-z]* [0-9]*/& $3/" || true
+.test-tap-exitcode = printf "%s\n" 1..1 "`$1 $(if $4,(cd $4 && $2),$2) < /dev/null > /dev/null || echo "not "`ok 1 $3"
+.test.human-print = echo $(if $(V),'$1 $2','Running test $3') &&
+.test.env = MALLOC_PERTURB_=$${MALLOC_PERTURB_:-$$(( $${RANDOM:-0} % 255 + 1))}
+
+# $1 = test name, $2 = test target (human or tap)
+.test.run = $(call .test.$2-print,$(.test.env.$1),$(.test.cmd.$1),$(.test.name.$1)) $(call .test-$2-$(.test.driver.$1),$(.test.env.$1),$(.test.cmd.$1),$(.test.name.$1),$(.test.dir.$1))
+
+.test.output-format = human
+
+.test.name.1 := qtest-i386/qom-test
+.test.driver.1 := tap
+.test.env.1 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.1 := tests/qtest/qom-test --tap -k
+.test.deps.1 := tests/qtest/qom-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-1
+run-test-1: $(.test.deps.1)
+	@$(call .test.run,1,$(.test.output-format))
+.test.name.2 := qtest-mips/qom-test
+.test.driver.2 := tap
+.test.env.2 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-mips QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.2 := tests/qtest/qom-test --tap -k
+.test.deps.2 := tests/qtest/qom-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd qemu-system-mips pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-2
+run-test-2: $(.test.deps.2)
+	@$(call .test.run,2,$(.test.output-format))
+.test.name.3 := qtest-arm/qom-test
+.test.driver.3 := tap
+.test.env.3 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.3 := tests/qtest/qom-test --tap -k
+.test.deps.3 := tests/qtest/qom-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-3
+run-test-3: $(.test.deps.3)
+	@$(call .test.run,3,$(.test.output-format))
+.test.name.4 := qtest-i386/migration-test
+.test.driver.4 := tap
+.test.env.4 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.4 := tests/qtest/migration-test --tap -k
+.test.deps.4 := tests/qtest/migration-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-4
+run-test-4: $(.test.deps.4)
+	@$(call .test.run,4,$(.test.output-format))
+.test.name.5 := qtest-arm/npcm7xx_pwm-test
+.test.driver.5 := tap
+.test.env.5 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.5 := tests/qtest/npcm7xx_pwm-test --tap -k
+.test.deps.5 := tests/qtest/npcm7xx_pwm-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-5
+run-test-5: $(.test.deps.5)
+	@$(call .test.run,5,$(.test.output-format))
+.test.name.6 := qtest-i386/bios-tables-test
+.test.driver.6 := tap
+.test.env.6 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.6 := tests/qtest/bios-tables-test --tap -k
+.test.deps.6 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/bios-tables-test pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-6
+run-test-6: $(.test.deps.6)
+	@$(call .test.run,6,$(.test.output-format))
+.test.name.7 := qtest-i386/test-hmp
+.test.driver.7 := tap
+.test.env.7 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.7 := tests/qtest/test-hmp --tap -k
+.test.deps.7 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/test-hmp pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-7
+run-test-7: $(.test.deps.7)
+	@$(call .test.run,7,$(.test.output-format))
+.test.name.8 := qtest-mips/test-hmp
+.test.driver.8 := tap
+.test.env.8 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-mips QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.8 := tests/qtest/test-hmp --tap -k
+.test.deps.8 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd qemu-system-mips tests/qtest/test-hmp pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-8
+run-test-8: $(.test.deps.8)
+	@$(call .test.run,8,$(.test.output-format))
+.test.name.9 := qtest-arm/test-hmp
+.test.driver.9 := tap
+.test.env.9 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.9 := tests/qtest/test-hmp --tap -k
+.test.deps.9 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/test-hmp pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-9
+run-test-9: $(.test.deps.9)
+	@$(call .test.run,9,$(.test.output-format))
+.test.name.10 := qtest-i386/pxe-test
+.test.driver.10 := tap
+.test.env.10 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.10 := tests/qtest/pxe-test --tap -k
+.test.deps.10 := pc-bios/edk2-i386-secure-code.fd tests/qtest/pxe-test pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-10
+run-test-10: $(.test.deps.10)
+	@$(call .test.run,10,$(.test.output-format))
+.test.name.11 := qtest-i386/ahci-test
+.test.driver.11 := tap
+.test.env.11 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.11 := tests/qtest/ahci-test --tap -k
+.test.deps.11 := pc-bios/edk2-i386-secure-code.fd tests/qtest/ahci-test pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-11
+run-test-11: $(.test.deps.11)
+	@$(call .test.run,11,$(.test.output-format))
+.test.name.12 := qtest-i386/boot-serial-test
+.test.driver.12 := tap
+.test.env.12 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.12 := tests/qtest/boot-serial-test --tap -k
+.test.deps.12 := pc-bios/edk2-i386-secure-code.fd tests/qtest/boot-serial-test pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-12
+run-test-12: $(.test.deps.12)
+	@$(call .test.run,12,$(.test.output-format))
+.test.name.13 := qtest-i386/qos-test
+.test.driver.13 := tap
+.test.env.13 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.13 := tests/qtest/qos-test --tap -k
+.test.deps.13 := pc-bios/edk2-i386-secure-code.fd tests/qtest/qos-test pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-13
+run-test-13: $(.test.deps.13)
+	@$(call .test.run,13,$(.test.output-format))
+.test.name.14 := qtest-mips/qos-test
+.test.driver.14 := tap
+.test.env.14 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-mips QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.14 := tests/qtest/qos-test --tap -k
+.test.deps.14 := pc-bios/edk2-i386-secure-code.fd tests/qtest/qos-test pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd qemu-system-mips pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-14
+run-test-14: $(.test.deps.14)
+	@$(call .test.run,14,$(.test.output-format))
+.test.name.15 := qtest-arm/boot-serial-test
+.test.driver.15 := tap
+.test.env.15 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.15 := tests/qtest/boot-serial-test --tap -k
+.test.deps.15 := pc-bios/edk2-i386-secure-code.fd tests/qtest/boot-serial-test pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-15
+run-test-15: $(.test.deps.15)
+	@$(call .test.run,15,$(.test.output-format))
+.test.name.16 := qtest-arm/qos-test
+.test.driver.16 := tap
+.test.env.16 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.16 := tests/qtest/qos-test --tap -k
+.test.deps.16 := pc-bios/edk2-i386-secure-code.fd tests/qtest/qos-test pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-16
+run-test-16: $(.test.deps.16)
+	@$(call .test.run,16,$(.test.output-format))
+.test.name.17 := test-crypto-tlscredsx509
+.test.driver.17 := tap
+.test.env.17 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.17 := tests/unit/test-crypto-tlscredsx509 --tap -k
+.test.deps.17 := tests/unit/test-crypto-tlscredsx509
+.PHONY: run-test-17
+run-test-17: $(.test.deps.17)
+	@$(call .test.run,17,$(.test.output-format))
+.test.name.18 := test-crypto-tlssession
+.test.driver.18 := tap
+.test.env.18 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.18 := tests/unit/test-crypto-tlssession --tap -k
+.test.deps.18 := tests/unit/test-crypto-tlssession
+.PHONY: run-test-18
+run-test-18: $(.test.deps.18)
+	@$(call .test.run,18,$(.test.output-format))
+.test.name.19 := check-block-qdict
+.test.driver.19 := tap
+.test.env.19 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.19 := tests/unit/check-block-qdict --tap -k
+.test.deps.19 := tests/unit/check-block-qdict
+.PHONY: run-test-19
+run-test-19: $(.test.deps.19)
+	@$(call .test.run,19,$(.test.output-format))
+.test.name.20 := check-qdict
+.test.driver.20 := tap
+.test.env.20 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.20 := tests/unit/check-qdict --tap -k
+.test.deps.20 := tests/unit/check-qdict
+.PHONY: run-test-20
+run-test-20: $(.test.deps.20)
+	@$(call .test.run,20,$(.test.output-format))
+.test.name.21 := check-qjson
+.test.driver.21 := tap
+.test.env.21 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.21 := tests/unit/check-qjson --tap -k
+.test.deps.21 := tests/unit/check-qjson
+.PHONY: run-test-21
+run-test-21: $(.test.deps.21)
+	@$(call .test.run,21,$(.test.output-format))
+.test.name.22 := check-qlist
+.test.driver.22 := tap
+.test.env.22 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.22 := tests/unit/check-qlist --tap -k
+.test.deps.22 := tests/unit/check-qlist
+.PHONY: run-test-22
+run-test-22: $(.test.deps.22)
+	@$(call .test.run,22,$(.test.output-format))
+.test.name.23 := check-qlit
+.test.driver.23 := tap
+.test.env.23 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.23 := tests/unit/check-qlit --tap -k
+.test.deps.23 := tests/unit/check-qlit
+.PHONY: run-test-23
+run-test-23: $(.test.deps.23)
+	@$(call .test.run,23,$(.test.output-format))
+.test.name.24 := check-qnull
+.test.driver.24 := tap
+.test.env.24 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.24 := tests/unit/check-qnull --tap -k
+.test.deps.24 := tests/unit/check-qnull
+.PHONY: run-test-24
+run-test-24: $(.test.deps.24)
+	@$(call .test.run,24,$(.test.output-format))
+.test.name.25 := check-qnum
+.test.driver.25 := tap
+.test.env.25 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.25 := tests/unit/check-qnum --tap -k
+.test.deps.25 := tests/unit/check-qnum
+.PHONY: run-test-25
+run-test-25: $(.test.deps.25)
+	@$(call .test.run,25,$(.test.output-format))
+.test.name.26 := check-qobject
+.test.driver.26 := tap
+.test.env.26 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.26 := tests/unit/check-qobject --tap -k
+.test.deps.26 := tests/unit/check-qobject
+.PHONY: run-test-26
+run-test-26: $(.test.deps.26)
+	@$(call .test.run,26,$(.test.output-format))
+.test.name.27 := check-qom-interface
+.test.driver.27 := tap
+.test.env.27 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.27 := tests/unit/check-qom-interface --tap -k
+.test.deps.27 := tests/unit/check-qom-interface
+.PHONY: run-test-27
+run-test-27: $(.test.deps.27)
+	@$(call .test.run,27,$(.test.output-format))
+.test.name.28 := check-qom-proplist
+.test.driver.28 := tap
+.test.env.28 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.28 := tests/unit/check-qom-proplist --tap -k
+.test.deps.28 := tests/unit/check-qom-proplist
+.PHONY: run-test-28
+run-test-28: $(.test.deps.28)
+	@$(call .test.run,28,$(.test.output-format))
+.test.name.29 := check-qstring
+.test.driver.29 := tap
+.test.env.29 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.29 := tests/unit/check-qstring --tap -k
+.test.deps.29 := tests/unit/check-qstring
+.PHONY: run-test-29
+run-test-29: $(.test.deps.29)
+	@$(call .test.run,29,$(.test.output-format))
+.test.name.30 := ptimer-test
+.test.driver.30 := tap
+.test.env.30 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.30 := tests/unit/ptimer-test --tap -k
+.test.deps.30 := tests/unit/ptimer-test
+.PHONY: run-test-30
+run-test-30: $(.test.deps.30)
+	@$(call .test.run,30,$(.test.output-format))
+.test.name.31 := rcutorture
+.test.driver.31 := tap
+.test.env.31 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.31 := tests/unit/rcutorture --tap -k
+.test.deps.31 := tests/unit/rcutorture
+.PHONY: run-test-31
+run-test-31: $(.test.deps.31)
+	@$(call .test.run,31,$(.test.output-format))
+.test.name.32 := test-aio
+.test.driver.32 := tap
+.test.env.32 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.32 := tests/unit/test-aio --tap -k
+.test.deps.32 := tests/unit/test-aio
+.PHONY: run-test-32
+run-test-32: $(.test.deps.32)
+	@$(call .test.run,32,$(.test.output-format))
+.test.name.33 := test-aio-multithread
+.test.driver.33 := tap
+.test.env.33 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.33 := tests/unit/test-aio-multithread --tap -k
+.test.deps.33 := tests/unit/test-aio-multithread
+.PHONY: run-test-33
+run-test-33: $(.test.deps.33)
+	@$(call .test.run,33,$(.test.output-format))
+.test.name.34 := test-authz-list
+.test.driver.34 := tap
+.test.env.34 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.34 := tests/unit/test-authz-list --tap -k
+.test.deps.34 := tests/unit/test-authz-list
+.PHONY: run-test-34
+run-test-34: $(.test.deps.34)
+	@$(call .test.run,34,$(.test.output-format))
+.test.name.35 := test-authz-listfile
+.test.driver.35 := tap
+.test.env.35 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.35 := tests/unit/test-authz-listfile --tap -k
+.test.deps.35 := tests/unit/test-authz-listfile
+.PHONY: run-test-35
+run-test-35: $(.test.deps.35)
+	@$(call .test.run,35,$(.test.output-format))
+.test.name.36 := test-authz-simple
+.test.driver.36 := tap
+.test.env.36 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.36 := tests/unit/test-authz-simple --tap -k
+.test.deps.36 := tests/unit/test-authz-simple
+.PHONY: run-test-36
+run-test-36: $(.test.deps.36)
+	@$(call .test.run,36,$(.test.output-format))
+.test.name.37 := test-base64
+.test.driver.37 := tap
+.test.env.37 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.37 := tests/unit/test-base64 --tap -k
+.test.deps.37 := tests/unit/test-base64
+.PHONY: run-test-37
+run-test-37: $(.test.deps.37)
+	@$(call .test.run,37,$(.test.output-format))
+.test.name.38 := test-bdrv-drain
+.test.driver.38 := tap
+.test.env.38 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.38 := tests/unit/test-bdrv-drain --tap -k
+.test.deps.38 := tests/unit/test-bdrv-drain
+.PHONY: run-test-38
+run-test-38: $(.test.deps.38)
+	@$(call .test.run,38,$(.test.output-format))
+.test.name.39 := test-bdrv-graph-mod
+.test.driver.39 := tap
+.test.env.39 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.39 := tests/unit/test-bdrv-graph-mod --tap -k
+.test.deps.39 := tests/unit/test-bdrv-graph-mod
+.PHONY: run-test-39
+run-test-39: $(.test.deps.39)
+	@$(call .test.run,39,$(.test.output-format))
+.test.name.40 := test-bitcnt
+.test.driver.40 := tap
+.test.env.40 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.40 := tests/unit/test-bitcnt --tap -k
+.test.deps.40 := tests/unit/test-bitcnt
+.PHONY: run-test-40
+run-test-40: $(.test.deps.40)
+	@$(call .test.run,40,$(.test.output-format))
+.test.name.41 := test-bitmap
+.test.driver.41 := tap
+.test.env.41 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.41 := tests/unit/test-bitmap --tap -k
+.test.deps.41 := tests/unit/test-bitmap
+.PHONY: run-test-41
+run-test-41: $(.test.deps.41)
+	@$(call .test.run,41,$(.test.output-format))
+.test.name.42 := test-bitops
+.test.driver.42 := tap
+.test.env.42 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.42 := tests/unit/test-bitops --tap -k
+.test.deps.42 := tests/unit/test-bitops
+.PHONY: run-test-42
+run-test-42: $(.test.deps.42)
+	@$(call .test.run,42,$(.test.output-format))
+.test.name.43 := test-block-backend
+.test.driver.43 := tap
+.test.env.43 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.43 := tests/unit/test-block-backend --tap -k
+.test.deps.43 := tests/unit/test-block-backend
+.PHONY: run-test-43
+run-test-43: $(.test.deps.43)
+	@$(call .test.run,43,$(.test.output-format))
+.test.name.44 := test-block-iothread
+.test.driver.44 := tap
+.test.env.44 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.44 := tests/unit/test-block-iothread --tap -k
+.test.deps.44 := tests/unit/test-block-iothread
+.PHONY: run-test-44
+run-test-44: $(.test.deps.44)
+	@$(call .test.run,44,$(.test.output-format))
+.test.name.45 := test-blockjob
+.test.driver.45 := tap
+.test.env.45 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.45 := tests/unit/test-blockjob --tap -k
+.test.deps.45 := tests/unit/test-blockjob
+.PHONY: run-test-45
+run-test-45: $(.test.deps.45)
+	@$(call .test.run,45,$(.test.output-format))
+.test.name.46 := test-blockjob-txn
+.test.driver.46 := tap
+.test.env.46 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.46 := tests/unit/test-blockjob-txn --tap -k
+.test.deps.46 := tests/unit/test-blockjob-txn
+.PHONY: run-test-46
+run-test-46: $(.test.deps.46)
+	@$(call .test.run,46,$(.test.output-format))
+.test.name.47 := test-bufferiszero
+.test.driver.47 := tap
+.test.env.47 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.47 := tests/unit/test-bufferiszero --tap -k
+.test.deps.47 := tests/unit/test-bufferiszero
+.PHONY: run-test-47
+run-test-47: $(.test.deps.47)
+	@$(call .test.run,47,$(.test.output-format))
+.test.name.48 := test-char
+.test.driver.48 := tap
+.test.env.48 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.48 := tests/unit/test-char --tap -k
+.test.deps.48 := tests/unit/test-char
+.PHONY: run-test-48
+run-test-48: $(.test.deps.48)
+	@$(call .test.run,48,$(.test.output-format))
+.test.name.49 := test-clone-visitor
+.test.driver.49 := tap
+.test.env.49 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.49 := tests/unit/test-clone-visitor --tap -k
+.test.deps.49 := tests/unit/test-clone-visitor
+.PHONY: run-test-49
+run-test-49: $(.test.deps.49)
+	@$(call .test.run,49,$(.test.output-format))
+.test.name.50 := test-coroutine
+.test.driver.50 := tap
+.test.env.50 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.50 := tests/unit/test-coroutine --tap -k
+.test.deps.50 := tests/unit/test-coroutine
+.PHONY: run-test-50
+run-test-50: $(.test.deps.50)
+	@$(call .test.run,50,$(.test.output-format))
+.test.name.51 := test-crypto-afsplit
+.test.driver.51 := tap
+.test.env.51 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.51 := tests/unit/test-crypto-afsplit --tap -k
+.test.deps.51 := tests/unit/test-crypto-afsplit
+.PHONY: run-test-51
+run-test-51: $(.test.deps.51)
+	@$(call .test.run,51,$(.test.output-format))
+.test.name.52 := test-crypto-block
+.test.driver.52 := tap
+.test.env.52 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.52 := tests/unit/test-crypto-block --tap -k
+.test.deps.52 := tests/unit/test-crypto-block
+.PHONY: run-test-52
+run-test-52: $(.test.deps.52)
+	@$(call .test.run,52,$(.test.output-format))
+.test.name.53 := test-crypto-cipher
+.test.driver.53 := tap
+.test.env.53 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.53 := tests/unit/test-crypto-cipher --tap -k
+.test.deps.53 := tests/unit/test-crypto-cipher
+.PHONY: run-test-53
+run-test-53: $(.test.deps.53)
+	@$(call .test.run,53,$(.test.output-format))
+.test.name.54 := test-crypto-hash
+.test.driver.54 := tap
+.test.env.54 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.54 := tests/unit/test-crypto-hash --tap -k
+.test.deps.54 := tests/unit/test-crypto-hash
+.PHONY: run-test-54
+run-test-54: $(.test.deps.54)
+	@$(call .test.run,54,$(.test.output-format))
+.test.name.55 := test-crypto-hmac
+.test.driver.55 := tap
+.test.env.55 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.55 := tests/unit/test-crypto-hmac --tap -k
+.test.deps.55 := tests/unit/test-crypto-hmac
+.PHONY: run-test-55
+run-test-55: $(.test.deps.55)
+	@$(call .test.run,55,$(.test.output-format))
+.test.name.56 := test-crypto-ivgen
+.test.driver.56 := tap
+.test.env.56 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.56 := tests/unit/test-crypto-ivgen --tap -k
+.test.deps.56 := tests/unit/test-crypto-ivgen
+.PHONY: run-test-56
+run-test-56: $(.test.deps.56)
+	@$(call .test.run,56,$(.test.output-format))
+.test.name.57 := test-crypto-pbkdf
+.test.driver.57 := tap
+.test.env.57 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.57 := tests/unit/test-crypto-pbkdf --tap -k
+.test.deps.57 := tests/unit/test-crypto-pbkdf
+.PHONY: run-test-57
+run-test-57: $(.test.deps.57)
+	@$(call .test.run,57,$(.test.output-format))
+.test.name.58 := test-crypto-secret
+.test.driver.58 := tap
+.test.env.58 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.58 := tests/unit/test-crypto-secret --tap -k
+.test.deps.58 := tests/unit/test-crypto-secret
+.PHONY: run-test-58
+run-test-58: $(.test.deps.58)
+	@$(call .test.run,58,$(.test.output-format))
+.test.name.59 := test-crypto-xts
+.test.driver.59 := tap
+.test.env.59 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.59 := tests/unit/test-crypto-xts --tap -k
+.test.deps.59 := tests/unit/test-crypto-xts
+.PHONY: run-test-59
+run-test-59: $(.test.deps.59)
+	@$(call .test.run,59,$(.test.output-format))
+.test.name.60 := test-cutils
+.test.driver.60 := tap
+.test.env.60 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.60 := tests/unit/test-cutils --tap -k
+.test.deps.60 := tests/unit/test-cutils
+.PHONY: run-test-60
+run-test-60: $(.test.deps.60)
+	@$(call .test.run,60,$(.test.output-format))
+.test.name.61 := test-div128
+.test.driver.61 := tap
+.test.env.61 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.61 := tests/unit/test-div128 --tap -k
+.test.deps.61 := tests/unit/test-div128
+.PHONY: run-test-61
+run-test-61: $(.test.deps.61)
+	@$(call .test.run,61,$(.test.output-format))
+.test.name.62 := test-forward-visitor
+.test.driver.62 := tap
+.test.env.62 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.62 := tests/unit/test-forward-visitor --tap -k
+.test.deps.62 := tests/unit/test-forward-visitor
+.PHONY: run-test-62
+run-test-62: $(.test.deps.62)
+	@$(call .test.run,62,$(.test.output-format))
+.test.name.63 := test-hbitmap
+.test.driver.63 := tap
+.test.env.63 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.63 := tests/unit/test-hbitmap --tap -k
+.test.deps.63 := tests/unit/test-hbitmap
+.PHONY: run-test-63
+run-test-63: $(.test.deps.63)
+	@$(call .test.run,63,$(.test.output-format))
+.test.name.64 := test-image-locking
+.test.driver.64 := tap
+.test.env.64 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.64 := tests/unit/test-image-locking --tap -k
+.test.deps.64 := tests/unit/test-image-locking
+.PHONY: run-test-64
+run-test-64: $(.test.deps.64)
+	@$(call .test.run,64,$(.test.output-format))
+.test.name.65 := test-int128
+.test.driver.65 := tap
+.test.env.65 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.65 := tests/unit/test-int128 --tap -k
+.test.deps.65 := tests/unit/test-int128
+.PHONY: run-test-65
+run-test-65: $(.test.deps.65)
+	@$(call .test.run,65,$(.test.output-format))
+.test.name.66 := test-io-channel-buffer
+.test.driver.66 := tap
+.test.env.66 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.66 := tests/unit/test-io-channel-buffer --tap -k
+.test.deps.66 := tests/unit/test-io-channel-buffer
+.PHONY: run-test-66
+run-test-66: $(.test.deps.66)
+	@$(call .test.run,66,$(.test.output-format))
+.test.name.67 := test-io-channel-command
+.test.driver.67 := tap
+.test.env.67 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.67 := tests/unit/test-io-channel-command --tap -k
+.test.deps.67 := tests/unit/test-io-channel-command
+.PHONY: run-test-67
+run-test-67: $(.test.deps.67)
+	@$(call .test.run,67,$(.test.output-format))
+.test.name.68 := test-io-channel-file
+.test.driver.68 := tap
+.test.env.68 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.68 := tests/unit/test-io-channel-file --tap -k
+.test.deps.68 := tests/unit/test-io-channel-file
+.PHONY: run-test-68
+run-test-68: $(.test.deps.68)
+	@$(call .test.run,68,$(.test.output-format))
+.test.name.69 := test-io-channel-socket
+.test.driver.69 := tap
+.test.env.69 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.69 := tests/unit/test-io-channel-socket --tap -k
+.test.deps.69 := tests/unit/test-io-channel-socket
+.PHONY: run-test-69
+run-test-69: $(.test.deps.69)
+	@$(call .test.run,69,$(.test.output-format))
+.test.name.70 := test-io-channel-tls
+.test.driver.70 := tap
+.test.env.70 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.70 := tests/unit/test-io-channel-tls --tap -k
+.test.deps.70 := tests/unit/test-io-channel-tls
+.PHONY: run-test-70
+run-test-70: $(.test.deps.70)
+	@$(call .test.run,70,$(.test.output-format))
+.test.name.71 := test-io-task
+.test.driver.71 := tap
+.test.env.71 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.71 := tests/unit/test-io-task --tap -k
+.test.deps.71 := tests/unit/test-io-task
+.PHONY: run-test-71
+run-test-71: $(.test.deps.71)
+	@$(call .test.run,71,$(.test.output-format))
+.test.name.72 := test-iov
+.test.driver.72 := tap
+.test.env.72 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.72 := tests/unit/test-iov --tap -k
+.test.deps.72 := tests/unit/test-iov
+.PHONY: run-test-72
+run-test-72: $(.test.deps.72)
+	@$(call .test.run,72,$(.test.output-format))
+.test.name.73 := test-keyval
+.test.driver.73 := tap
+.test.env.73 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.73 := tests/unit/test-keyval --tap -k
+.test.deps.73 := tests/unit/test-keyval
+.PHONY: run-test-73
+run-test-73: $(.test.deps.73)
+	@$(call .test.run,73,$(.test.output-format))
+.test.name.74 := test-logging
+.test.driver.74 := tap
+.test.env.74 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.74 := tests/unit/test-logging --tap -k
+.test.deps.74 := tests/unit/test-logging
+.PHONY: run-test-74
+run-test-74: $(.test.deps.74)
+	@$(call .test.run,74,$(.test.output-format))
+.test.name.75 := test-mul64
+.test.driver.75 := tap
+.test.env.75 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.75 := tests/unit/test-mul64 --tap -k
+.test.deps.75 := tests/unit/test-mul64
+.PHONY: run-test-75
+run-test-75: $(.test.deps.75)
+	@$(call .test.run,75,$(.test.output-format))
+.test.name.76 := test-opts-visitor
+.test.driver.76 := tap
+.test.env.76 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.76 := tests/unit/test-opts-visitor --tap -k
+.test.deps.76 := tests/unit/test-opts-visitor
+.PHONY: run-test-76
+run-test-76: $(.test.deps.76)
+	@$(call .test.run,76,$(.test.output-format))
+.test.name.77 := test-qapi-util
+.test.driver.77 := tap
+.test.env.77 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.77 := tests/unit/test-qapi-util --tap -k
+.test.deps.77 := tests/unit/test-qapi-util
+.PHONY: run-test-77
+run-test-77: $(.test.deps.77)
+	@$(call .test.run,77,$(.test.output-format))
+.test.name.78 := test-qdev-global-props
+.test.driver.78 := tap
+.test.env.78 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.78 := tests/unit/test-qdev-global-props --tap -k
+.test.deps.78 := tests/unit/test-qdev-global-props
+.PHONY: run-test-78
+run-test-78: $(.test.deps.78)
+	@$(call .test.run,78,$(.test.output-format))
+.test.name.79 := test-qdist
+.test.driver.79 := tap
+.test.env.79 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.79 := tests/unit/test-qdist --tap -k
+.test.deps.79 := tests/unit/test-qdist
+.PHONY: run-test-79
+run-test-79: $(.test.deps.79)
+	@$(call .test.run,79,$(.test.output-format))
+.test.name.80 := test-qemu-opts
+.test.driver.80 := tap
+.test.env.80 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.80 := tests/unit/test-qemu-opts --tap -k
+.test.deps.80 := tests/unit/test-qemu-opts
+.PHONY: run-test-80
+run-test-80: $(.test.deps.80)
+	@$(call .test.run,80,$(.test.output-format))
+.test.name.81 := test-qga
+.test.driver.81 := tap
+.test.env.81 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.81 := tests/unit/test-qga --tap -k
+.test.deps.81 := tests/unit/test-qga qga/qemu-ga
+.PHONY: run-test-81
+run-test-81: $(.test.deps.81)
+	@$(call .test.run,81,$(.test.output-format))
+.test.name.82 := test-qgraph
+.test.driver.82 := tap
+.test.env.82 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.82 := tests/unit/test-qgraph --tap -k
+.test.deps.82 := tests/unit/test-qgraph
+.PHONY: run-test-82
+run-test-82: $(.test.deps.82)
+	@$(call .test.run,82,$(.test.output-format))
+.test.name.83 := test-qht
+.test.driver.83 := tap
+.test.env.83 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.83 := tests/unit/test-qht --tap -k
+.test.deps.83 := tests/unit/test-qht
+.PHONY: run-test-83
+run-test-83: $(.test.deps.83)
+	@$(call .test.run,83,$(.test.output-format))
+.test.name.84 := test-qmp-cmds
+.test.driver.84 := tap
+.test.env.84 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.84 := tests/unit/test-qmp-cmds --tap -k
+.test.deps.84 := tests/unit/test-qmp-cmds
+.PHONY: run-test-84
+run-test-84: $(.test.deps.84)
+	@$(call .test.run,84,$(.test.output-format))
+.test.name.85 := test-qmp-event
+.test.driver.85 := tap
+.test.env.85 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.85 := tests/unit/test-qmp-event --tap -k
+.test.deps.85 := tests/unit/test-qmp-event
+.PHONY: run-test-85
+run-test-85: $(.test.deps.85)
+	@$(call .test.run,85,$(.test.output-format))
+.test.name.86 := test-qobject-input-visitor
+.test.driver.86 := tap
+.test.env.86 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.86 := tests/unit/test-qobject-input-visitor --tap -k
+.test.deps.86 := tests/unit/test-qobject-input-visitor
+.PHONY: run-test-86
+run-test-86: $(.test.deps.86)
+	@$(call .test.run,86,$(.test.output-format))
+.test.name.87 := test-qobject-output-visitor
+.test.driver.87 := tap
+.test.env.87 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.87 := tests/unit/test-qobject-output-visitor --tap -k
+.test.deps.87 := tests/unit/test-qobject-output-visitor
+.PHONY: run-test-87
+run-test-87: $(.test.deps.87)
+	@$(call .test.run,87,$(.test.output-format))
+.test.name.88 := test-rcu-list
+.test.driver.88 := tap
+.test.env.88 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.88 := tests/unit/test-rcu-list --tap -k
+.test.deps.88 := tests/unit/test-rcu-list
+.PHONY: run-test-88
+run-test-88: $(.test.deps.88)
+	@$(call .test.run,88,$(.test.output-format))
+.test.name.89 := test-rcu-simpleq
+.test.driver.89 := tap
+.test.env.89 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.89 := tests/unit/test-rcu-simpleq --tap -k
+.test.deps.89 := tests/unit/test-rcu-simpleq
+.PHONY: run-test-89
+run-test-89: $(.test.deps.89)
+	@$(call .test.run,89,$(.test.output-format))
+.test.name.90 := test-rcu-slist
+.test.driver.90 := tap
+.test.env.90 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.90 := tests/unit/test-rcu-slist --tap -k
+.test.deps.90 := tests/unit/test-rcu-slist
+.PHONY: run-test-90
+run-test-90: $(.test.deps.90)
+	@$(call .test.run,90,$(.test.output-format))
+.test.name.91 := test-rcu-tailq
+.test.driver.91 := tap
+.test.env.91 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.91 := tests/unit/test-rcu-tailq --tap -k
+.test.deps.91 := tests/unit/test-rcu-tailq
+.PHONY: run-test-91
+run-test-91: $(.test.deps.91)
+	@$(call .test.run,91,$(.test.output-format))
+.test.name.92 := test-replication
+.test.driver.92 := tap
+.test.env.92 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.92 := tests/unit/test-replication --tap -k
+.test.deps.92 := tests/unit/test-replication
+.PHONY: run-test-92
+run-test-92: $(.test.deps.92)
+	@$(call .test.run,92,$(.test.output-format))
+.test.name.93 := test-shift128
+.test.driver.93 := tap
+.test.env.93 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.93 := tests/unit/test-shift128 --tap -k
+.test.deps.93 := tests/unit/test-shift128
+.PHONY: run-test-93
+run-test-93: $(.test.deps.93)
+	@$(call .test.run,93,$(.test.output-format))
+.test.name.94 := test-smp-parse
+.test.driver.94 := tap
+.test.env.94 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.94 := tests/unit/test-smp-parse --tap -k
+.test.deps.94 := tests/unit/test-smp-parse
+.PHONY: run-test-94
+run-test-94: $(.test.deps.94)
+	@$(call .test.run,94,$(.test.output-format))
+.test.name.95 := test-string-input-visitor
+.test.driver.95 := tap
+.test.env.95 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.95 := tests/unit/test-string-input-visitor --tap -k
+.test.deps.95 := tests/unit/test-string-input-visitor
+.PHONY: run-test-95
+run-test-95: $(.test.deps.95)
+	@$(call .test.run,95,$(.test.output-format))
+.test.name.96 := test-string-output-visitor
+.test.driver.96 := tap
+.test.env.96 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.96 := tests/unit/test-string-output-visitor --tap -k
+.test.deps.96 := tests/unit/test-string-output-visitor
+.PHONY: run-test-96
+run-test-96: $(.test.deps.96)
+	@$(call .test.run,96,$(.test.output-format))
+.test.name.97 := test-thread-pool
+.test.driver.97 := tap
+.test.env.97 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.97 := tests/unit/test-thread-pool --tap -k
+.test.deps.97 := tests/unit/test-thread-pool
+.PHONY: run-test-97
+run-test-97: $(.test.deps.97)
+	@$(call .test.run,97,$(.test.output-format))
+.test.name.98 := test-throttle
+.test.driver.98 := tap
+.test.env.98 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.98 := tests/unit/test-throttle --tap -k
+.test.deps.98 := tests/unit/test-throttle
+.PHONY: run-test-98
+run-test-98: $(.test.deps.98)
+	@$(call .test.run,98,$(.test.output-format))
+.test.name.99 := test-timed-average
+.test.driver.99 := tap
+.test.env.99 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.99 := tests/unit/test-timed-average --tap -k
+.test.deps.99 := tests/unit/test-timed-average
+.PHONY: run-test-99
+run-test-99: $(.test.deps.99)
+	@$(call .test.run,99,$(.test.output-format))
+.test.name.100 := test-util-sockets
+.test.driver.100 := tap
+.test.env.100 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.100 := tests/unit/test-util-sockets --tap -k
+.test.deps.100 := tests/unit/test-util-sockets
+.PHONY: run-test-100
+run-test-100: $(.test.deps.100)
+	@$(call .test.run,100,$(.test.output-format))
+.test.name.101 := test-uuid
+.test.driver.101 := tap
+.test.env.101 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.101 := tests/unit/test-uuid --tap -k
+.test.deps.101 := tests/unit/test-uuid
+.PHONY: run-test-101
+run-test-101: $(.test.deps.101)
+	@$(call .test.run,101,$(.test.output-format))
+.test.name.102 := test-visitor-serialization
+.test.driver.102 := tap
+.test.env.102 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.102 := tests/unit/test-visitor-serialization --tap -k
+.test.deps.102 := tests/unit/test-visitor-serialization
+.PHONY: run-test-102
+run-test-102: $(.test.deps.102)
+	@$(call .test.run,102,$(.test.output-format))
+.test.name.103 := test-vmstate
+.test.driver.103 := tap
+.test.env.103 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.103 := tests/unit/test-vmstate --tap -k
+.test.deps.103 := tests/unit/test-vmstate
+.PHONY: run-test-103
+run-test-103: $(.test.deps.103)
+	@$(call .test.run,103,$(.test.output-format))
+.test.name.104 := test-write-threshold
+.test.driver.104 := tap
+.test.env.104 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.104 := tests/unit/test-write-threshold --tap -k
+.test.deps.104 := tests/unit/test-write-threshold
+.PHONY: run-test-104
+run-test-104: $(.test.deps.104)
+	@$(call .test.run,104,$(.test.output-format))
+.test.name.105 := test-x86-cpuid
+.test.driver.105 := tap
+.test.env.105 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.105 := tests/unit/test-x86-cpuid --tap -k
+.test.deps.105 := tests/unit/test-x86-cpuid
+.PHONY: run-test-105
+run-test-105: $(.test.deps.105)
+	@$(call .test.run,105,$(.test.output-format))
+.test.name.106 := test-xbzrle
+.test.driver.106 := tap
+.test.env.106 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.106 := tests/unit/test-xbzrle --tap -k
+.test.deps.106 := tests/unit/test-xbzrle
+.PHONY: run-test-106
+run-test-106: $(.test.deps.106)
+	@$(call .test.run,106,$(.test.output-format))
+.test.name.107 := test-yank
+.test.driver.107 := tap
+.test.env.107 := $(.test.env) G_TEST_SRCDIR=/home/mypc/Tools/diff/qemu-6.2.0/tests/unit G_TEST_BUILDDIR=/home/mypc/Tools/diff/qemu-6.2.0/build/tests/unit
+.test.cmd.107 := tests/unit/test-yank --tap -k
+.test.deps.107 := tests/unit/test-yank
+.PHONY: run-test-107
+run-test-107: $(.test.deps.107)
+	@$(call .test.run,107,$(.test.output-format))
+.test.name.108 := qtest-i386/test-netfilter
+.test.driver.108 := tap
+.test.env.108 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.108 := tests/qtest/test-netfilter --tap -k
+.test.deps.108 := tests/qtest/test-netfilter pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-108
+run-test-108: $(.test.deps.108)
+	@$(call .test.run,108,$(.test.output-format))
+.test.name.109 := qtest-i386/test-filter-mirror
+.test.driver.109 := tap
+.test.env.109 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.109 := tests/qtest/test-filter-mirror --tap -k
+.test.deps.109 := tests/qtest/test-filter-mirror pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-109
+run-test-109: $(.test.deps.109)
+	@$(call .test.run,109,$(.test.output-format))
+.test.name.110 := qtest-i386/endianness-test
+.test.driver.110 := tap
+.test.env.110 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.110 := tests/qtest/endianness-test --tap -k
+.test.deps.110 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/endianness-test pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-110
+run-test-110: $(.test.deps.110)
+	@$(call .test.run,110,$(.test.output-format))
+.test.name.111 := qtest-i386/test-filter-redirector
+.test.driver.111 := tap
+.test.env.111 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.111 := tests/qtest/test-filter-redirector --tap -k
+.test.deps.111 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 tests/qtest/test-filter-redirector pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-111
+run-test-111: $(.test.deps.111)
+	@$(call .test.run,111,$(.test.output-format))
+.test.name.112 := qtest-i386/ipmi-kcs-test
+.test.driver.112 := tap
+.test.env.112 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.112 := tests/qtest/ipmi-kcs-test --tap -k
+.test.deps.112 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd tests/qtest/ipmi-kcs-test pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-112
+run-test-112: $(.test.deps.112)
+	@$(call .test.run,112,$(.test.output-format))
+.test.name.113 := qtest-i386/ipmi-bt-test
+.test.driver.113 := tap
+.test.env.113 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.113 := tests/qtest/ipmi-bt-test --tap -k
+.test.deps.113 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/ipmi-bt-test pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-113
+run-test-113: $(.test.deps.113)
+	@$(call .test.run,113,$(.test.output-format))
+.test.name.114 := qtest-i386/wdt_ib700-test
+.test.driver.114 := tap
+.test.env.114 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.114 := tests/qtest/wdt_ib700-test --tap -k
+.test.deps.114 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/wdt_ib700-test pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-114
+run-test-114: $(.test.deps.114)
+	@$(call .test.run,114,$(.test.output-format))
+.test.name.115 := qtest-i386/pvpanic-test
+.test.driver.115 := tap
+.test.env.115 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.115 := tests/qtest/pvpanic-test --tap -k
+.test.deps.115 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 tests/qtest/pvpanic-test pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-115
+run-test-115: $(.test.deps.115)
+	@$(call .test.run,115,$(.test.output-format))
+.test.name.116 := qtest-i386/pvpanic-pci-test
+.test.driver.116 := tap
+.test.env.116 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.116 := tests/qtest/pvpanic-pci-test --tap -k
+.test.deps.116 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/pvpanic-pci-test pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-116
+run-test-116: $(.test.deps.116)
+	@$(call .test.run,116,$(.test.output-format))
+.test.name.117 := qtest-i386/intel-hda-test
+.test.driver.117 := tap
+.test.env.117 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.117 := tests/qtest/intel-hda-test --tap -k
+.test.deps.117 := tests/qtest/intel-hda-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-117
+run-test-117: $(.test.deps.117)
+	@$(call .test.run,117,$(.test.output-format))
+.test.name.118 := qtest-i386/i82801b11-test
+.test.driver.118 := tap
+.test.env.118 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.118 := tests/qtest/i82801b11-test --tap -k
+.test.deps.118 := pc-bios/edk2-i386-secure-code.fd tests/qtest/i82801b11-test pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-118
+run-test-118: $(.test.deps.118)
+	@$(call .test.run,118,$(.test.output-format))
+.test.name.119 := qtest-i386/ioh3420-test
+.test.driver.119 := tap
+.test.env.119 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.119 := tests/qtest/ioh3420-test --tap -k
+.test.deps.119 := tests/qtest/ioh3420-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-119
+run-test-119: $(.test.deps.119)
+	@$(call .test.run,119,$(.test.output-format))
+.test.name.120 := qtest-i386/lpc-ich9-test
+.test.driver.120 := tap
+.test.env.120 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.120 := tests/qtest/lpc-ich9-test --tap -k
+.test.deps.120 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/lpc-ich9-test pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-120
+run-test-120: $(.test.deps.120)
+	@$(call .test.run,120,$(.test.output-format))
+.test.name.121 := qtest-i386/usb-hcd-uhci-test
+.test.driver.121 := tap
+.test.env.121 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.121 := tests/qtest/usb-hcd-uhci-test --tap -k
+.test.deps.121 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/usb-hcd-uhci-test pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-121
+run-test-121: $(.test.deps.121)
+	@$(call .test.run,121,$(.test.output-format))
+.test.name.122 := qtest-i386/usb-hcd-ehci-test
+.test.driver.122 := tap
+.test.env.122 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.122 := tests/qtest/usb-hcd-ehci-test --tap -k
+.test.deps.122 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/usb-hcd-ehci-test pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-122
+run-test-122: $(.test.deps.122)
+	@$(call .test.run,122,$(.test.output-format))
+.test.name.123 := qtest-i386/usb-hcd-xhci-test
+.test.driver.123 := tap
+.test.env.123 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.123 := tests/qtest/usb-hcd-xhci-test --tap -k
+.test.deps.123 := tests/qtest/usb-hcd-xhci-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-123
+run-test-123: $(.test.deps.123)
+	@$(call .test.run,123,$(.test.output-format))
+.test.name.124 := qtest-i386/tpm-crb-test
+.test.driver.124 := tap
+.test.env.124 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.124 := tests/qtest/tpm-crb-test --tap -k
+.test.deps.124 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/tpm-crb-test pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-124
+run-test-124: $(.test.deps.124)
+	@$(call .test.run,124,$(.test.output-format))
+.test.name.125 := qtest-i386/tpm-crb-swtpm-test
+.test.driver.125 := tap
+.test.env.125 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.125 := tests/qtest/tpm-crb-swtpm-test --tap -k
+.test.deps.125 := tests/qtest/tpm-crb-swtpm-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-125
+run-test-125: $(.test.deps.125)
+	@$(call .test.run,125,$(.test.output-format))
+.test.name.126 := qtest-i386/tpm-tis-test
+.test.driver.126 := tap
+.test.env.126 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.126 := tests/qtest/tpm-tis-test --tap -k
+.test.deps.126 := pc-bios/edk2-i386-secure-code.fd tests/qtest/tpm-tis-test pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-126
+run-test-126: $(.test.deps.126)
+	@$(call .test.run,126,$(.test.output-format))
+.test.name.127 := qtest-i386/tpm-tis-swtpm-test
+.test.driver.127 := tap
+.test.env.127 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.127 := tests/qtest/tpm-tis-swtpm-test --tap -k
+.test.deps.127 := tests/qtest/tpm-tis-swtpm-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-127
+run-test-127: $(.test.deps.127)
+	@$(call .test.run,127,$(.test.output-format))
+.test.name.128 := qtest-i386/rtl8139-test
+.test.driver.128 := tap
+.test.env.128 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.128 := tests/qtest/rtl8139-test --tap -k
+.test.deps.128 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/rtl8139-test pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-128
+run-test-128: $(.test.deps.128)
+	@$(call .test.run,128,$(.test.output-format))
+.test.name.129 := qtest-i386/fuzz-e1000e-test
+.test.driver.129 := tap
+.test.env.129 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.129 := tests/qtest/fuzz-e1000e-test --tap -k
+.test.deps.129 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd tests/qtest/fuzz-e1000e-test pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-129
+run-test-129: $(.test.deps.129)
+	@$(call .test.run,129,$(.test.output-format))
+.test.name.130 := qtest-i386/am53c974-test
+.test.driver.130 := tap
+.test.env.130 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.130 := tests/qtest/am53c974-test --tap -k
+.test.deps.130 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/am53c974-test pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-130
+run-test-130: $(.test.deps.130)
+	@$(call .test.run,130,$(.test.output-format))
+.test.name.131 := qtest-i386/display-vga-test
+.test.driver.131 := tap
+.test.env.131 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.131 := tests/qtest/display-vga-test --tap -k
+.test.deps.131 := tests/qtest/display-vga-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-131
+run-test-131: $(.test.deps.131)
+	@$(call .test.run,131,$(.test.output-format))
+.test.name.132 := qtest-i386/ivshmem-test
+.test.driver.132 := tap
+.test.env.132 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.132 := tests/qtest/ivshmem-test --tap -k
+.test.deps.132 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/ivshmem-test pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-132
+run-test-132: $(.test.deps.132)
+	@$(call .test.run,132,$(.test.output-format))
+.test.name.133 := qtest-i386/fdc-test
+.test.driver.133 := tap
+.test.env.133 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.133 := tests/qtest/fdc-test --tap -k
+.test.deps.133 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd tests/qtest/fdc-test pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-133
+run-test-133: $(.test.deps.133)
+	@$(call .test.run,133,$(.test.output-format))
+.test.name.134 := qtest-i386/ide-test
+.test.driver.134 := tap
+.test.env.134 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.134 := tests/qtest/ide-test --tap -k
+.test.deps.134 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd tests/qtest/ide-test pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-134
+run-test-134: $(.test.deps.134)
+	@$(call .test.run,134,$(.test.output-format))
+.test.name.135 := qtest-i386/hd-geo-test
+.test.driver.135 := tap
+.test.env.135 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.135 := tests/qtest/hd-geo-test --tap -k
+.test.deps.135 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/hd-geo-test pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-135
+run-test-135: $(.test.deps.135)
+	@$(call .test.run,135,$(.test.output-format))
+.test.name.136 := qtest-i386/boot-order-test
+.test.driver.136 := tap
+.test.env.136 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.136 := tests/qtest/boot-order-test --tap -k
+.test.deps.136 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/boot-order-test pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-136
+run-test-136: $(.test.deps.136)
+	@$(call .test.run,136,$(.test.output-format))
+.test.name.137 := qtest-i386/rtc-test
+.test.driver.137 := tap
+.test.env.137 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.137 := tests/qtest/rtc-test --tap -k
+.test.deps.137 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd tests/qtest/rtc-test pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-137
+run-test-137: $(.test.deps.137)
+	@$(call .test.run,137,$(.test.output-format))
+.test.name.138 := qtest-i386/i440fx-test
+.test.driver.138 := tap
+.test.env.138 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.138 := tests/qtest/i440fx-test --tap -k
+.test.deps.138 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/i440fx-test pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-138
+run-test-138: $(.test.deps.138)
+	@$(call .test.run,138,$(.test.output-format))
+.test.name.139 := qtest-i386/fw_cfg-test
+.test.driver.139 := tap
+.test.env.139 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.139 := tests/qtest/fw_cfg-test --tap -k
+.test.deps.139 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/fw_cfg-test pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-139
+run-test-139: $(.test.deps.139)
+	@$(call .test.run,139,$(.test.output-format))
+.test.name.140 := qtest-i386/device-plug-test
+.test.driver.140 := tap
+.test.env.140 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.140 := tests/qtest/device-plug-test --tap -k
+.test.deps.140 := pc-bios/edk2-i386-secure-code.fd tests/qtest/device-plug-test pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-140
+run-test-140: $(.test.deps.140)
+	@$(call .test.run,140,$(.test.output-format))
+.test.name.141 := qtest-i386/drive_del-test
+.test.driver.141 := tap
+.test.env.141 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.141 := tests/qtest/drive_del-test --tap -k
+.test.deps.141 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/drive_del-test pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-141
+run-test-141: $(.test.deps.141)
+	@$(call .test.run,141,$(.test.output-format))
+.test.name.142 := qtest-i386/tco-test
+.test.driver.142 := tap
+.test.env.142 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.142 := tests/qtest/tco-test --tap -k
+.test.deps.142 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd tests/qtest/tco-test pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-142
+run-test-142: $(.test.deps.142)
+	@$(call .test.run,142,$(.test.output-format))
+.test.name.143 := qtest-i386/cpu-plug-test
+.test.driver.143 := tap
+.test.env.143 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.143 := tests/qtest/cpu-plug-test --tap -k
+.test.deps.143 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/cpu-plug-test pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-143
+run-test-143: $(.test.deps.143)
+	@$(call .test.run,143,$(.test.output-format))
+.test.name.144 := qtest-i386/q35-test
+.test.driver.144 := tap
+.test.env.144 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.144 := tests/qtest/q35-test --tap -k
+.test.deps.144 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/q35-test pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-144
+run-test-144: $(.test.deps.144)
+	@$(call .test.run,144,$(.test.output-format))
+.test.name.145 := qtest-i386/vmgenid-test
+.test.driver.145 := tap
+.test.env.145 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.145 := tests/qtest/vmgenid-test --tap -k
+.test.deps.145 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 tests/qtest/vmgenid-test pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-145
+run-test-145: $(.test.deps.145)
+	@$(call .test.run,145,$(.test.output-format))
+.test.name.146 := qtest-i386/test-x86-cpuid-compat
+.test.driver.146 := tap
+.test.env.146 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.146 := tests/qtest/test-x86-cpuid-compat --tap -k
+.test.deps.146 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/test-x86-cpuid-compat pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-146
+run-test-146: $(.test.deps.146)
+	@$(call .test.run,146,$(.test.output-format))
+.test.name.147 := qtest-i386/numa-test
+.test.driver.147 := tap
+.test.env.147 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.147 := tests/qtest/numa-test --tap -k
+.test.deps.147 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/numa-test pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-147
+run-test-147: $(.test.deps.147)
+	@$(call .test.run,147,$(.test.output-format))
+.test.name.148 := qtest-i386/fuzz-megasas-test
+.test.driver.148 := tap
+.test.env.148 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.148 := tests/qtest/fuzz-megasas-test --tap -k
+.test.deps.148 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/fuzz-megasas-test pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-148
+run-test-148: $(.test.deps.148)
+	@$(call .test.run,148,$(.test.output-format))
+.test.name.149 := qtest-i386/fuzz-virtio-scsi-test
+.test.driver.149 := tap
+.test.env.149 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.149 := tests/qtest/fuzz-virtio-scsi-test --tap -k
+.test.deps.149 := pc-bios/edk2-i386-secure-code.fd tests/qtest/fuzz-virtio-scsi-test pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-149
+run-test-149: $(.test.deps.149)
+	@$(call .test.run,149,$(.test.output-format))
+.test.name.150 := qtest-i386/fuzz-sb16-test
+.test.driver.150 := tap
+.test.env.150 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.150 := tests/qtest/fuzz-sb16-test --tap -k
+.test.deps.150 := tests/qtest/fuzz-sb16-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-150
+run-test-150: $(.test.deps.150)
+	@$(call .test.run,150,$(.test.output-format))
+.test.name.151 := qtest-i386/fuzz-sdcard-test
+.test.driver.151 := tap
+.test.env.151 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.151 := tests/qtest/fuzz-sdcard-test --tap -k
+.test.deps.151 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd tests/qtest/fuzz-sdcard-test pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-151
+run-test-151: $(.test.deps.151)
+	@$(call .test.run,151,$(.test.output-format))
+.test.name.152 := qtest-i386/cdrom-test
+.test.driver.152 := tap
+.test.env.152 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.152 := tests/qtest/cdrom-test --tap -k
+.test.deps.152 := pc-bios/edk2-i386-secure-code.fd tests/qtest/cdrom-test pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-152
+run-test-152: $(.test.deps.152)
+	@$(call .test.run,152,$(.test.output-format))
+.test.name.153 := qtest-i386/device-introspect-test
+.test.driver.153 := tap
+.test.env.153 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.153 := tests/qtest/device-introspect-test --tap -k
+.test.deps.153 := tests/qtest/device-introspect-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-153
+run-test-153: $(.test.deps.153)
+	@$(call .test.run,153,$(.test.output-format))
+.test.name.154 := qtest-i386/machine-none-test
+.test.driver.154 := tap
+.test.env.154 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.154 := tests/qtest/machine-none-test --tap -k
+.test.deps.154 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/machine-none-test pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-154
+run-test-154: $(.test.deps.154)
+	@$(call .test.run,154,$(.test.output-format))
+.test.name.155 := qtest-i386/qmp-test
+.test.driver.155 := tap
+.test.env.155 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.155 := tests/qtest/qmp-test --tap -k
+.test.deps.155 := tests/qtest/qmp-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-155
+run-test-155: $(.test.deps.155)
+	@$(call .test.run,155,$(.test.output-format))
+.test.name.156 := qtest-i386/qmp-cmd-test
+.test.driver.156 := tap
+.test.env.156 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-i386 QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.156 := tests/qtest/qmp-cmd-test --tap -k
+.test.deps.156 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/qmp-cmd-test pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd qemu-system-i386 pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-156
+run-test-156: $(.test.deps.156)
+	@$(call .test.run,156,$(.test.output-format))
+.test.name.157 := qtest-mips/endianness-test
+.test.driver.157 := tap
+.test.env.157 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-mips QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.157 := tests/qtest/endianness-test --tap -k
+.test.deps.157 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd qemu-system-mips tests/qtest/endianness-test pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-157
+run-test-157: $(.test.deps.157)
+	@$(call .test.run,157,$(.test.output-format))
+.test.name.158 := qtest-mips/display-vga-test
+.test.driver.158 := tap
+.test.env.158 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-mips QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.158 := tests/qtest/display-vga-test --tap -k
+.test.deps.158 := tests/qtest/display-vga-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd qemu-system-mips pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-158
+run-test-158: $(.test.deps.158)
+	@$(call .test.run,158,$(.test.output-format))
+.test.name.159 := qtest-mips/fuzz-megasas-test
+.test.driver.159 := tap
+.test.env.159 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-mips QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.159 := tests/qtest/fuzz-megasas-test --tap -k
+.test.deps.159 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd qemu-system-mips tests/qtest/fuzz-megasas-test pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-159
+run-test-159: $(.test.deps.159)
+	@$(call .test.run,159,$(.test.output-format))
+.test.name.160 := qtest-mips/fuzz-virtio-scsi-test
+.test.driver.160 := tap
+.test.env.160 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-mips QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.160 := tests/qtest/fuzz-virtio-scsi-test --tap -k
+.test.deps.160 := pc-bios/edk2-i386-secure-code.fd tests/qtest/fuzz-virtio-scsi-test pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd qemu-system-mips pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-160
+run-test-160: $(.test.deps.160)
+	@$(call .test.run,160,$(.test.output-format))
+.test.name.161 := qtest-mips/fuzz-sb16-test
+.test.driver.161 := tap
+.test.env.161 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-mips QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.161 := tests/qtest/fuzz-sb16-test --tap -k
+.test.deps.161 := tests/qtest/fuzz-sb16-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd qemu-system-mips pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-161
+run-test-161: $(.test.deps.161)
+	@$(call .test.run,161,$(.test.output-format))
+.test.name.162 := qtest-mips/fuzz-sdcard-test
+.test.driver.162 := tap
+.test.env.162 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-mips QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.162 := tests/qtest/fuzz-sdcard-test --tap -k
+.test.deps.162 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd qemu-system-mips pc-bios/edk2-arm-code.fd tests/qtest/fuzz-sdcard-test pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-162
+run-test-162: $(.test.deps.162)
+	@$(call .test.run,162,$(.test.output-format))
+.test.name.163 := qtest-mips/cdrom-test
+.test.driver.163 := tap
+.test.env.163 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-mips QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.163 := tests/qtest/cdrom-test --tap -k
+.test.deps.163 := pc-bios/edk2-i386-secure-code.fd tests/qtest/cdrom-test pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd qemu-system-mips pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-163
+run-test-163: $(.test.deps.163)
+	@$(call .test.run,163,$(.test.output-format))
+.test.name.164 := qtest-mips/device-introspect-test
+.test.driver.164 := tap
+.test.env.164 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-mips QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.164 := tests/qtest/device-introspect-test --tap -k
+.test.deps.164 := tests/qtest/device-introspect-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd qemu-system-mips pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-164
+run-test-164: $(.test.deps.164)
+	@$(call .test.run,164,$(.test.output-format))
+.test.name.165 := qtest-mips/machine-none-test
+.test.driver.165 := tap
+.test.env.165 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-mips QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.165 := tests/qtest/machine-none-test --tap -k
+.test.deps.165 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/machine-none-test pc-bios/edk2-x86_64-code.fd qemu-system-mips pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-165
+run-test-165: $(.test.deps.165)
+	@$(call .test.run,165,$(.test.output-format))
+.test.name.166 := qtest-mips/qmp-test
+.test.driver.166 := tap
+.test.env.166 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-mips QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.166 := tests/qtest/qmp-test --tap -k
+.test.deps.166 := tests/qtest/qmp-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd qemu-system-mips pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-166
+run-test-166: $(.test.deps.166)
+	@$(call .test.run,166,$(.test.output-format))
+.test.name.167 := qtest-mips/qmp-cmd-test
+.test.driver.167 := tap
+.test.env.167 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-mips QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.167 := tests/qtest/qmp-cmd-test --tap -k
+.test.deps.167 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd qemu-system-mips tests/qtest/qmp-cmd-test pc-bios/edk2-arm-code.fd pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-167
+run-test-167: $(.test.deps.167)
+	@$(call .test.run,167,$(.test.output-format))
+.test.name.168 := qtest-arm/sse-timer-test
+.test.driver.168 := tap
+.test.env.168 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.168 := tests/qtest/sse-timer-test --tap -k
+.test.deps.168 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/sse-timer-test pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-168
+run-test-168: $(.test.deps.168)
+	@$(call .test.run,168,$(.test.output-format))
+.test.name.169 := qtest-arm/cmsdk-apb-dualtimer-test
+.test.driver.169 := tap
+.test.env.169 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.169 := tests/qtest/cmsdk-apb-dualtimer-test --tap -k
+.test.deps.169 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/cmsdk-apb-dualtimer-test pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-169
+run-test-169: $(.test.deps.169)
+	@$(call .test.run,169,$(.test.output-format))
+.test.name.170 := qtest-arm/cmsdk-apb-timer-test
+.test.driver.170 := tap
+.test.env.170 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.170 := tests/qtest/cmsdk-apb-timer-test --tap -k
+.test.deps.170 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd tests/qtest/cmsdk-apb-timer-test pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-170
+run-test-170: $(.test.deps.170)
+	@$(call .test.run,170,$(.test.output-format))
+.test.name.171 := qtest-arm/cmsdk-apb-watchdog-test
+.test.driver.171 := tap
+.test.env.171 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.171 := tests/qtest/cmsdk-apb-watchdog-test --tap -k
+.test.deps.171 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/cmsdk-apb-watchdog-test pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-171
+run-test-171: $(.test.deps.171)
+	@$(call .test.run,171,$(.test.output-format))
+.test.name.172 := qtest-arm/pflash-cfi02-test
+.test.driver.172 := tap
+.test.env.172 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.172 := tests/qtest/pflash-cfi02-test --tap -k
+.test.deps.172 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/pflash-cfi02-test pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-172
+run-test-172: $(.test.deps.172)
+	@$(call .test.run,172,$(.test.output-format))
+.test.name.173 := qtest-arm/aspeed_hace-test
+.test.driver.173 := tap
+.test.env.173 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.173 := tests/qtest/aspeed_hace-test --tap -k
+.test.deps.173 := tests/qtest/aspeed_hace-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-173
+run-test-173: $(.test.deps.173)
+	@$(call .test.run,173,$(.test.output-format))
+.test.name.174 := qtest-arm/aspeed_smc-test
+.test.driver.174 := tap
+.test.env.174 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.174 := tests/qtest/aspeed_smc-test --tap -k
+.test.deps.174 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd tests/qtest/aspeed_smc-test pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-174
+run-test-174: $(.test.deps.174)
+	@$(call .test.run,174,$(.test.output-format))
+.test.name.175 := qtest-arm/npcm7xx_adc-test
+.test.driver.175 := tap
+.test.env.175 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.175 := tests/qtest/npcm7xx_adc-test --tap -k
+.test.deps.175 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd tests/qtest/npcm7xx_adc-test qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-175
+run-test-175: $(.test.deps.175)
+	@$(call .test.run,175,$(.test.output-format))
+.test.name.176 := qtest-arm/npcm7xx_gpio-test
+.test.driver.176 := tap
+.test.env.176 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.176 := tests/qtest/npcm7xx_gpio-test --tap -k
+.test.deps.176 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/npcm7xx_gpio-test pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-176
+run-test-176: $(.test.deps.176)
+	@$(call .test.run,176,$(.test.output-format))
+.test.name.177 := qtest-arm/npcm7xx_rng-test
+.test.driver.177 := tap
+.test.env.177 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.177 := tests/qtest/npcm7xx_rng-test --tap -k
+.test.deps.177 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/npcm7xx_rng-test pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-177
+run-test-177: $(.test.deps.177)
+	@$(call .test.run,177,$(.test.output-format))
+.test.name.178 := qtest-arm/npcm7xx_smbus-test
+.test.driver.178 := tap
+.test.env.178 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.178 := tests/qtest/npcm7xx_smbus-test --tap -k
+.test.deps.178 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/npcm7xx_smbus-test pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-178
+run-test-178: $(.test.deps.178)
+	@$(call .test.run,178,$(.test.output-format))
+.test.name.179 := qtest-arm/npcm7xx_timer-test
+.test.driver.179 := tap
+.test.env.179 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.179 := tests/qtest/npcm7xx_timer-test --tap -k
+.test.deps.179 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/npcm7xx_timer-test pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-179
+run-test-179: $(.test.deps.179)
+	@$(call .test.run,179,$(.test.output-format))
+.test.name.180 := qtest-arm/npcm7xx_watchdog_timer-test
+.test.driver.180 := tap
+.test.env.180 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.180 := tests/qtest/npcm7xx_watchdog_timer-test --tap -k
+.test.deps.180 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/npcm7xx_watchdog_timer-test pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-180
+run-test-180: $(.test.deps.180)
+	@$(call .test.run,180,$(.test.output-format))
+.test.name.181 := qtest-arm/npcm7xx_emc-test
+.test.driver.181 := tap
+.test.env.181 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.181 := tests/qtest/npcm7xx_emc-test --tap -k
+.test.deps.181 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd tests/qtest/npcm7xx_emc-test qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-181
+run-test-181: $(.test.deps.181)
+	@$(call .test.run,181,$(.test.output-format))
+.test.name.182 := qtest-arm/arm-cpu-features
+.test.driver.182 := tap
+.test.env.182 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.182 := tests/qtest/arm-cpu-features --tap -k
+.test.deps.182 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd tests/qtest/arm-cpu-features pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-182
+run-test-182: $(.test.deps.182)
+	@$(call .test.run,182,$(.test.output-format))
+.test.name.183 := qtest-arm/microbit-test
+.test.driver.183 := tap
+.test.env.183 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.183 := tests/qtest/microbit-test --tap -k
+.test.deps.183 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd tests/qtest/microbit-test qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-183
+run-test-183: $(.test.deps.183)
+	@$(call .test.run,183,$(.test.output-format))
+.test.name.184 := qtest-arm/test-arm-mptimer
+.test.driver.184 := tap
+.test.env.184 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.184 := tests/qtest/test-arm-mptimer --tap -k
+.test.deps.184 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/test-arm-mptimer pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-184
+run-test-184: $(.test.deps.184)
+	@$(call .test.run,184,$(.test.output-format))
+.test.name.185 := qtest-arm/hexloader-test
+.test.driver.185 := tap
+.test.env.185 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.185 := tests/qtest/hexloader-test --tap -k
+.test.deps.185 := tests/qtest/hexloader-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-185
+run-test-185: $(.test.deps.185)
+	@$(call .test.run,185,$(.test.output-format))
+.test.name.186 := qtest-arm/fuzz-megasas-test
+.test.driver.186 := tap
+.test.env.186 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.186 := tests/qtest/fuzz-megasas-test --tap -k
+.test.deps.186 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/fuzz-megasas-test pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-186
+run-test-186: $(.test.deps.186)
+	@$(call .test.run,186,$(.test.output-format))
+.test.name.187 := qtest-arm/fuzz-virtio-scsi-test
+.test.driver.187 := tap
+.test.env.187 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.187 := tests/qtest/fuzz-virtio-scsi-test --tap -k
+.test.deps.187 := pc-bios/edk2-i386-secure-code.fd tests/qtest/fuzz-virtio-scsi-test pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-187
+run-test-187: $(.test.deps.187)
+	@$(call .test.run,187,$(.test.output-format))
+.test.name.188 := qtest-arm/fuzz-sb16-test
+.test.driver.188 := tap
+.test.env.188 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.188 := tests/qtest/fuzz-sb16-test --tap -k
+.test.deps.188 := tests/qtest/fuzz-sb16-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-188
+run-test-188: $(.test.deps.188)
+	@$(call .test.run,188,$(.test.output-format))
+.test.name.189 := qtest-arm/fuzz-sdcard-test
+.test.driver.189 := tap
+.test.env.189 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.189 := tests/qtest/fuzz-sdcard-test --tap -k
+.test.deps.189 := tests/qtest/fuzz-sdcard-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-189
+run-test-189: $(.test.deps.189)
+	@$(call .test.run,189,$(.test.output-format))
+.test.name.190 := qtest-arm/cdrom-test
+.test.driver.190 := tap
+.test.env.190 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.190 := tests/qtest/cdrom-test --tap -k
+.test.deps.190 := pc-bios/edk2-i386-secure-code.fd tests/qtest/cdrom-test pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-190
+run-test-190: $(.test.deps.190)
+	@$(call .test.run,190,$(.test.output-format))
+.test.name.191 := qtest-arm/device-introspect-test
+.test.driver.191 := tap
+.test.env.191 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.191 := tests/qtest/device-introspect-test --tap -k
+.test.deps.191 := tests/qtest/device-introspect-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-191
+run-test-191: $(.test.deps.191)
+	@$(call .test.run,191,$(.test.output-format))
+.test.name.192 := qtest-arm/machine-none-test
+.test.driver.192 := tap
+.test.env.192 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.192 := tests/qtest/machine-none-test --tap -k
+.test.deps.192 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd tests/qtest/machine-none-test pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-192
+run-test-192: $(.test.deps.192)
+	@$(call .test.run,192,$(.test.output-format))
+.test.name.193 := qtest-arm/qmp-test
+.test.driver.193 := tap
+.test.env.193 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.193 := tests/qtest/qmp-test --tap -k
+.test.deps.193 := tests/qtest/qmp-test pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-193
+run-test-193: $(.test.deps.193)
+	@$(call .test.run,193,$(.test.output-format))
+.test.name.194 := qtest-arm/qmp-cmd-test
+.test.driver.194 := tap
+.test.env.194 := $(.test.env) QTEST_QEMU_IMG=./qemu-img G_TEST_DBUS_DAEMON=/home/mypc/Tools/diff/qemu-6.2.0/tests/dbus-vmstate-daemon.sh QTEST_QEMU_BINARY=./qemu-system-arm QTEST_QEMU_STORAGE_DAEMON_BINARY=./storage-daemon/qemu-storage-daemon
+.test.cmd.194 := tests/qtest/qmp-cmd-test --tap -k
+.test.deps.194 := pc-bios/edk2-i386-secure-code.fd pc-bios/edk2-i386-code.fd pc-bios/edk2-i386-vars.fd pc-bios/edk2-aarch64-code.fd pc-bios/edk2-x86_64-code.fd tests/qtest/qmp-cmd-test pc-bios/edk2-arm-code.fd qemu-system-arm pc-bios/edk2-x86_64-secure-code.fd pc-bios/edk2-arm-vars.fd storage-daemon/qemu-storage-daemon qemu-img
+.PHONY: run-test-194
+run-test-194: $(.test.deps.194)
+	@$(call .test.run,194,$(.test.output-format))
+.test.dir.195 := /home/mypc/Tools/diff/qemu-6.2.0/tests/decode
+.test.name.195 := decodetree
+.test.driver.195 := exitcode
+.test.env.195 := $(.test.env) 
+.test.cmd.195 := ../../../../../../../bin/sh /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/decode/check.sh '/usr/bin/python3 -B' /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/../scripts/decodetree.py
+.test.deps.195 := 
+.PHONY: run-test-195
+run-test-195: $(.test.deps.195)
+	@$(call .test.run,195,$(.test.output-format))
+.test.name.196 := fp-test-float-to-float
+.test.driver.196 := exitcode
+.test.env.196 := $(.test.env) 
+.test.cmd.196 := tests/fp/fp-test -s -l 1 -r all f16_to_f32 f16_to_f64 f16_to_extF80 f16_to_f128 f32_to_f16 f32_to_f64 f32_to_extF80 f64_to_f16 f64_to_f32 extF80_to_f16 extF80_to_f32 extF80_to_f64 extF80_to_f128 f128_to_f16
+.test.deps.196 := tests/fp/fp-test
+.PHONY: run-test-196
+run-test-196: $(.test.deps.196)
+	@$(call .test.run,196,$(.test.output-format))
+.test.name.197 := fp-test-float-to-int
+.test.driver.197 := exitcode
+.test.env.197 := $(.test.env) 
+.test.cmd.197 := tests/fp/fp-test -s -l 1 -r all f16_to_i32 f16_to_i32_r_minMag f32_to_i32 f32_to_i32_r_minMag f64_to_i32 f64_to_i32_r_minMag extF80_to_i32 extF80_to_i32_r_minMag f128_to_i32 f128_to_i32_r_minMag f16_to_i64 f16_to_i64_r_minMag f32_to_i64 f32_to_i64_r_minMag f64_to_i64 f64_to_i64_r_minMag extF80_to_i64 extF80_to_i64_r_minMag f128_to_i64 f128_to_i64_r_minMag
+.test.deps.197 := tests/fp/fp-test
+.PHONY: run-test-197
+run-test-197: $(.test.deps.197)
+	@$(call .test.run,197,$(.test.output-format))
+.test.name.198 := fp-test-float-to-uint
+.test.driver.198 := exitcode
+.test.env.198 := $(.test.env) 
+.test.cmd.198 := tests/fp/fp-test -s -l 1 -r all f16_to_ui32 f16_to_ui32_r_minMag f32_to_ui32 f32_to_ui32_r_minMag f64_to_ui32 f64_to_ui32_r_minMag extF80_to_ui32 extF80_to_ui32_r_minMag f128_to_ui32 f128_to_ui32_r_minMag f16_to_ui64 f16_to_ui64_r_minMag f32_to_ui64 f32_to_ui64_r_minMag f64_to_ui64 f64_to_ui64_r_minMag extF80_to_ui64 extF80_to_ui64_r_minMag f128_to_ui64 f128_to_ui64_r_minMag
+.test.deps.198 := tests/fp/fp-test
+.PHONY: run-test-198
+run-test-198: $(.test.deps.198)
+	@$(call .test.run,198,$(.test.output-format))
+.test.name.199 := fp-test-int-to-float
+.test.driver.199 := exitcode
+.test.env.199 := $(.test.env) 
+.test.cmd.199 := tests/fp/fp-test -s -l 1 -r all i32_to_f16 i64_to_f16 i32_to_f32 i64_to_f32 i32_to_f64 i64_to_f64 i32_to_extF80 i64_to_extF80 i32_to_f128 i64_to_f128
+.test.deps.199 := tests/fp/fp-test
+.PHONY: run-test-199
+run-test-199: $(.test.deps.199)
+	@$(call .test.run,199,$(.test.output-format))
+.test.name.200 := fp-test-round-to-integer
+.test.driver.200 := exitcode
+.test.env.200 := $(.test.env) 
+.test.cmd.200 := tests/fp/fp-test -s -l 1 -r all f16_roundToInt f32_roundToInt f64_roundToInt extF80_roundToInt f128_roundToInt
+.test.deps.200 := tests/fp/fp-test
+.PHONY: run-test-200
+run-test-200: $(.test.deps.200)
+	@$(call .test.run,200,$(.test.output-format))
+.test.name.201 := fp-test-uint-to-float
+.test.driver.201 := exitcode
+.test.env.201 := $(.test.env) 
+.test.cmd.201 := tests/fp/fp-test -s -l 1 -r all ui32_to_f16 ui64_to_f16 ui32_to_f32 ui64_to_f32 ui32_to_f64 ui64_to_f64 ui64_to_f128 ui32_to_extF80 ui64_to_extF80
+.test.deps.201 := tests/fp/fp-test
+.PHONY: run-test-201
+run-test-201: $(.test.deps.201)
+	@$(call .test.run,201,$(.test.output-format))
+.test.name.202 := fp-test-add
+.test.driver.202 := exitcode
+.test.env.202 := $(.test.env) 
+.test.cmd.202 := tests/fp/fp-test -s -l 1 -r all f16_add f32_add f64_add f128_add extF80_add
+.test.deps.202 := tests/fp/fp-test
+.PHONY: run-test-202
+run-test-202: $(.test.deps.202)
+	@$(call .test.run,202,$(.test.output-format))
+.test.name.203 := fp-test-div
+.test.driver.203 := exitcode
+.test.env.203 := $(.test.env) 
+.test.cmd.203 := tests/fp/fp-test -s -l 1 -r all f16_div f32_div f64_div f128_div extF80_div
+.test.deps.203 := tests/fp/fp-test
+.PHONY: run-test-203
+run-test-203: $(.test.deps.203)
+	@$(call .test.run,203,$(.test.output-format))
+.test.name.204 := fp-test-eq_signaling
+.test.driver.204 := exitcode
+.test.env.204 := $(.test.env) 
+.test.cmd.204 := tests/fp/fp-test -s -l 1 -r all f16_eq_signaling f32_eq_signaling f64_eq_signaling f128_eq_signaling extF80_eq_signaling
+.test.deps.204 := tests/fp/fp-test
+.PHONY: run-test-204
+run-test-204: $(.test.deps.204)
+	@$(call .test.run,204,$(.test.output-format))
+.test.name.205 := fp-test-le
+.test.driver.205 := exitcode
+.test.env.205 := $(.test.env) 
+.test.cmd.205 := tests/fp/fp-test -s -l 1 -r all f16_le f32_le f64_le f128_le extF80_le
+.test.deps.205 := tests/fp/fp-test
+.PHONY: run-test-205
+run-test-205: $(.test.deps.205)
+	@$(call .test.run,205,$(.test.output-format))
+.test.name.206 := fp-test-le_quiet
+.test.driver.206 := exitcode
+.test.env.206 := $(.test.env) 
+.test.cmd.206 := tests/fp/fp-test -s -l 1 -r all f16_le_quiet f32_le_quiet f64_le_quiet f128_le_quiet extF80_le_quiet
+.test.deps.206 := tests/fp/fp-test
+.PHONY: run-test-206
+run-test-206: $(.test.deps.206)
+	@$(call .test.run,206,$(.test.output-format))
+.test.name.207 := fp-test-lt_quiet
+.test.driver.207 := exitcode
+.test.env.207 := $(.test.env) 
+.test.cmd.207 := tests/fp/fp-test -s -l 1 -r all f16_lt_quiet f32_lt_quiet f64_lt_quiet f128_lt_quiet extF80_lt_quiet
+.test.deps.207 := tests/fp/fp-test
+.PHONY: run-test-207
+run-test-207: $(.test.deps.207)
+	@$(call .test.run,207,$(.test.output-format))
+.test.name.208 := fp-test-mul
+.test.driver.208 := exitcode
+.test.env.208 := $(.test.env) 
+.test.cmd.208 := tests/fp/fp-test -s -l 1 -r all f16_mul f32_mul f64_mul f128_mul extF80_mul
+.test.deps.208 := tests/fp/fp-test
+.PHONY: run-test-208
+run-test-208: $(.test.deps.208)
+	@$(call .test.run,208,$(.test.output-format))
+.test.name.209 := fp-test-rem
+.test.driver.209 := exitcode
+.test.env.209 := $(.test.env) 
+.test.cmd.209 := tests/fp/fp-test -s -l 1 -r all f16_rem f32_rem f64_rem f128_rem extF80_rem
+.test.deps.209 := tests/fp/fp-test
+.PHONY: run-test-209
+run-test-209: $(.test.deps.209)
+	@$(call .test.run,209,$(.test.output-format))
+.test.name.210 := fp-test-sqrt
+.test.driver.210 := exitcode
+.test.env.210 := $(.test.env) 
+.test.cmd.210 := tests/fp/fp-test -s -l 1 -r all f16_sqrt f32_sqrt f64_sqrt f128_sqrt extF80_sqrt
+.test.deps.210 := tests/fp/fp-test
+.PHONY: run-test-210
+run-test-210: $(.test.deps.210)
+	@$(call .test.run,210,$(.test.output-format))
+.test.name.211 := fp-test-sub
+.test.driver.211 := exitcode
+.test.env.211 := $(.test.env) 
+.test.cmd.211 := tests/fp/fp-test -s -l 1 -r all f16_sub f32_sub f64_sub f128_sub extF80_sub
+.test.deps.211 := tests/fp/fp-test
+.PHONY: run-test-211
+run-test-211: $(.test.deps.211)
+	@$(call .test.run,211,$(.test.output-format))
+.test.name.212 := fp-test-mulAdd
+.test.driver.212 := exitcode
+.test.env.212 := $(.test.env) 
+.test.cmd.212 := tests/fp/fp-test -s -l 1 f16_mulAdd f32_mulAdd f64_mulAdd f128_mulAdd
+.test.deps.212 := tests/fp/fp-test
+.PHONY: run-test-212
+run-test-212: $(.test.deps.212)
+	@$(call .test.run,212,$(.test.output-format))
+.test.name.213 := fp-test-log2
+.test.driver.213 := exitcode
+.test.env.213 := $(.test.env) 
+.test.cmd.213 := tests/fp/fp-test-log2
+.test.deps.213 := tests/fp/fp-test-log2
+.PHONY: run-test-213
+run-test-213: $(.test.deps.213)
+	@$(call .test.run,213,$(.test.output-format))
+.test.name.214 := QAPI schema regression tests
+.test.driver.214 := exitcode
+.test.env.214 := $(.test.env) PYTHONPATH=/home/mypc/Tools/diff/qemu-6.2.0/scripts PYTHONIOENCODING=utf-8
+.test.cmd.214 := ../../../../../../usr/bin/python3 /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/test-qapi.py /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/alternate-any.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/alternate-array.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/alternate-base.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/alternate-branch-if-invalid.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/alternate-clash.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/alternate-conflict-dict.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/alternate-conflict-enum-bool.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/alternate-conflict-enum-int.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/alternate-conflict-string.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/alternate-conflict-bool-string.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/alternate-conflict-num-string.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/alternate-data-invalid.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/alternate-empty.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/alternate-invalid-dict.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/alternate-nested.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/alternate-unknown.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/args-alternate.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/args-any.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/args-array-empty.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/args-array-unknown.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/args-bad-boxed.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/args-boxed-anon.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/args-boxed-string.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/args-int.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/args-invalid.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/args-member-array-bad.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/args-member-case.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/args-member-unknown.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/args-union.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/args-unknown.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/bad-base.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/bad-data.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/bad-ident.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/bad-if.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/bad-if-all.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/bad-if-empty.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/bad-if-empty-list.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/bad-if-key.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/bad-if-keys.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/bad-if-list.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/bad-if-not.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/bad-type-bool.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/bad-type-dict.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/bad-type-int.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/base-cycle-direct.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/base-cycle-indirect.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/command-int.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/comments.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-bad-alternate-member.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-bad-boxed-command-arg.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-bad-command-arg.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-bad-enum-member.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-bad-event-arg.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-bad-feature.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-bad-indent.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-bad-section.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-bad-symbol.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-bad-union-member.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-before-include.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-before-pragma.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-duplicated-arg.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-duplicated-return.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-duplicated-since.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-empty-arg.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-empty-section.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-empty-symbol.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-good.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-interleaved-section.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-invalid-end.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-invalid-end2.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-invalid-return.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-invalid-section.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-invalid-start.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-missing-colon.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-missing-expr.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-missing-space.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-missing.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-no-symbol.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/doc-undoc-feature.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/double-type.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/duplicate-key.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/empty.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/enum-bad-member.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/enum-bad-name.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/enum-bad-prefix.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/enum-clash-member.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/enum-dict-member-unknown.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/enum-if-invalid.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/enum-int-member.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/enum-member-case.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/enum-missing-data.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/enum-wrong-data.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/event-boxed-empty.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/event-case.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/event-member-invalid-dict.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/event-nest-struct.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/features-bad-type.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/features-deprecated-type.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/features-duplicate-name.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/features-if-invalid.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/features-missing-name.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/features-name-bad-type.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/features-no-list.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/features-unknown-key.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/funny-char.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/funny-word.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/ident-with-escape.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/include-before-err.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/include-cycle.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/include-extra-junk.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/include-nested-err.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/include-no-file.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/include-non-file.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/include-repetition.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/include-self-cycle.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/include-simple.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/indented-expr.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/leading-comma-list.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/leading-comma-object.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/missing-array-rsqb.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/missing-colon.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/missing-comma-list.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/missing-comma-object.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/missing-object-member-element.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/missing-type.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/nested-struct-data.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/nested-struct-data-invalid-dict.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/non-objects.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/oob-coroutine.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/oob-test.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/allow-preconfig-test.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/pragma-extra-junk.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/pragma-non-dict.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/pragma-unknown.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/pragma-value-not-bool.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/pragma-value-not-list-of-str.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/pragma-value-not-list.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/qapi-schema-test.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/quoted-structural-chars.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/redefined-command.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/redefined-event.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/redefined-predefined.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/redefined-type.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/reserved-command-q.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/reserved-enum-q.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/reserved-member-has.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/reserved-member-q.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/reserved-member-u.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/reserved-member-underscore.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/reserved-type-list.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/returns-alternate.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/returns-array-bad.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/returns-bad-type.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/returns-dict.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/returns-unknown.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/string-code-point-31.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/string-code-point-127.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/struct-base-clash-deep.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/struct-base-clash.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/struct-data-invalid.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/struct-member-if-invalid.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/struct-member-invalid-dict.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/struct-member-invalid.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/struct-member-name-clash.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/trailing-comma-list.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/trailing-comma-object.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/type-bypass-bad-gen.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/type-case.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/unclosed-list.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/unclosed-object.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/unclosed-string.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-array-branch.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-bad-base.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-bad-discriminator.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-base-any.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-base-empty.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-base-no-discriminator.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-base-union.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-branch-if-invalid.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-branch-invalid-dict.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-clash-member.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-discriminator-bad-name.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-empty.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-inline-invalid-dict.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-int-branch.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-invalid-base.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-invalid-branch-key.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-invalid-data.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-invalid-discriminator.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-invalid-if-discriminator.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-no-base.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-optional-discriminator.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-string-discriminator.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/union-unknown.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/unknown-escape.json /home/mypc/Tools/diff/qemu-6.2.0/build/../tests/qapi-schema/unknown-expr-key.json /home/mypc/Tools/diff/qemu-6.2.0/tests/qapi-schema/missing-schema.json
+.test.deps.214 := 
+.PHONY: run-test-214
+run-test-214: $(.test.deps.214)
+	@$(call .test.run,214,$(.test.output-format))
+.PHONY: check check-report.tap check-report-qtest.tap check-report-qtest-i386.tap check-report-qtest-mips.tap check-report-qtest-arm.tap check-report-unit.tap check-report-decodetree.tap check-report-softfloat.tap check-report-softfloat-conv.tap check-report-softfloat-ops.tap check-report-softfloat-compare.tap check-report-qapi-schema.tap check-report-qapi-frontend.tap
+check: run-tests
+check-report.tap check-report-qtest.tap check-report-qtest-i386.tap check-report-qtest-mips.tap check-report-qtest-arm.tap check-report-unit.tap check-report-decodetree.tap check-report-softfloat.tap check-report-softfloat-conv.tap check-report-softfloat-ops.tap check-report-softfloat-compare.tap check-report-qapi-schema.tap check-report-qapi-frontend.tap: check-report%.tap: all
+	$(MAKE) .test.output-format=tap --quiet -Otarget V=1 check$* | ./scripts/tap-merge.pl | tee "$@" \
+              | ./scripts/tap-driver.pl $(if $(V),, --show-failures-only)
+.test.quick.check-qtest := 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191 192 193 194
+.test.slow.check-qtest := $(.test.quick.check-qtest) 
+check-build: tests/qtest/fdc-test tests/qtest/npcm7xx_rng-test tests/qtest/ipmi-bt-test tests/qtest/lpc-ich9-test tests/qtest/fuzz-virtio-scsi-test tests/qtest/qmp-test tests/qtest/npcm7xx_smbus-test tests/qtest/numa-test tests/qtest/machine-none-test tests/qtest/qos-test tests/qtest/bios-tables-test tests/qtest/ioh3420-test tests/qtest/arm-cpu-features tests/qtest/npcm7xx_adc-test tests/qtest/microbit-test tests/qtest/cmsdk-apb-dualtimer-test tests/qtest/test-x86-cpuid-compat tests/qtest/usb-hcd-xhci-test tests/qtest/cmsdk-apb-watchdog-test tests/qtest/test-filter-mirror tests/qtest/cmsdk-apb-timer-test tests/qtest/fw_cfg-test tests/qtest/pflash-cfi02-test tests/qtest/intel-hda-test tests/qtest/pxe-test tests/qtest/npcm7xx_emc-test tests/qtest/hexloader-test tests/qtest/ide-test tests/qtest/usb-hcd-uhci-test tests/qtest/device-introspect-test tests/qtest/i82801b11-test tests/qtest/test-arm-mptimer tests/qtest/fuzz-e1000e-test tests/qtest/boot-serial-test tests/qtest/sse-timer-test tests/qtest/pvpanic-test tests/qtest/test-hmp tests/qtest/fuzz-sdcard-test tests/qtest/test-netfilter tests/qtest/tco-test tests/qtest/migration-test tests/qtest/i440fx-test tests/qtest/am53c974-test tests/qtest/boot-order-test tests/qtest/usb-hcd-ehci-test tests/qtest/wdt_ib700-test tests/qtest/display-vga-test tests/qtest/hd-geo-test tests/qtest/drive_del-test tests/qtest/ipmi-kcs-test tests/qtest/qom-test tests/qtest/ahci-test tests/qtest/rtc-test tests/qtest/npcm7xx_pwm-test tests/qtest/tpm-crb-test tests/qtest/cpu-plug-test tests/qtest/vmgenid-test tests/qtest/aspeed_smc-test tests/qtest/ivshmem-test tests/qtest/endianness-test tests/qtest/device-plug-test tests/qtest/cdrom-test tests/qtest/npcm7xx_timer-test tests/qtest/tpm-tis-swtpm-test tests/qtest/rtl8139-test tests/qtest/test-filter-redirector tests/qtest/npcm7xx_watchdog_timer-test tests/qtest/fuzz-sb16-test tests/qtest/aspeed_hace-test tests/qtest/pvpanic-pci-test tests/qtest/fuzz-megasas-test tests/qtest/npcm7xx_gpio-test tests/qtest/tpm-tis-test tests/qtest/tpm-crb-swtpm-test tests/qtest/q35-test tests/qtest/qmp-cmd-test
+.PHONY: check-qtest
+.PHONY: check-report-qtest.tap
+check-qtest: run-tests
+ifneq ($(filter check-qtest check, $(MAKECMDGOALS)),)
+.tests += $(.test.$(SPEED).check-qtest)
+endif
+all-check-targets += check-qtest
+.test.quick.check-qtest-i386 := 1 4 6 7 10 11 12 13 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156
+.test.slow.check-qtest-i386 := $(.test.quick.check-qtest-i386) 
+check-build: tests/qtest/fdc-test tests/qtest/ipmi-bt-test tests/qtest/lpc-ich9-test tests/qtest/fuzz-virtio-scsi-test tests/qtest/qmp-test tests/qtest/numa-test tests/qtest/machine-none-test tests/qtest/qos-test tests/qtest/bios-tables-test tests/qtest/ioh3420-test tests/qtest/test-x86-cpuid-compat tests/qtest/usb-hcd-xhci-test tests/qtest/test-filter-mirror tests/qtest/fw_cfg-test tests/qtest/intel-hda-test tests/qtest/pxe-test tests/qtest/ide-test tests/qtest/usb-hcd-uhci-test tests/qtest/device-introspect-test tests/qtest/i82801b11-test tests/qtest/fuzz-e1000e-test tests/qtest/boot-serial-test tests/qtest/pvpanic-test tests/qtest/test-hmp tests/qtest/fuzz-sdcard-test tests/qtest/test-netfilter tests/qtest/tco-test tests/qtest/migration-test tests/qtest/i440fx-test tests/qtest/am53c974-test tests/qtest/boot-order-test tests/qtest/usb-hcd-ehci-test tests/qtest/wdt_ib700-test tests/qtest/display-vga-test tests/qtest/hd-geo-test tests/qtest/drive_del-test tests/qtest/ipmi-kcs-test tests/qtest/qom-test tests/qtest/ahci-test tests/qtest/rtc-test tests/qtest/cpu-plug-test tests/qtest/tpm-crb-test tests/qtest/q35-test tests/qtest/vmgenid-test tests/qtest/ivshmem-test tests/qtest/endianness-test tests/qtest/device-plug-test tests/qtest/cdrom-test tests/qtest/tpm-tis-swtpm-test tests/qtest/rtl8139-test tests/qtest/test-filter-redirector tests/qtest/fuzz-sb16-test tests/qtest/pvpanic-pci-test tests/qtest/fuzz-megasas-test tests/qtest/tpm-tis-test tests/qtest/tpm-crb-swtpm-test tests/qtest/qmp-cmd-test
+.PHONY: check-qtest-i386
+.PHONY: check-report-qtest-i386.tap
+check-qtest-i386: run-tests
+ifneq ($(filter check-qtest-i386 check, $(MAKECMDGOALS)),)
+.tests += $(.test.$(SPEED).check-qtest-i386)
+endif
+all-check-targets += check-qtest-i386
+.test.quick.check-qtest-mips := 2 8 14 157 158 159 160 161 162 163 164 165 166 167
+.test.slow.check-qtest-mips := $(.test.quick.check-qtest-mips) 
+check-build: tests/qtest/qmp-test tests/qtest/fuzz-virtio-scsi-test tests/qtest/device-introspect-test tests/qtest/fuzz-sb16-test tests/qtest/display-vga-test tests/qtest/fuzz-megasas-test tests/qtest/machine-none-test tests/qtest/fuzz-sdcard-test tests/qtest/qom-test tests/qtest/qos-test tests/qtest/qmp-cmd-test tests/qtest/cdrom-test tests/qtest/test-hmp tests/qtest/endianness-test
+.PHONY: check-qtest-mips
+.PHONY: check-report-qtest-mips.tap
+check-qtest-mips: run-tests
+ifneq ($(filter check-qtest-mips check, $(MAKECMDGOALS)),)
+.tests += $(.test.$(SPEED).check-qtest-mips)
+endif
+all-check-targets += check-qtest-mips
+.test.quick.check-qtest-arm := 3 5 9 15 16 168 169 170 171 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191 192 193 194
+.test.slow.check-qtest-arm := $(.test.quick.check-qtest-arm) 
+check-build: tests/qtest/npcm7xx_rng-test tests/qtest/qmp-test tests/qtest/fuzz-virtio-scsi-test tests/qtest/npcm7xx_smbus-test tests/qtest/machine-none-test tests/qtest/qos-test tests/qtest/arm-cpu-features tests/qtest/npcm7xx_adc-test tests/qtest/microbit-test tests/qtest/cmsdk-apb-dualtimer-test tests/qtest/cmsdk-apb-watchdog-test tests/qtest/cmsdk-apb-timer-test tests/qtest/pflash-cfi02-test tests/qtest/hexloader-test tests/qtest/device-introspect-test tests/qtest/boot-serial-test tests/qtest/test-hmp tests/qtest/fuzz-sdcard-test tests/qtest/npcm7xx_emc-test tests/qtest/test-arm-mptimer tests/qtest/qom-test tests/qtest/npcm7xx_pwm-test tests/qtest/aspeed_smc-test tests/qtest/npcm7xx_timer-test tests/qtest/cdrom-test tests/qtest/npcm7xx_watchdog_timer-test tests/qtest/aspeed_hace-test tests/qtest/fuzz-sb16-test tests/qtest/fuzz-megasas-test tests/qtest/npcm7xx_gpio-test tests/qtest/sse-timer-test tests/qtest/qmp-cmd-test
+.PHONY: check-qtest-arm
+.PHONY: check-report-qtest-arm.tap
+check-qtest-arm: run-tests
+ifneq ($(filter check-qtest-arm check, $(MAKECMDGOALS)),)
+.tests += $(.test.$(SPEED).check-qtest-arm)
+endif
+all-check-targets += check-qtest-arm
+.test.quick.check-unit := 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107
+.test.slow.check-unit := $(.test.quick.check-unit) 
+check-build: tests/unit/test-div128 tests/unit/test-timed-average tests/unit/test-qobject-output-visitor tests/unit/test-qemu-opts tests/unit/test-iov tests/unit/test-crypto-pbkdf tests/unit/test-crypto-secret tests/unit/test-block-backend tests/unit/test-qmp-event tests/unit/check-qlit tests/unit/check-qom-proplist tests/unit/check-qnum tests/unit/test-io-channel-buffer tests/unit/test-crypto-hmac tests/unit/test-crypto-tlssession tests/unit/test-yank tests/unit/check-qnull tests/unit/check-qom-interface tests/unit/test-int128 tests/unit/test-char tests/unit/test-aio tests/unit/test-bufferiszero tests/unit/test-authz-list tests/unit/test-crypto-xts tests/unit/test-io-task tests/unit/test-block-iothread tests/unit/test-rcu-tailq tests/unit/check-qlist tests/unit/test-crypto-afsplit tests/unit/test-crypto-block tests/unit/check-qdict tests/unit/test-bdrv-graph-mod tests/unit/test-bitmap tests/unit/test-forward-visitor tests/unit/test-keyval tests/unit/test-logging tests/unit/test-vmstate tests/unit/test-coroutine tests/unit/test-bitcnt tests/unit/test-string-input-visitor tests/unit/test-crypto-hash tests/unit/test-clone-visitor tests/unit/test-rcu-simpleq tests/unit/test-bdrv-drain tests/unit/test-mul64 tests/unit/test-image-locking tests/unit/test-rcu-list tests/unit/check-block-qdict tests/unit/test-io-channel-file tests/unit/test-rcu-slist tests/unit/ptimer-test tests/unit/check-qjson tests/unit/test-qgraph tests/unit/test-throttle tests/unit/test-authz-simple tests/unit/test-qga tests/unit/rcutorture tests/unit/test-hbitmap tests/unit/test-qdev-global-props tests/unit/test-qobject-input-visitor tests/unit/test-qapi-util tests/unit/test-util-sockets tests/unit/test-blockjob tests/unit/check-qobject tests/unit/test-crypto-tlscredsx509 tests/unit/test-qht tests/unit/test-io-channel-tls tests/unit/test-replication tests/unit/test-crypto-cipher tests/unit/test-cutils tests/unit/check-qstring tests/unit/test-write-threshold tests/unit/test-shift128 tests/unit/test-visitor-serialization tests/unit/test-qdist tests/unit/test-aio-multithread tests/unit/test-base64 tests/unit/test-blockjob-txn tests/unit/test-smp-parse tests/unit/test-io-channel-command tests/unit/test-string-output-visitor tests/unit/test-uuid tests/unit/test-io-channel-socket tests/unit/test-qmp-cmds tests/unit/test-x86-cpuid tests/unit/test-thread-pool tests/unit/test-opts-visitor tests/unit/test-crypto-ivgen tests/unit/test-xbzrle tests/unit/test-authz-listfile tests/unit/test-bitops
+.PHONY: check-unit
+.PHONY: check-report-unit.tap
+check-unit: run-tests
+ifneq ($(filter check-unit check, $(MAKECMDGOALS)),)
+.tests += $(.test.$(SPEED).check-unit)
+endif
+all-check-targets += check-unit
+.test.quick.check-decodetree := 195
+.test.slow.check-decodetree := $(.test.quick.check-decodetree) 
+check-build: ../../../../../../bin/sh
+.PHONY: check-decodetree
+.PHONY: check-report-decodetree.tap
+check-decodetree: run-tests
+ifneq ($(filter check-decodetree check, $(MAKECMDGOALS)),)
+.tests += $(.test.$(SPEED).check-decodetree)
+endif
+all-check-targets += check-decodetree
+.test.quick.check-softfloat := 196 197 198 199 200 201 202 203 204 205 206 207 208 209 210 211 213
+.test.slow.check-softfloat := $(.test.quick.check-softfloat) 212
+check-build: tests/fp/fp-test-log2 tests/fp/fp-test
+.PHONY: check-softfloat
+.PHONY: check-report-softfloat.tap
+check-softfloat: run-tests
+ifneq ($(filter check-softfloat check, $(MAKECMDGOALS)),)
+.tests += $(.test.$(SPEED).check-softfloat)
+endif
+all-check-targets += check-softfloat
+.test.quick.check-softfloat-conv := 196 197 198 199 200 201
+.test.slow.check-softfloat-conv := $(.test.quick.check-softfloat-conv) 
+check-build: tests/fp/fp-test
+.PHONY: check-softfloat-conv
+.PHONY: check-report-softfloat-conv.tap
+check-softfloat-conv: run-tests
+ifneq ($(filter check-softfloat-conv check, $(MAKECMDGOALS)),)
+.tests += $(.test.$(SPEED).check-softfloat-conv)
+endif
+all-check-targets += check-softfloat-conv
+.test.quick.check-softfloat-ops := 202 203 208 209 210 211 213
+.test.slow.check-softfloat-ops := $(.test.quick.check-softfloat-ops) 212
+check-build: tests/fp/fp-test-log2 tests/fp/fp-test
+.PHONY: check-softfloat-ops
+.PHONY: check-report-softfloat-ops.tap
+check-softfloat-ops: run-tests
+ifneq ($(filter check-softfloat-ops check, $(MAKECMDGOALS)),)
+.tests += $(.test.$(SPEED).check-softfloat-ops)
+endif
+all-check-targets += check-softfloat-ops
+.test.quick.check-softfloat-compare := 204 205 206 207
+.test.slow.check-softfloat-compare := $(.test.quick.check-softfloat-compare) 
+check-build: tests/fp/fp-test
+.PHONY: check-softfloat-compare
+.PHONY: check-report-softfloat-compare.tap
+check-softfloat-compare: run-tests
+ifneq ($(filter check-softfloat-compare check, $(MAKECMDGOALS)),)
+.tests += $(.test.$(SPEED).check-softfloat-compare)
+endif
+all-check-targets += check-softfloat-compare
+.test.quick.check-qapi-schema := 214
+.test.slow.check-qapi-schema := $(.test.quick.check-qapi-schema) 
+check-build: ../../../../../../usr/bin/python3
+.PHONY: check-qapi-schema
+.PHONY: check-report-qapi-schema.tap
+check-qapi-schema: run-tests
+ifneq ($(filter check-qapi-schema check, $(MAKECMDGOALS)),)
+.tests += $(.test.$(SPEED).check-qapi-schema)
+endif
+all-check-targets += check-qapi-schema
+.test.quick.check-qapi-frontend := 214
+.test.slow.check-qapi-frontend := $(.test.quick.check-qapi-frontend) 
+check-build: ../../../../../../usr/bin/python3
+.PHONY: check-qapi-frontend
+.PHONY: check-report-qapi-frontend.tap
+check-qapi-frontend: run-tests
+ifneq ($(filter check-qapi-frontend check, $(MAKECMDGOALS)),)
+.tests += $(.test.$(SPEED).check-qapi-frontend)
+endif
+all-check-targets += check-qapi-frontend
+.test.name.215 := benchmark-crypto-cipher
+.test.driver.215 := tap
+.test.env.215 := $(.test.env) 
+.test.cmd.215 := tests/bench/benchmark-crypto-cipher --tap -k
+.test.deps.215 := tests/bench/benchmark-crypto-cipher
+.PHONY: run-test-215
+run-test-215: $(.test.deps.215)
+	@$(call .test.run,215,$(.test.output-format))
+.test.name.216 := benchmark-crypto-hash
+.test.driver.216 := tap
+.test.env.216 := $(.test.env) 
+.test.cmd.216 := tests/bench/benchmark-crypto-hash --tap -k
+.test.deps.216 := tests/bench/benchmark-crypto-hash
+.PHONY: run-test-216
+run-test-216: $(.test.deps.216)
+	@$(call .test.run,216,$(.test.output-format))
+.test.name.217 := benchmark-crypto-hmac
+.test.driver.217 := tap
+.test.env.217 := $(.test.env) 
+.test.cmd.217 := tests/bench/benchmark-crypto-hmac --tap -k
+.test.deps.217 := tests/bench/benchmark-crypto-hmac
+.PHONY: run-test-217
+run-test-217: $(.test.deps.217)
+	@$(call .test.run,217,$(.test.output-format))
+.PHONY: bench bench-report.tap bench-report-speed.tap
+bench: run-tests
+bench-report.tap bench-report-speed.tap: bench-report%.tap: all
+	$(MAKE) .test.output-format=tap --quiet -Otarget V=1 bench$* | ./scripts/tap-merge.pl | tee "$@" \
+              | ./scripts/tap-driver.pl $(if $(V),, --show-failures-only)
+.test.quick.bench-speed := 215 216 217
+.test.slow.bench-speed := $(.test.quick.bench-speed) 
+bench-build: tests/bench/benchmark-crypto-hmac tests/bench/benchmark-crypto-hash tests/bench/benchmark-crypto-cipher
+.PHONY: bench-speed
+.PHONY: bench-report-speed.tap
+bench-speed: run-tests
+ifneq ($(filter bench-speed bench, $(MAKECMDGOALS)),)
+.tests += $(.test.$(SPEED).bench-speed)
+endif
+all-bench-targets += bench-speed
+run-tests: $(patsubst %, run-test-%, $(.tests))

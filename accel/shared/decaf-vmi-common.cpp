@@ -377,7 +377,7 @@ int vmi_dispatch_lm(module * m, process *p, gva_t base)	//vmi_dispatch_loadmodul
 
 int vmi_is_module_extract_required()
 {
-	if(LIST_EMPTY(&VMI_callbacks[VMI_LOADMODULE_CB]) && LIST_EMPTY(&VMI_callbacks[VMI_REMOVEMODULE_CB]))
+	if(QLIST_EMPTY(&VMI_callbacks[VMI_LOADMODULE_CB]) && QLIST_EMPTY(&VMI_callbacks[VMI_REMOVEMODULE_CB]))
 		return 0;
 
 	return 1;
@@ -422,6 +422,8 @@ int vmi_unregister_callback(VMI_callback_type_t cb_type, DECAF_handle handle)
 
 void vmi_init(void)
 {
+#ifdef CONFIG_ENABLE_VMI
 	printf("inside vmi init \n");
 	insn_handle_c = decaf_register_callback(DECAF_TLB_EXEC_CB, guest_os_confirm, NULL);
+#endif
 }

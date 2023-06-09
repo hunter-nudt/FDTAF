@@ -21,7 +21,10 @@
 #include "exec/helper-gen.h"
 
 #include "shared/decaf-callback-to-qemu.h"
+#include "shared/decaf-taint-tcg.h"
+#include "shared/decaf-taint-memory.h"
 
+TCGOp *old_first_op;
 
 /* Pairs with tcg_clear_temp_count.
    To be called by #TranslatorOps.{translate_insn,tb_stop} if
@@ -59,6 +62,7 @@ static inline void translator_page_protect(DisasContextBase *dcbase,
 void translator_loop(const TranslatorOps *ops, DisasContextBase *db,
                      CPUState *cpu, TranslationBlock *tb, int max_insns)
 {
+    TCGContext *s = tcg_ctx;
     uint32_t cflags = tb_cflags(tb);
     bool plugin_enabled;
 
@@ -99,8 +103,7 @@ void translator_loop(const TranslatorOps *ops, DisasContextBase *db,
         // /* Running callback function when gen a new instruction */
         // if (decaf_is_callback_needed(DECAF_INSN_BEGIN_CB)) {
         //     gen_helper_decaf_invoke_insn_begin_callback(cpu_env);
-        // }
-		    
+        // }   
         db->num_insns++;
         ops->insn_start(db, cpu);
         tcg_debug_assert(db->is_jmp == DISAS_NEXT);  /* no early exit */
@@ -116,11 +119,14 @@ void translator_loop(const TranslatorOps *ops, DisasContextBase *db,
         if (db->num_insns == db->max_insns && (cflags & CF_LAST_IO)) {
             /* Accept I/O on the last instruction.  */
             gen_io_start();
-            ops->translate_insn(db, cpu);
+            ops->translate_insn(db, cpu);  
         } else {
             /* we should only see CF_MEMI_ONLY for io_recompile */
             tcg_debug_assert(!(cflags & CF_MEMI_ONLY));
             ops->translate_insn(db, cpu);
+            // if (taint_tracking_enabled) {
+            //     optimize_taint(old_first_op);
+            // }
         }
 
         /* Stop translation if translate_insn so indicated.  */
@@ -152,6 +158,11 @@ void translator_loop(const TranslatorOps *ops, DisasContextBase *db,
     /* Emit code to exit the TB, as indicated by db->is_jmp.  */
     ops->tb_stop(db, cpu);
     gen_tb_end(db->tb, db->num_insns);
+
+    old_first_op = QTAILQ_FIRST(&s->ops); 
+    if (taint_tracking_enabled) {
+        optimize_taint(old_first_op);
+    }
 
     if (plugin_enabled) {
         plugin_gen_tb_end(cpu);

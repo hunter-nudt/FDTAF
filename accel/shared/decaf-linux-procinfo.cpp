@@ -44,32 +44,36 @@ gva_t find_taskstruct_from_threadinfo(CPUState * cs, gva_t threadinfo, ProcInfo*
         return (INV_ADDR);
     }
     
-    //iterate through the thread info structure
-    for (i = 0; i < MAX_THREAD_INFO_SEARCH_SIZE; i+= sizeof(target_ptr))
+    if (is_kernel_address(threadinfo))
     {
-        temp = (threadinfo + i);
-        candidate = 0;
-        decaf_read_ptr(cs, temp, &candidate);
-        //if it looks like a kernel address
-        if (is_kernel_address(candidate))
+        //iterate through the thread info structure
+        for (i = 0; i < MAX_THREAD_INFO_SEARCH_SIZE; i+= sizeof(target_ptr))
         {
-        //iterate through the potential task struct 
-            for (j = 0; j < MAX_TASK_STRUCT_SEARCH_SIZE; j+= sizeof(target_ptr))
+            temp = (threadinfo + i);
+            candidate = 0;
+            decaf_read_ptr(cs, temp, &candidate);
+            //if it looks like a kernel address
+            if (is_kernel_address(candidate))
             {
-                temp2 = (candidate + j);
-                //if there is an entry that has the same 
-                // value as threadinfo then we are set
-                uint32_t val = 0;
-                decaf_read_ptr(cs, temp2, &val);
-                if (val == threadinfo)
+            //iterate through the potential task struct 
+                for (j = 0; j < MAX_TASK_STRUCT_SEARCH_SIZE; j+= sizeof(target_ptr))
                 {
-                    pPI->ti_task = i;
-                    pPI->ts_stack = j;
-                    ret = candidate;
+                    temp2 = (candidate + j);
+                    //if there is an entry that has the same 
+                    // value as threadinfo then we are set
+                    uint32_t val = 0;
+                    decaf_read_ptr(cs, temp2, &val);
+                    if (val == threadinfo)
+                    {
+                        pPI->ti_task = i;
+                        pPI->ts_stack = j;
+                        ret = candidate;
+                    }
                 }
             }
-        }
+        }   
     }
+    
     return ret;
 }
 

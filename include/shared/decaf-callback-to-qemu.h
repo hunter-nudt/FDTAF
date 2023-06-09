@@ -47,13 +47,13 @@ extern void helper_decaf_invoke_opcode_range_callback(CPUState *cs, decaf_target
 //This is needed since tlb_exec_cb doesn't go into tb and therefore not in helper.h
 extern void decaf_invoke_tlb_exec_callback(CPUState *cs, gva_t vaddr);
 
-void helper_decaf_invoke_nic_rec_callback(const uint8_t * buf, int size, int cur_pos, int start, int stop);
-void helper_decaf_invoke_nic_send_callback(uint32_t addr, int size, const uint8_t *buf);
-void helper_decaf_invoke_mem_read_callback(gva_t virt_addr,gpa_t phy_addr, unsigned long value, DATA_TYPE data_type);
-void helper_decaf_invoke_mem_write_callback(gva_t virt_addr,gpa_t phy_addr,unsigned long value, DATA_TYPE data_type);
-void helper_decaf_invoke_keystroke_callback(int keycode,uint32_t *taint_mark);
-void helper_decaf_invoke_read_taint_mem(gva_t vaddr,gpa_t paddr,uint32_t size,uint8_t *taint_info);
-void helper_decaf_invoke_write_taint_mem(gva_t vaddr,gpa_t paddr,uint32_t size,uint8_t *taint_info);
+void helper_decaf_invoke_nic_rec_callback(uint8_t * buf, int size, int cur_pos, int start, int stop);
+void helper_decaf_invoke_nic_send_callback(uint32_t addr, int size, uint8_t *buf);
+void helper_decaf_invoke_mem_read_callback(gva_t vaddr, ram_addr_t paddr, unsigned long value, DATA_TYPE data_type);
+void helper_decaf_invoke_mem_write_callback(gva_t vaddr, ram_addr_t paddr, unsigned long value, DATA_TYPE data_type);
+void helper_decaf_invoke_keystroke_callback(int keycode, uint32_t *taint_mark);
+void helper_decaf_invoke_read_taint_mem(gva_t vaddr, ram_addr_t paddr, uint32_t size, uint8_t *taint_info);
+void helper_decaf_invoke_write_taint_mem(gva_t vaddr, ram_addr_t paddr, uint32_t size, uint8_t *taint_info);
 void helper_decaf_invoke_log_pointer_read(gva_t virt_addr,gva_t taint_info);
 void helper_decaf_invoke_log_pointer_write(gva_t virt_addr, gva_t taint_info);
 

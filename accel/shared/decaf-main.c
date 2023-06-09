@@ -7,6 +7,7 @@
 #include "exec/translate-all.h"
 #include "qapi/qapi-types-machine.h"
 #include "accel/tcg/tb-context.h"
+#include "sysemu/runstate.h"
 #include "sysemu/hw_accel.h"
 #if !defined(CONFIG_USER_ONLY)
 #include "hw/boards.h"
@@ -15,6 +16,7 @@
 #include "shared/decaf-callback-to-qemu.h"
 #include "shared/decaf-target.h"
 #include "shared/decaf-linux-vmi.h"
+#include "shared/decaf-taint-memory.h"
 
 
 #define GUEST_OS_THREAD_SIZE 8192
@@ -35,6 +37,30 @@ flush_list flush_list_internal;
 static inline bool tb_htable_cmp(const void *p, const void *d);
 static inline void decaf_tb_flush_block(void *p);
 static inline void decaf_tb_flush_page(void *p);
+
+/* Pause the guest system */
+void decaf_stop_vm(void)
+{
+	if (runstate_is_running()) {
+        vm_stop(RUN_STATE_PAUSED);
+    }
+}
+
+/* Unpause the guest system */
+void decaf_start_vm(void)
+{
+    if (!runstate_is_running()) {
+        vm_start();
+    }
+}
+
+CPUState *decaf_get_current_cpu(void)
+{
+    if (!current_cpu) {
+        return first_cpu;
+    }
+    return current_cpu;
+}
 
 static gpa_t decaf_get_phys_addr_internal(CPUState* cs, gva_t addr)
 {
@@ -61,7 +87,6 @@ static gpa_t decaf_get_phys_addr_internal(CPUState* cs, gva_t addr)
     }
 
     p = (void *)((uintptr_t)addr + entry->addend);
-
     return qemu_ram_addr_from_host_nofail(p);
 }
 
@@ -71,7 +96,7 @@ gpa_t decaf_get_phys_addr(CPUState* cs, gva_t addr)
     hwaddr phys_addr;
 	if (env == NULL )
 	{
-        cs = first_cpu;
+        cs = decaf_get_current_cpu();
         cpu_synchronize_state(cs);
 		env = (CPUArchState *)cs->env_ptr; 
 	}
@@ -98,7 +123,7 @@ DECAF_errno_t decaf_memory_rw(CPUState* cs, decaf_target_ulong addr, void *buf, 
 
 	if (cs == NULL ) 
     {
-		cs = first_cpu;/* AWH cpu_single_env ? cpu_single_env :*/
+        cs = decaf_get_current_cpu();
         cpu_synchronize_state(cs);
 	}
 
@@ -304,6 +329,7 @@ void decaf_init(void)
 {
 	decaf_callback_init();
 	vmi_init();
+    shadow_memory_init();
     // decaf_vm_compress_init();
 	// function_map_init();
 	// init_hookapi();
@@ -350,22 +376,23 @@ void decaf_bdrv_open(int index, void *opaque)
 }
 #endif
 
-void decaf_nic_receive(const uint8_t * buf, const int size, const int cur_pos, const int start, const int stop)
+void decaf_nic_receive(uint8_t * buf, int size, int cur_pos, int start, int stop)
 {
     if (decaf_is_callback_needed(DECAF_NIC_REC_CB))
 		helper_decaf_invoke_nic_rec_callback(buf, size, cur_pos, start, stop);
 }
 
-void decaf_nic_send(const uint32_t addr, const int size, const uint8_t * buf)
+void decaf_nic_send(uint32_t addr, int size, uint8_t * buf)
 {
     if (decaf_is_callback_needed(DECAF_NIC_SEND_CB))
 		helper_decaf_invoke_nic_send_callback(addr, size, buf);
 }
 
-void decaf_nic_in(const uint32_t addr, const int size)
+void decaf_nic_in(uint32_t addr, int size)
 {
 // #ifdef CONFIG_TCG_TAINT
-	// CPUState *cs = first_cpu;
+	// CPUState cs = decaf_get_current_cpu();
+    // cpu_synchronize_state(cs);
     // CPUArchState *env = (CPUArchState *)cs->env_ptr;
 	// taintcheck_nic_writebuf(addr, size, (uint8_t *) &(env->tempidx));
 // #endif
@@ -374,7 +401,8 @@ void decaf_nic_in(const uint32_t addr, const int size)
 void decaf_nic_out(const uint32_t addr, const int size)
 {
 // #ifdef CONFIG_TCG_TAINT
-    // CPUState *cs = first_cpu;
+	// CPUState cs = decaf_get_current_cpu();
+    // cpu_synchronize_state(cs);
     // CPUArchState *env = (CPUArchState *)cs->env_ptr;
     // taintcheck_nic_readbuf(addr, size, (uint8_t *) &(env->tempidx));
 // #endif
@@ -469,3 +497,5 @@ void decaf_nic_out(const uint32_t addr, const int size)
 // {
 
 // }
+
+

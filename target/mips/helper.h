@@ -1,3 +1,5 @@
+DEF_HELPER_3(taint_ld_mmu, void, env, tl, i32)
+DEF_HELPER_3(taint_st_mmu, void, env, tl, i32)
 DEF_HELPER_2(decaf_invoke_block_begin_callback, void, cs, tb)
 
 DEF_HELPER_3(raise_exception_err, noreturn, env, i32, int)

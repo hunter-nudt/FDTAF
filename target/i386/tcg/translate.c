@@ -32,6 +32,8 @@
 
 #include "exec/log.h"
 
+#include "shared/decaf-taint-tcg.h"
+
 #define PREFIX_REPZ   0x01
 #define PREFIX_REPNZ  0x02
 #define PREFIX_LOCK   0x04
@@ -69,6 +71,16 @@ static TCGv cpu_regs[CPU_NB_REGS];
 static TCGv cpu_seg_base[6];
 static TCGv_i64 cpu_bndl[4];
 static TCGv_i64 cpu_bndu[4];
+
+
+#ifdef CONFIG_TCG_TAINT
+static TCGv shadow_cpu_cc_dst, shadow_cpu_cc_src, shadow_cpu_cc_src2;
+static TCGv_i32 shadow_cpu_cc_op;
+static TCGv shadow_cpu_regs[CPU_NB_REGS];
+static TCGv shadow_cpu_seg_base[6];
+static TCGv_i64 shadow_cpu_bndl[4];
+static TCGv_i64 shadow_cpu_bndu[4];
+#endif /* CONFIG_TCG_TAINT */
 
 #include "exec/gen-icount.h"
 
@@ -8513,21 +8525,79 @@ void tcg_x86_init(void)
     static const char bnd_regu_names[4][8] = {
         "bnd0_ub", "bnd1_ub", "bnd2_ub", "bnd3_ub"
     };
+
+#ifdef CONFIG_TCG_TAINT
+    static const char taint_reg_names[CPU_NB_REGS][10] = {
+#ifdef TARGET_X86_64
+        [R_EAX] = "taint_rax",
+        [R_EBX] = "taint_rbx",
+        [R_ECX] = "taint_rcx",
+        [R_EDX] = "taint_rdx",
+        [R_ESI] = "taint_rsi",
+        [R_EDI] = "taint_rdi",
+        [R_EBP] = "taint_rbp",
+        [R_ESP] = "taint_rsp",
+        [8]  = "taint_r8",
+        [9]  = "taint_r9",
+        [10] = "taint_r10",
+        [11] = "taint_r11",
+        [12] = "taint_r12",
+        [13] = "taint_r13",
+        [14] = "taint_r14",
+        [15] = "taint_r15",
+#else
+        [R_EAX] = "taint_eax",
+        [R_EBX] = "taint_ebx",
+        [R_ECX] = "taint_ecx",
+        [R_EDX] = "taint_edx",
+        [R_ESI] = "taint_esi",
+        [R_EDI] = "taint_edi",
+        [R_EBP] = "taint_ebp",
+        [R_ESP] = "taint_esp",
+#endif
+    };
+    static const char taint_seg_base_names[6][14] = {
+        [R_CS] = "taint_cs_base",
+        [R_DS] = "taint_ds_base",
+        [R_ES] = "taint_es_base",
+        [R_FS] = "taint_fs_base",
+        [R_GS] = "taint_gs_base",
+        [R_SS] = "taint_ss_base",
+    };
+    static const char taint_bnd_regl_names[4][14] = {
+        "taint_bnd0_lb", "taint_bnd1_lb", "taint_bnd2_lb", "taint_bnd3_lb"
+    };
+    static const char taint_bnd_regu_names[4][14] = {
+        "taint_bnd0_ub", "taint_bnd1_ub", "taint_bnd2_ub", "taint_bnd3_ub"
+    };
+#endif
     int i;
 
-    cpu_cc_op = tcg_global_mem_new_i32(cpu_env,
-                                       offsetof(CPUX86State, cc_op), "cc_op");
-    cpu_cc_dst = tcg_global_mem_new(cpu_env, offsetof(CPUX86State, cc_dst),
-                                    "cc_dst");
-    cpu_cc_src = tcg_global_mem_new(cpu_env, offsetof(CPUX86State, cc_src),
-                                    "cc_src");
-    cpu_cc_src2 = tcg_global_mem_new(cpu_env, offsetof(CPUX86State, cc_src2),
-                                     "cc_src2");
+    cpu_cc_op = tcg_global_mem_new_i32(cpu_env, offsetof(CPUX86State, cc_op), "cc_op");
+    cpu_cc_dst = tcg_global_mem_new(cpu_env, offsetof(CPUX86State, cc_dst), "cc_dst");
+    cpu_cc_src = tcg_global_mem_new(cpu_env, offsetof(CPUX86State, cc_src), "cc_src");
+    cpu_cc_src2 = tcg_global_mem_new(cpu_env, offsetof(CPUX86State, cc_src2), "cc_src2");
+    
+
+#ifdef CONFIG_TCG_TAINT
+    shadow_cpu_cc_op = tcg_global_mem_new_i32(cpu_env, offsetof(CPUX86State, taint_cc_op), "taint_cc_op");
+    shadow_cpu_cc_dst = tcg_global_mem_new(cpu_env, offsetof(CPUX86State, taint_cc_dst), "taint_cc_dst");
+    shadow_cpu_cc_src = tcg_global_mem_new(cpu_env, offsetof(CPUX86State, taint_cc_src), "taint_cc_src");
+    shadow_cpu_cc_src2 = tcg_global_mem_new(cpu_env, offsetof(CPUX86State, taint_cc_src2), "taint_cc_src2");
+    shadow_arg_list[temp_idx(tcgv_i32_temp(cpu_cc_op))] = temp_idx(tcgv_i32_temp(shadow_cpu_cc_op));
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_cc_dst))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_cc_dst));
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_cc_src))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_cc_src));
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_cc_src2))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_cc_src2));
+#endif  /* CONFIG_TCG_TAINT */
 
     for (i = 0; i < CPU_NB_REGS; ++i) {
         cpu_regs[i] = tcg_global_mem_new(cpu_env,
                                          offsetof(CPUX86State, regs[i]),
                                          reg_names[i]);
+#ifdef CONFIG_TCG_TAINT
+        shadow_cpu_regs[i] = tcg_global_mem_new(cpu_env, offsetof(CPUX86State, taint_regs[i]), taint_reg_names[i]);
+        shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_regs[i]))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_regs[i]));
+#endif  /* CONFIG_TCG_TAINT */        
     }
 
     for (i = 0; i < 6; ++i) {
@@ -8535,6 +8605,10 @@ void tcg_x86_init(void)
             = tcg_global_mem_new(cpu_env,
                                  offsetof(CPUX86State, segs[i].base),
                                  seg_base_names[i]);
+#ifdef CONFIG_TCG_TAINT                                 
+        shadow_cpu_seg_base[i] = tcg_global_mem_new(cpu_env, offsetof(CPUX86State, taint_segs[i].base), taint_seg_base_names[i]);
+        shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_seg_base[i]))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_seg_base[i]));
+#endif  /* CONFIG_TCG_TAINT */         
     }
 
     for (i = 0; i < 4; ++i) {
@@ -8542,11 +8616,24 @@ void tcg_x86_init(void)
             = tcg_global_mem_new_i64(cpu_env,
                                      offsetof(CPUX86State, bnd_regs[i].lb),
                                      bnd_regl_names[i]);
+#ifdef CONFIG_TCG_TAINT                                        
+        shadow_cpu_bndl[i] = tcg_global_mem_new_i64(cpu_env, offsetof(CPUX86State, taint_bnd_regs[i].lb), taint_bnd_regl_names[i]);
+        shadow_arg_list[temp_idx(tcgv_i64_temp(cpu_bndl[i]))] =temp_idx(tcgv_i64_temp(shadow_cpu_bndl[i]));
+#endif  /* CONFIG_TCG_TAINT */        
         cpu_bndu[i]
             = tcg_global_mem_new_i64(cpu_env,
                                      offsetof(CPUX86State, bnd_regs[i].ub),
                                      bnd_regu_names[i]);
+#ifdef CONFIG_TCG_TAINT                                        
+        shadow_cpu_bndu[i] = tcg_global_mem_new_i64(cpu_env, offsetof(CPUX86State, taint_bnd_regs[i].ub), taint_bnd_regu_names[i]);
+        shadow_arg_list[temp_idx(tcgv_i64_temp(cpu_bndu[i]))] =temp_idx(tcgv_i64_temp(shadow_cpu_bndu[i]));
+#endif  /* CONFIG_TCG_TAINT */    
     }
+
+#ifdef CONFIG_TCG_TAINT  
+    taint_temps = tcg_global_mem_new_i64(cpu_env, offsetof(CPUX86State, taint_temps), "taint_temps");
+#endif
+
 }
 
 static void i386_tr_init_disas_context(DisasContextBase *dcbase, CPUState *cpu)

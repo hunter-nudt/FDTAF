@@ -45,6 +45,7 @@
 #include "shared/decaf-linux-vmi.h"
 #include "shared/decaf-callback-common.h"
 #include "shared/decaf-callback-to-qemu.h"
+#include "shared/decaf-taint-memory.h"
 
 /* DEBUG defines, enable DEBUG_TLB_LOG to log to the CPU_LOG_MMU target */
 /* #define DEBUG_TLB */

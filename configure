@@ -357,6 +357,8 @@ vvfat=${default_feature:-yes}
 qed=${default_feature:-yes}
 parallels=${default_feature:-yes}
 debug_mutex="no"
+enable_vmi="yes"
+enable_tcg_taint="yes"
 plugins="$default_feature"
 rng_none="no"
 secret_keyring="$default_feature"
@@ -1155,6 +1157,14 @@ for opt do
   ;;
   --disable-debug-mutex) debug_mutex=no
   ;;
+  --enable-vmi) enable_vmi=yes
+  ;;
+  --disable-vmi) enable_vmi=no
+  ;;
+  --enable-tcg-taint) enable_tcg_taint=yes
+  ;;
+  --disable-tcg-taint) enable_tcg_taint=no
+  ;;
   --enable-plugins) if test "$mingw32" = "yes"; then
                         error_exit "TCG plugins not currently supported on Windows platforms"
                     else
@@ -1419,6 +1429,7 @@ Advanced options (experts only):
                            enable plugins via shared library loading
   --disable-containers     don't use containers for cross-building
   --gdb=GDB-path           gdb to use for gdbstub tests [$gdb_bin]
+  --enable-vmi             enable vmi
 EOF
   meson_options_help
 cat << EOF
@@ -3690,6 +3701,12 @@ if test "$qed" = "yes" ; then
 fi
 if test "$parallels" = "yes" ; then
   echo "CONFIG_PARALLELS=y" >> $config_host_mak
+fi
+if test "$enable_vmi" = "yes" ; then
+  echo "CONFIG_ENABLE_VMI=y" >> $config_host_mak
+fi
+if test "$enable_tcg_taint" = "yes" ; then
+  echo "CONFIG_TCG_TAINT=y" >> $config_host_mak
 fi
 
 if test "$plugins" = "yes" ; then

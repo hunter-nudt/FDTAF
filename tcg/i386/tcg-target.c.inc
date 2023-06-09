@@ -1607,6 +1607,7 @@ static void tcg_out_nopn(TCGContext *s, int n)
 
 #if defined(CONFIG_SOFTMMU)
 #include "../tcg-ldst.c.inc"
+#include "shared/decaf-taint-memory.h"
 
 /* helper signature: helper_ret_ld_mmu(CPUState *env, target_ulong addr,
  *                                     int mmu_idx, uintptr_t ra)
@@ -1654,6 +1655,7 @@ static void * const qemu_st_helpers[(MO_SIZE | MO_BSWAP) + 1] = {
    hold a guest address.
 
    First argument register is clobbered.  */
+
 
 static inline void tcg_out_tlb_load(TCGContext *s, TCGReg addrlo, TCGReg addrhi,
                                     int mem_index, MemOp opc,
@@ -1735,6 +1737,7 @@ static inline void tcg_out_tlb_load(TCGContext *s, TCGReg addrlo, TCGReg addrhi,
     tcg_out_modrm_offset(s, OPC_ADD_GvEv + hrexw, r1, r0,
                          offsetof(CPUTLBEntry, addend));
 }
+
 
 /*
  * Record the context of a call to the out of line helper code for the slow path

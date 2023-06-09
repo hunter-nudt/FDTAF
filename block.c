@@ -6486,6 +6486,8 @@ void bdrv_invalidate_cache_all(Error **errp)
     }
 }
 
+/* insert place */
+
 static bool bdrv_has_bds_parent(BlockDriverState *bs, bool only_active)
 {
     BdrvChild *parent;

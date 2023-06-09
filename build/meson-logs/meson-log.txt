@@ -1,0 +1,3529 @@
+Build started at 2023-05-21T01:14:50.972624
+Main binary: /usr/bin/python3
+Build Options: -Daudio_drv_list=default -Ddefault_devices=true -Ddocdir=/usr/local/share/doc -Dqemu_firmwarepath=/usr/local/share/qemu-firmware -Dqemu_suffix=qemu -Dsphinx_build= -Dtrace_file=trace -Doptimization=0 -Ddebug=true -Dwerror=true -Dstrip=false -Db_pie=true -Db_coverage=false -Db_lto=false -Dcfi=false -Dtcg=enabled -Dxen=enabled -Dcapstone=auto -Dfdt=auto -Dslirp=auto -Dprefix=/usr/local -Dbindir=/usr/local/bin -Ddatadir=/usr/local/share -Dincludedir=/usr/local/include -Dlibdir=/usr/local/lib -Dlibexecdir=/usr/local/libexec -Dlocaledir=/usr/local/share/locale -Dlocalstatedir=/usr/local/var -Dmandir=/usr/local/share/man -Dsysconfdir=/usr/local/etc -Dbackend=ninja
+Python system: Linux
+The Meson build system
+Version: 0.59.3
+Source dir: /home/mypc/Tools/diff/qemu-6.2.0
+Build dir: /home/mypc/Tools/diff/qemu-6.2.0/build
+Build type: native build
+Project name: qemu
+Project version: 6.2.0
+C compiler for the host machine: cc -m64 -mcx16 (gcc 7.5.0 "cc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0")
+C linker for the host machine: cc -m64 -mcx16 ld.bfd 2.30
+C compiler for the build machine: cc -m64 -mcx16 (gcc 7.5.0 "cc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0")
+C linker for the build machine: cc -m64 -mcx16 ld.bfd 2.30
+Build machine cpu family: x86_64
+Build machine cpu: x86_64
+Host machine cpu family: x86_64
+Host machine cpu: x86_64
+Target machine cpu family: x86_64
+Target machine cpu: x86_64
+Program sh found: YES (/bin/sh)
+Program python3 found: YES (/usr/bin/python3)
+WARNING: Broken python installation detected. Python files installed by Meson might not be found by python interpreter.
+Program bzip2 found: YES (/bin/bzip2)
+C++ compiler for the host machine: c++ -m64 -mcx16 (gcc 7.5.0 "c++ (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0")
+C++ linker for the host machine: c++ -m64 -mcx16 ld.bfd 2.30
+Program cgcc found: NO
+Running compile:
+Working directory:  /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmphw35pdpy
+Command line:  cc -m64 -mcx16 /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmphw35pdpy/testfile.c -o /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmphw35pdpy/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lm -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library m found: YES
+Dependency threads found: YES unknown (cached)
+Running compile:
+Working directory:  /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpoyq7ed37
+Command line:  cc -m64 -mcx16 /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpoyq7ed37/testfile.c -o /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpoyq7ed37/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lutil -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library util found: YES
+Run-time dependency appleframeworks found: NO (tried framework)
+Dependency pixman-1 found: YES 0.34.0 (cached)
+Dependency zlib found: YES 1.2.11 (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("libaio.h")
+          #error "Header 'libaio.h' could not be found"
+         #endif
+        #else
+         #include <libaio.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Has header "libaio.h" : YES (cached)
+Running compile:
+Working directory:  /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpuw2vxm4g
+Command line:  cc -m64 -mcx16 /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpuw2vxm4g/testfile.c -o /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpuw2vxm4g/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -laio -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library aio found: YES
+Pkg-config binary for MachineChoice.HOST is not cached.
+Pkg-config binary for 1 specified from cross file, native file, or env var as ['pkg-config']
+Found pkg-config: /usr/bin/pkg-config (0.29.1)
+Determining dependency 'liburing' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion liburing` -> 1
+
+Run-time dependency liburing found: NO (tried pkgconfig)
+Dependency libxml-2.0 found: YES 2.9.4 (cached)
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'libnfs' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libnfs` -> 1
+
+Run-time dependency libnfs found: NO (tried pkgconfig)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #include <stddef.h>
+  #include <sys/types.h>
+  #ifdef CONFIG_LIBATTR
+  #include <attr/xattr.h>
+  #else
+  #include <sys/xattr.h>
+  #endif
+  int main(void) { getxattr(NULL, NULL, NULL, 0); setxattr(NULL, NULL, NULL, 0, 0); return 0; }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Run-time dependency appleframeworks found: NO (tried framework)
+Dependency libseccomp found: YES 2.5.1 (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("cap-ng.h")
+          #error "Header 'cap-ng.h' could not be found"
+         #endif
+        #else
+         #include <cap-ng.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Has header "cap-ng.h" : YES (cached)
+Running compile:
+Working directory:  /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpvvsojmjy
+Command line:  cc -m64 -mcx16 /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpvvsojmjy/testfile.c -o /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpvvsojmjy/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lcap-ng -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library cap-ng found: YES
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+   #include <cap-ng.h>
+   int main(void)
+   {
+     capng_capability_to_name(CAPNG_EFFECTIVE);
+     return 0;
+   }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Dependency xkbcommon found: YES 0.8.2 (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("libvdeplug.h")
+          #error "Header 'libvdeplug.h' could not be found"
+         #endif
+        #else
+         #include <libvdeplug.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp4jerpi3s/testfile.c:4:12: error: #error "Header 'libvdeplug.h' could not be found"
+           #error "Header 'libvdeplug.h' could not be found"
+            ^~~~~
+
+Has header "libvdeplug.h" : NO (cached)
+Dependency libpulse found: YES 11.1 (cached)
+Dependency alsa found: YES 1.1.3 (cached)
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'jack' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion jack` -> 1
+
+Run-time dependency jack found: NO (tried pkgconfig)
+Dependency spice-protocol found: YES 0.12.13 (cached)
+Dependency spice-server found: YES 0.14.0 (cached)
+Running compile:
+Working directory:  /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpzrpy1p7s
+Command line:  cc -m64 -mcx16 /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpzrpy1p7s/testfile.c -o /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpzrpy1p7s/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lrt -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library rt found: YES
+Dependency libiscsi found: YES 1.17.0 (cached)
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'libzstd' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libzstd` -> 1
+
+Run-time dependency libzstd found: NO (tried pkgconfig)
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'virglrenderer' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion virglrenderer` -> 1
+
+Run-time dependency virglrenderer found: NO (tried pkgconfig)
+Dependency libcurl found: YES 7.58.0 (cached)
+Dependency libudev found: YES 237 (cached)
+Running compile:
+Working directory:  /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpbpn00917
+Command line:  cc -m64 -mcx16 /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpbpn00917/testfile.c -o /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpbpn00917/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lmpathpersist -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ /usr/bin/ld: cannot find -lmpathpersist
+collect2: error: ld returned 1 exit status
+
+Running compile:
+Working directory:  /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp7udjg42l
+Command line:  cc -m64 -mcx16 /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp7udjg42l/testfile.c -o /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp7udjg42l/output.exe -D_FILE_OFFSET_BITS=64 -O0 
+
+Code:
+ #include<stdio.h>
+        
+        int main(void) {
+            printf("%ld\n", (long)(sizeof(void *)));
+            return 0;
+        };
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Program stdout:
+
+8
+
+Program stderr:
+
+
+Running compile:
+Working directory:  /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpqtaetq8k
+Command line:  cc -m64 -mcx16 /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpqtaetq8k/testfile.c -o /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpqtaetq8k/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 --print-search-dirs 
+
+Code:
+ 
+Compiler stdout:
+ install: /usr/lib/gcc/x86_64-linux-gnu/7/
+programs: =/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/bin/
+libraries: =/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib/:/lib/x86_64-linux-gnu/7/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/7/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/lib/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../:/lib/:/usr/lib/
+
+Compiler stderr:
+ 
+Library mpathpersist found: NO
+Dependency ncursesw found: YES 6.1.20180127 (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+    #if defined(__APPLE__) || defined(__OpenBSD__)
+    #define _XOPEN_SOURCE_EXTENDED 1
+    #endif
+    #include <locale.h>
+    #include <curses.h>
+    #include <wchar.h>
+    int main(void) {
+      wchar_t wch = L'w';
+      setlocale(LC_ALL, "");
+      resize_term(0, 0);
+      addwstr(L"wide chars\n");
+      addnwstr(&wch, 1);
+      add_wch(WACS_DEGREE);
+      return 0;
+    }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #include <iconv.h>
+        int main(void) {
+          iconv_t conv = iconv_open("WCHAR_T", "UCS-2");
+          return conv != (iconv_t) -1;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /usr/bin/ld: cannot find -liconv
+collect2: error: ld returned 1 exit status
+
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #include <iconv.h>
+        int main(void) {
+          iconv_t conv = iconv_open("WCHAR_T", "UCS-2");
+          return conv != (iconv_t) -1;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("brlapi.h")
+          #error "Header 'brlapi.h' could not be found"
+         #endif
+        #else
+         #include <brlapi.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Has header "brlapi.h" : YES (cached)
+Running compile:
+Working directory:  /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp1d25v6dq
+Command line:  cc -m64 -mcx16 /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp1d25v6dq/testfile.c -o /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp1d25v6dq/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lbrlapi -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library brlapi found: YES
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+     #include <brlapi.h>
+     #include <stddef.h>
+     int main(void) { return brlapi__openConnection (NULL, NULL, NULL); }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Dependency sdl2 found: YES 2.0.8 (cached)
+Dependency SDL2_image found: YES 2.0.3 (cached)
+Running compile:
+Working directory:  /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmplymitrl8
+Command line:  cc -m64 -mcx16 /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmplymitrl8/testfile.c -o /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmplymitrl8/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lrados -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library rados found: YES
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("rbd/librbd.h")
+          #error "Header 'rbd/librbd.h' could not be found"
+         #endif
+        #else
+         #include <rbd/librbd.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Has header "rbd/librbd.h" : YES (cached)
+Running compile:
+Working directory:  /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpnsb4e7mq
+Command line:  cc -m64 -mcx16 /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpnsb4e7mq/testfile.c -o /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpnsb4e7mq/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lrbd -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library rbd found: YES
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+      #include <stdio.h>
+      #include <rbd/librbd.h>
+      int main(void) {
+        rados_t cluster;
+        rados_create(&cluster, NULL);
+        #if LIBRBD_VERSION_CODE < LIBRBD_VERSION(1, 12, 0)
+        #error
+        #endif
+        return 0;
+      }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'glusterfs-api' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion glusterfs-api` -> 1
+
+Run-time dependency glusterfs-api found: NO (tried pkgconfig)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("bzlib.h")
+          #error "Header 'bzlib.h' could not be found"
+         #endif
+        #else
+         #include <bzlib.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Has header "bzlib.h" : YES (cached)
+Running compile:
+Working directory:  /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpxqk2trfn
+Command line:  cc -m64 -mcx16 /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpxqk2trfn/testfile.c -o /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpxqk2trfn/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lbz2 -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library bz2 found: YES
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+     #include <bzlib.h>
+     int main(void) { BZ2_bzlibVersion(); return 0; }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("lzfse.h")
+          #error "Header 'lzfse.h' could not be found"
+         #endif
+        #else
+         #include <lzfse.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp29akgn0e/testfile.c:4:12: error: #error "Header 'lzfse.h' could not be found"
+           #error "Header 'lzfse.h' could not be found"
+            ^~~~~
+
+Has header "lzfse.h" : NO (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("sys/soundcard.h")
+          #error "Header 'sys/soundcard.h' could not be found"
+         #endif
+        #else
+         #include <sys/soundcard.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Has header "sys/soundcard.h" : YES (cached)
+Dependency gnutls found: NO found 3.5.18 but need: '>=3.6.14' (cached)
+Dependency gnutls found: YES 3.5.18 (cached)
+libgcrypt-config binary missing from cross or native file, or env var undefined.
+Trying a default libgcrypt-config fallback at libgcrypt-config
+libgcrypt-config found: NO need ['>=1.8']
+Run-time dependency libgcrypt found: NO (tried config-tool)
+Dependency nettle found: YES 3.4.1 (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("nettle/xts.h")
+          #error "Header 'nettle/xts.h' could not be found"
+         #endif
+        #else
+         #include <nettle/xts.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp9d7g925c/testfile.c:4:12: error: #error "Header 'nettle/xts.h' could not be found"
+           #error "Header 'nettle/xts.h' could not be found"
+            ^~~~~
+
+Has header "nettle/xts.h" with dependency nettle: NO (cached)
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'gtk+-3.0' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion gtk+-3.0` -> 1
+
+Run-time dependency gtk+-3.0 found: NO (tried pkgconfig)
+Dependency libpng found: YES 1.6.34 (cached)
+Dependency libjpeg found: YES unknown (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("sasl/sasl.h")
+          #error "Header 'sasl/sasl.h' could not be found"
+         #endif
+        #else
+         #include <sasl/sasl.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Has header "sasl/sasl.h" : YES (cached)
+Running compile:
+Working directory:  /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpzat89m65
+Command line:  cc -m64 -mcx16 /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpzat89m65/testfile.c -o /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpzat89m65/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lsasl2 -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library sasl2 found: YES
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("security/pam_appl.h")
+          #error "Header 'security/pam_appl.h' could not be found"
+         #endif
+        #else
+         #include <security/pam_appl.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmphwvy7j21/testfile.c:4:12: error: #error "Header 'security/pam_appl.h' could not be found"
+           #error "Header 'security/pam_appl.h' could not be found"
+            ^~~~~
+
+Has header "security/pam_appl.h" : NO (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("snappy-c.h")
+          #error "Header 'snappy-c.h' could not be found"
+         #endif
+        #else
+         #include <snappy-c.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp_rsqs5nf/testfile.c:4:12: error: #error "Header 'snappy-c.h' could not be found"
+           #error "Header 'snappy-c.h' could not be found"
+            ^~~~~
+
+Has header "snappy-c.h" : NO (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("lzo/lzo1x.h")
+          #error "Header 'lzo/lzo1x.h' could not be found"
+         #endif
+        #else
+         #include <lzo/lzo1x.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpm6fh_mou/testfile.c:4:12: error: #error "Header 'lzo/lzo1x.h' could not be found"
+           #error "Header 'lzo/lzo1x.h' could not be found"
+            ^~~~~
+
+Has header "lzo/lzo1x.h" : NO (cached)
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'libcacard' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libcacard` -> 0
+2.5.0
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --cflags libcacard` -> 0
+-I/usr/include/cacard
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libcacard` -> 0
+-L/usr/lib/x86_64-linux-gnu -lcacard
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --libs libcacard` -> 0
+-lcacard
+Running compile:
+Working directory:  /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpq8jb9way
+Command line:  c++ -m64 -mcx16 /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpq8jb9way/testfile.cpp -o /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpq8jb9way/output.exe -D_FILE_OFFSET_BITS=64 -O0 -fpermissive 
+
+Code:
+ #include<stdio.h>
+        
+        int main(void) {
+            printf("%ld\n", (long)(sizeof(void *)));
+            return 0;
+        };
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Program stdout:
+
+8
+
+Program stderr:
+
+
+Running compile:
+Working directory:  /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp_n1jnue7
+Command line:  c++ -m64 -mcx16 /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp_n1jnue7/testfile.cpp -o /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp_n1jnue7/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 -fpermissive --print-search-dirs 
+
+Code:
+ 
+Compiler stdout:
+ install: /usr/lib/gcc/x86_64-linux-gnu/7/
+programs: =/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/bin/
+libraries: =/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib/:/lib/x86_64-linux-gnu/7/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/7/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/lib/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../:/lib/:/usr/lib/
+
+Compiler stderr:
+ 
+Dependency libcacard found: NO found 2.5.0 but need: '>=2.5.1'
+Run-time dependency libcacard found: NO (tried pkgconfig)
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'u2f-emu' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion u2f-emu` -> 1
+
+Run-time dependency u2f-emu found: NO (tried pkgconfig)
+Dependency libusbredirparser-0.5 found: YES 0.7.1 (cached)
+Dependency libusb-1.0 found: YES 1.0.21 (cached)
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'libpmem' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libpmem` -> 1
+
+Run-time dependency libpmem found: NO (tried pkgconfig)
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'libdaxctl' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libdaxctl` -> 1
+
+Run-time dependency libdaxctl found: NO (tried pkgconfig)
+Dependency libtasn1 found: YES 4.13 (cached)
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'libkeyutils' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libkeyutils` -> 1
+
+Run-time dependency libkeyutils found: NO (tried pkgconfig)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define gettid meson_disable_define_of_gettid
+        
+        #include <limits.h>
+        #undef gettid
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char gettid (void);
+        
+        #if defined __stub_gettid || defined __stub___gettid
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return gettid ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /tmp/ccKXYCsG.o: In function `main':
+testfile.c:(.text+0x5): undefined reference to `gettid'
+collect2: error: ld returned 1 exit status
+
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        int main(void) {
+
+        /* With some toolchains (MSYS2/mingw for example) the compiler
+         * provides various builtins which are not really implemented and
+         * fall back to the stdlib where they aren't provided and fail at
+         * build/link time. In case the user provides a header, including
+         * the header didn't lead to the function being defined, and the
+         * function we are checking isn't a builtin itself we assume the
+         * builtin is not functional and we just error out. */
+        #if !1 && !defined(gettid) && !0
+            #error "No definition for __builtin_gettid found in the prefix"
+        #endif
+
+        #ifdef __has_builtin
+            #if !__has_builtin(__builtin_gettid)
+                #error "__builtin_gettid not found"
+            #endif
+        #elif ! defined(gettid)
+            __builtin_gettid;
+        #endif
+        return 0;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpm1vqgx4u/testfile.c: In function 'main':
+/home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpm1vqgx4u/testfile.c:20:13: error: '__builtin_gettid' undeclared (first use in this function); did you mean '__builtin_gettext'?
+             __builtin_gettid;
+             ^~~~~~~~~~~~~~~~
+             __builtin_gettext
+/home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpm1vqgx4u/testfile.c:20:13: note: each undeclared identifier is reported only once for each function it appears in
+
+Checking for function "gettid" : NO (cached)
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'libselinux' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libselinux` -> 1
+
+Run-time dependency libselinux found: NO (tried pkgconfig)
+Using cached compile:
+Cached command line:   
+
+Code:
+ #include <malloc.h>
+                int main(void) { malloc_trim(0); return 0; }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <sys/stat.h>
+  int main(void) {
+    struct statx statxbuf;
+    statx(0, "", 0, STATX_BASIC_STATS, &statxbuf);
+    return 0;
+  }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpz22fxrkj/testfile.c: In function 'main':
+/home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpz22fxrkj/testfile.c:8:18: error: storage size of 'statxbuf' isn't known
+     struct statx statxbuf;
+                  ^~~~~~~~
+/home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpz22fxrkj/testfile.c:9:5: warning: implicit declaration of function 'statx'; did you mean 'stat'? [-Wimplicit-function-declaration]
+     statx(0, "", 0, STATX_BASIC_STATS, &statxbuf);
+     ^~~~~
+     stat
+/home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpz22fxrkj/testfile.c:9:21: error: 'STATX_BASIC_STATS' undeclared (first use in this function)
+     statx(0, "", 0, STATX_BASIC_STATS, &statxbuf);
+                     ^~~~~~~~~~~~~~~~~
+/home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpz22fxrkj/testfile.c:9:21: note: each undeclared identifier is reported only once for each function it appears in
+
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'fuse3' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion fuse3` -> 1
+
+Run-time dependency fuse3 found: NO (tried pkgconfig)
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'libbpf' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion libbpf` -> 1
+
+Run-time dependency libbpf found: NO (tried pkgconfig)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("sys/epoll.h")
+          #error "Header 'sys/epoll.h' could not be found"
+         #endif
+        #else
+         #include <sys/epoll.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Has header "sys/epoll.h" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("linux/magic.h")
+          #error "Header 'linux/magic.h' could not be found"
+         #endif
+        #else
+         #include <linux/magic.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Has header "linux/magic.h" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("valgrind/valgrind.h")
+          #error "Header 'valgrind/valgrind.h' could not be found"
+         #endif
+        #else
+         #include <valgrind/valgrind.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpicfws1ru/testfile.c:4:12: error: #error "Header 'valgrind/valgrind.h' could not be found"
+           #error "Header 'valgrind/valgrind.h' could not be found"
+            ^~~~~
+
+Has header "valgrind/valgrind.h" : NO (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("linux/btrfs.h")
+          #error "Header 'linux/btrfs.h' could not be found"
+         #endif
+        #else
+         #include <linux/btrfs.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Has header "linux/btrfs.h" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("libdrm/drm.h")
+          #error "Header 'libdrm/drm.h' could not be found"
+         #endif
+        #else
+         #include <libdrm/drm.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Has header "libdrm/drm.h" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("pty.h")
+          #error "Header 'pty.h' could not be found"
+         #endif
+        #else
+         #include <pty.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Has header "pty.h" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("sys/disk.h")
+          #error "Header 'sys/disk.h' could not be found"
+         #endif
+        #else
+         #include <sys/disk.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp29veh00p/testfile.c:4:12: error: #error "Header 'sys/disk.h' could not be found"
+           #error "Header 'sys/disk.h' could not be found"
+            ^~~~~
+
+Has header "sys/disk.h" : NO (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("sys/ioccom.h")
+          #error "Header 'sys/ioccom.h' could not be found"
+         #endif
+        #else
+         #include <sys/ioccom.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp9qnywqpb/testfile.c:4:12: error: #error "Header 'sys/ioccom.h' could not be found"
+           #error "Header 'sys/ioccom.h' could not be found"
+            ^~~~~
+
+Has header "sys/ioccom.h" : NO (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("sys/kcov.h")
+          #error "Header 'sys/kcov.h' could not be found"
+         #endif
+        #else
+         #include <sys/kcov.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp72dcd2ka/testfile.c:4:12: error: #error "Header 'sys/kcov.h' could not be found"
+           #error "Header 'sys/kcov.h' could not be found"
+            ^~~~~
+
+Has header "sys/kcov.h" : NO (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define accept4 meson_disable_define_of_accept4
+        
+        #include <limits.h>
+        #undef accept4
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char accept4 (void);
+        
+        #if defined __stub_accept4 || defined __stub___accept4
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return accept4 ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "accept4" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define clock_adjtime meson_disable_define_of_clock_adjtime
+        
+        #include <limits.h>
+        #undef clock_adjtime
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char clock_adjtime (void);
+        
+        #if defined __stub_clock_adjtime || defined __stub___clock_adjtime
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return clock_adjtime ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "clock_adjtime" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define dup3 meson_disable_define_of_dup3
+        
+        #include <limits.h>
+        #undef dup3
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char dup3 (void);
+        
+        #if defined __stub_dup3 || defined __stub___dup3
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return dup3 ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "dup3" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define fallocate meson_disable_define_of_fallocate
+        
+        #include <limits.h>
+        #undef fallocate
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char fallocate (void);
+        
+        #if defined __stub_fallocate || defined __stub___fallocate
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return fallocate ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "fallocate" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define posix_fallocate meson_disable_define_of_posix_fallocate
+        
+        #include <limits.h>
+        #undef posix_fallocate
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char posix_fallocate (void);
+        
+        #if defined __stub_posix_fallocate || defined __stub___posix_fallocate
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return posix_fallocate ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "posix_fallocate" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define posix_memalign meson_disable_define_of_posix_memalign
+        
+        #include <limits.h>
+        #undef posix_memalign
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char posix_memalign (void);
+        
+        #if defined __stub_posix_memalign || defined __stub___posix_memalign
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return posix_memalign ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpdb_xroju/testfile.c:10:14: warning: conflicting types for built-in function 'posix_memalign' [-Wbuiltin-declaration-mismatch]
+         char posix_memalign (void);
+              ^~~~~~~~~~~~~~
+
+Checking for function "posix_memalign" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define ppoll meson_disable_define_of_ppoll
+        
+        #include <limits.h>
+        #undef ppoll
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char ppoll (void);
+        
+        #if defined __stub_ppoll || defined __stub___ppoll
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return ppoll ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "ppoll" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ #include <sys/uio.h>
+#include <limits.h>
+
+        #if defined __stub_preadv || defined __stub___preadv
+        fail fail fail this function is not going to work
+        #endif
+        
+int main(void) {
+            void *a = (void*) &preadv;
+            long long b = (long long) a;
+            return (int) b;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "preadv" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define sem_timedwait meson_disable_define_of_sem_timedwait
+        
+        #include <limits.h>
+        #undef sem_timedwait
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char sem_timedwait (void);
+        
+        #if defined __stub_sem_timedwait || defined __stub___sem_timedwait
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return sem_timedwait ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "sem_timedwait" with dependency threads: YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define sendfile meson_disable_define_of_sendfile
+        
+        #include <limits.h>
+        #undef sendfile
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char sendfile (void);
+        
+        #if defined __stub_sendfile || defined __stub___sendfile
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return sendfile ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "sendfile" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define setns meson_disable_define_of_setns
+        
+        #include <limits.h>
+        #undef setns
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char setns (void);
+        
+        #if defined __stub_setns || defined __stub___setns
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return setns ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "setns" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define unshare meson_disable_define_of_unshare
+        
+        #include <limits.h>
+        #undef unshare
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char unshare (void);
+        
+        #if defined __stub_unshare || defined __stub___unshare
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return unshare ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "unshare" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define syncfs meson_disable_define_of_syncfs
+        
+        #include <limits.h>
+        #undef syncfs
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char syncfs (void);
+        
+        #if defined __stub_syncfs || defined __stub___syncfs
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return syncfs ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "syncfs" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define sync_file_range meson_disable_define_of_sync_file_range
+        
+        #include <limits.h>
+        #undef sync_file_range
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char sync_file_range (void);
+        
+        #if defined __stub_sync_file_range || defined __stub___sync_file_range
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return sync_file_range ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "sync_file_range" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define timerfd_create meson_disable_define_of_timerfd_create
+        
+        #include <limits.h>
+        #undef timerfd_create
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char timerfd_create (void);
+        
+        #if defined __stub_timerfd_create || defined __stub___timerfd_create
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return timerfd_create ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "timerfd_create" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define copy_file_range meson_disable_define_of_copy_file_range
+        
+        #include <limits.h>
+        #undef copy_file_range
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char copy_file_range (void);
+        
+        #if defined __stub_copy_file_range || defined __stub___copy_file_range
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return copy_file_range ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "copy_file_range" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define openpty meson_disable_define_of_openpty
+        
+        #include <limits.h>
+        #undef openpty
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char openpty (void);
+        
+        #if defined __stub_openpty || defined __stub___openpty
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return openpty ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "openpty" with dependency -lutil: YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define strchrnul meson_disable_define_of_strchrnul
+        
+        #include <limits.h>
+        #undef strchrnul
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char strchrnul (void);
+        
+        #if defined __stub_strchrnul || defined __stub___strchrnul
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return strchrnul ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "strchrnul" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ #include <stdlib.h>
+#include <limits.h>
+
+        #if defined __stub_system || defined __stub___system
+        fail fail fail this function is not going to work
+        #endif
+        
+int main(void) {
+            void *a = (void*) &system;
+            long long b = (long long) a;
+            return (int) b;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "system" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #include <byteswap.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef bswap_32
+                bswap_32;
+            #endif
+            return 0;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Header <byteswap.h> has symbol "bswap_32" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #include <sys/epoll.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef epoll_create1
+                epoll_create1;
+            #endif
+            return 0;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Header <sys/epoll.h> has symbol "epoll_create1" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+        #include <unistd.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef environ
+                environ;
+            #endif
+            return 0;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Header <unistd.h> has symbol "environ" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #include <linux/falloc.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef FALLOC_FL_PUNCH_HOLE
+                FALLOC_FL_PUNCH_HOLE;
+            #endif
+            return 0;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Header <linux/falloc.h> has symbol "FALLOC_FL_PUNCH_HOLE" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #include <linux/falloc.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef FALLOC_FL_KEEP_SIZE
+                FALLOC_FL_KEEP_SIZE;
+            #endif
+            return 0;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Header <linux/falloc.h> has symbol "FALLOC_FL_KEEP_SIZE" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #include <linux/falloc.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef FALLOC_FL_ZERO_RANGE
+                FALLOC_FL_ZERO_RANGE;
+            #endif
+            return 0;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Header <linux/falloc.h> has symbol "FALLOC_FL_ZERO_RANGE" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("linux/fiemap.h")
+          #error "Header 'linux/fiemap.h' could not be found"
+         #endif
+        #else
+         #include <linux/fiemap.h>
+        #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Has header "linux/fiemap.h" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #include <linux/fs.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef FS_IOC_FIEMAP
+                FS_IOC_FIEMAP;
+            #endif
+            return 0;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Header <linux/fs.h> has symbol "FS_IOC_FIEMAP" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #define getrandom meson_disable_define_of_getrandom
+        
+        #include <limits.h>
+        #undef getrandom
+        
+        #ifdef __cplusplus
+        extern "C"
+        #endif
+        char getrandom (void);
+        
+        #if defined __stub_getrandom || defined __stub___getrandom
+        fail fail fail this function is not going to work
+        #endif
+        
+        int main(void) {
+          return getrandom ();
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for function "getrandom" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #include <sys/random.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef GRND_NONBLOCK
+                GRND_NONBLOCK;
+            #endif
+            return 0;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Header <sys/random.h> has symbol "GRND_NONBLOCK" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #include <sys/inotify.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef inotify_init
+                inotify_init;
+            #endif
+            return 0;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Header <sys/inotify.h> has symbol "inotify_init" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #include <sys/inotify.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef inotify_init1
+                inotify_init1;
+            #endif
+            return 0;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Header <sys/inotify.h> has symbol "inotify_init1" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ #include <sys/endian.h>
+                                                     #include <sys/types.h>
+        #include <machine/bswap.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef bswap32
+                bswap32;
+            #endif
+            return 0;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmprfp6h9eg/testfile.c:1:10: fatal error: sys/endian.h: No such file or directory
+ #include <sys/endian.h>
+          ^~~~~~~~~~~~~~
+compilation terminated.
+
+Header <machine/bswap.h> has symbol "bswap32" : NO (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #include <sys/prctl.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef PR_SET_TIMERSLACK
+                PR_SET_TIMERSLACK;
+            #endif
+            return 0;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Header <sys/prctl.h> has symbol "PR_SET_TIMERSLACK" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #include <linux/rtnetlink.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef IFLA_PROTO_DOWN
+                IFLA_PROTO_DOWN;
+            #endif
+            return 0;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Header <linux/rtnetlink.h> has symbol "IFLA_PROTO_DOWN" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #include <sys/sysmacros.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef makedev
+                makedev;
+            #endif
+            return 0;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Header <sys/sysmacros.h> has symbol "makedev" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #include <getopt.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef optreset
+                optreset;
+            #endif
+            return 0;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp8q0r5ty5/testfile.c: In function 'main':
+/home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp8q0r5ty5/testfile.c:6:17: error: 'optreset' undeclared (first use in this function); did you mean 'optopt'?
+                 optreset;
+                 ^~~~~~~~
+                 optopt
+/home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp8q0r5ty5/testfile.c:6:17: note: each undeclared identifier is reported only once for each function it appears in
+
+Header <getopt.h> has symbol "optreset" : NO (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+        #include <netinet/in.h>
+        int main(void) {
+            /* If it's not defined as a macro, try to use as a symbol */
+            #ifndef IPPROTO_MPTCP
+                IPPROTO_MPTCP;
+            #endif
+            return 0;
+        }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmphb69qd63/testfile.c: In function 'main':
+/home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmphb69qd63/testfile.c:6:17: error: 'IPPROTO_MPTCP' undeclared (first use in this function); did you mean 'IPPROTO_MTP'?
+                 IPPROTO_MPTCP;
+                 ^~~~~~~~~~~~~
+                 IPPROTO_MTP
+/home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmphb69qd63/testfile.c:6:17: note: each undeclared identifier is reported only once for each function it appears in
+
+Header <netinet/in.h> has symbol "IPPROTO_MPTCP" : NO (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ #include <signal.h>
+        void bar(void) {
+            struct sigevent foo;
+            foo.sigev_notify_thread_id;
+
+        };
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpwhs03q5f/testfile.c: In function 'bar':
+/home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpwhs03q5f/testfile.c:4:17: error: 'struct sigevent' has no member named 'sigev_notify_thread_id'; did you mean 'sigev_notify'?
+             foo.sigev_notify_thread_id;
+                 ^~~~~~~~~~~~~~~~~~~~~~
+                 sigev_notify
+
+Checking whether type "struct sigevent" has member "sigev_notify_thread_id" : NO (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ #include <sys/stat.h>
+        void bar(void) {
+            struct stat foo;
+            foo.st_atim;
+
+        };
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking whether type "struct stat" has member "st_atim" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ #include <sys/uio.h>
+        void bar(void) {
+            sizeof(struct iovec);
+        };
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for type "struct iovec" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ #include <utmpx.h>
+        void bar(void) {
+            sizeof(struct utmpx);
+        };
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for type "struct utmpx" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #include <sys/eventfd.h>
+  int main(void) { return eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC); }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <unistd.h>
+  int main(void) {
+  #if defined(_POSIX_SYNCHRONIZED_IO) && _POSIX_SYNCHRONIZED_IO > 0
+  return fdatasync(0);
+  #else
+  #error Not supported
+  #endif
+  }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <sys/types.h>
+  #include <sys/mman.h>
+  #include <stddef.h>
+  int main(void) { return madvise(NULL, 0, MADV_DONTNEED); }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <sys/mman.h>
+  int main(void) { return memfd_create("foo", MFD_ALLOW_SEALING); }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <fcntl.h>
+  #if !defined(AT_EMPTY_PATH)
+  # error missing definition
+  #else
+  int main(void) { struct file_handle fh; return open_by_handle_at(0, &fh, 0); }
+  #endif
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <unistd.h>
+  #include <fcntl.h>
+
+  int main(void)
+  {
+      int pipefd[2];
+      return pipe2(pipefd, O_CLOEXEC);
+  }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <sys/mman.h>
+  #include <stddef.h>
+  int main(void) { return posix_madvise(NULL, 0, POSIX_MADV_DONTNEED); }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <pthread.h>
+
+  static void *f(void *p) { return NULL; }
+  int main(void)
+  {
+    pthread_t thread;
+    pthread_create(&thread, 0, f, 0);
+    pthread_setname_np(thread, "QEMU");
+    return 0;
+  }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <pthread.h>
+
+  static void *f(void *p) { pthread_setname_np("QEMU"); return NULL; }
+  int main(void)
+  {
+    pthread_t thread;
+    pthread_create(&thread, 0, f, 0);
+    return 0;
+  }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp0plz_3vk/testfile.c: In function 'f':
+/home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp0plz_3vk/testfile.c:8:48: warning: passing argument 1 of 'pthread_setname_np' makes integer from pointer without a cast [-Wint-conversion]
+   static void *f(void *p) { pthread_setname_np("QEMU"); return NULL; }
+                                                ^~~~~~
+In file included from /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp0plz_3vk/testfile.c:6:0:
+/usr/include/pthread.h:452:12: note: expected 'pthread_t {aka long unsigned int}' but argument is of type 'char *'
+ extern int pthread_setname_np (pthread_t __target_thread, const char *__name)
+            ^~~~~~~~~~~~~~~~~~
+/home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp0plz_3vk/testfile.c:8:29: error: too few arguments to function 'pthread_setname_np'
+   static void *f(void *p) { pthread_setname_np("QEMU"); return NULL; }
+                             ^~~~~~~~~~~~~~~~~~
+In file included from /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp0plz_3vk/testfile.c:6:0:
+/usr/include/pthread.h:452:12: note: declared here
+ extern int pthread_setname_np (pthread_t __target_thread, const char *__name)
+            ^~~~~~~~~~~~~~~~~~
+
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <sys/signalfd.h>
+  #include <stddef.h>
+  int main(void) { return signalfd(-1, NULL, SFD_CLOEXEC); }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpt4xrn3zq/testfile.c: In function 'main':
+/home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpt4xrn3zq/testfile.c:8:27: warning: null argument where non-null required (argument 2) [-Wnonnull]
+   int main(void) { return signalfd(-1, NULL, SFD_CLOEXEC); }
+                           ^~~~~~~~
+
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <unistd.h>
+  #include <fcntl.h>
+  #include <limits.h>
+
+  int main(void)
+  {
+    int len, fd = 0;
+    len = tee(STDIN_FILENO, STDOUT_FILENO, INT_MAX, SPLICE_F_NONBLOCK);
+    splice(STDIN_FILENO, NULL, fd, NULL, len, SPLICE_F_MOVE);
+    return 0;
+  }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <sys/mman.h>
+  int main(int argc, char *argv[]) {
+    return mlockall(MCL_FUTURE);
+  }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+      #include <sys/socket.h>
+      #include <linux/ip.h>
+        void bar(void) {
+            sizeof(struct mmsghdr);
+        };
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Checking for type "struct mmsghdr" : YES (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+    #include <inttypes.h>
+    #include <net/if.h>
+    #include <net/netmap.h>
+    #include <net/netmap_user.h>
+    #if (NETMAP_API < 11) || (NETMAP_API > 15)
+    #error
+    #endif
+    int main(void) { return 0; }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmplgrc85rt/testfile.c:4:14: fatal error: net/netmap.h: No such file or directory
+     #include <net/netmap.h>
+              ^~~~~~~~~~~~~~
+compilation terminated.
+
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #include <linux/fs.h>
+  struct fsxattr foo;
+  int main(void) {
+    return 0;
+  }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+    #include <stdint.h>
+    #include <stdio.h>
+    int main(int argc, char *argv[]) {
+        return printf("%zu", SIZE_MAX);
+    }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #include <stdint.h>
+  int main(void)
+  {
+    uint64_t x = 0, y = 0;
+    y = __atomic_load_n(&x, __ATOMIC_RELAXED);
+    __atomic_store_n(&x, y, __ATOMIC_RELAXED);
+    __atomic_compare_exchange_n(&x, &y, x, 0, __ATOMIC_RELAXED, __ATOMIC_RELAXED);
+    __atomic_exchange_n(&x, y, __ATOMIC_RELAXED);
+    __atomic_fetch_add(&x, y, __ATOMIC_RELAXED);
+    return 0;
+  }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <sys/auxv.h>
+  int main(void) {
+    return getauxval(AT_HWCAP) == 0;
+  }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+
+  #include <errno.h>
+  #include <sys/types.h>
+  #include <sys/socket.h>
+  #if !defined(AF_VSOCK)
+  # error missing AF_VSOCK flag
+  #endif
+  #include <linux/vm_sockets.h>
+  int main(void) {
+    int sock, ret;
+    struct sockaddr_vm svm;
+    socklen_t len = sizeof(svm);
+    sock = socket(AF_VSOCK, SOCK_STREAM, 0);
+    ret = getpeername(sock, (struct sockaddr *)&svm, &len);
+    if ((ret == -1) && (errno == ENOTCONN)) {
+        return 0;
+    }
+    return -1;
+  }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Program scripts/minikconf.py found: YES (/home/mypc/Tools/diff/qemu-6.2.0/scripts/minikconf.py)
+Configuring i386-softmmu-config-target.h using configuration
+Configuring i386-softmmu-config-devices.mak with command
+Running command: /home/mypc/Tools/diff/qemu-6.2.0/scripts/minikconf.py --defconfig i386-softmmu-config-devices.mak /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/i386-softmmu-config-devices.mak.d /home/mypc/Tools/diff/qemu-6.2.0/configs/devices/i386-softmmu/default.mak /home/mypc/Tools/diff/qemu-6.2.0/Kconfig CONFIG_TPM=y CONFIG_SPICE=y CONFIG_IVSHMEM=y CONFIG_VHOST_USER=y CONFIG_VHOST_VDPA=y CONFIG_VHOST_KERNEL=y CONFIG_VIRTFS=y CONFIG_LINUX=y CONFIG_MULTIPROCESS_ALLOWED=y CONFIG_KVM=y CONFIG_XEN=y CONFIG_TCG=y CONFIG_I386=y
+--- stdout ---
+CONFIG_AC97=y
+CONFIG_ACPI=y
+CONFIG_ACPI_CPU_HOTPLUG=y
+CONFIG_ACPI_HMAT=y
+CONFIG_ACPI_HW_REDUCED=y
+CONFIG_ACPI_MEMORY_HOTPLUG=y
+CONFIG_ACPI_NVDIMM=y
+CONFIG_ACPI_PCI=y
+CONFIG_ACPI_PCIHP=y
+CONFIG_ACPI_PIIX4=y
+CONFIG_ACPI_SMBUS=y
+CONFIG_ACPI_VIOT=y
+CONFIG_ACPI_VMGENID=y
+CONFIG_ACPI_X86=y
+CONFIG_ACPI_X86_ICH=y
+CONFIG_ADLIB=y
+CONFIG_AHCI=y
+CONFIG_AHCI_ICH9=y
+CONFIG_AMD_IOMMU=y
+CONFIG_APIC=y
+CONFIG_APM=y
+CONFIG_APPLESMC=y
+CONFIG_ATI_VGA=y
+CONFIG_BITBANG_I2C=y
+CONFIG_BOCHS_DISPLAY=y
+CONFIG_CAN_BUS=y
+CONFIG_CAN_CTUCANFD=y
+CONFIG_CAN_CTUCANFD_PCI=y
+CONFIG_CAN_PCI=y
+CONFIG_CAN_SJA1000=y
+CONFIG_CS4231A=y
+CONFIG_DDC=y
+CONFIG_DIMM=y
+CONFIG_E1000E_PCI_EXPRESS=y
+CONFIG_E1000_PCI=y
+CONFIG_EDID=y
+CONFIG_EDU=y
+CONFIG_EEPRO100_PCI=y
+CONFIG_ES1370=y
+CONFIG_ESP=y
+CONFIG_ESP_PCI=y
+CONFIG_FDC=y
+CONFIG_FDC_ISA=y
+CONFIG_FSDEV_9P=y
+CONFIG_FW_CFG_DMA=y
+CONFIG_GENERIC_LOADER=y
+CONFIG_GUEST_LOADER=y
+CONFIG_GUS=y
+CONFIG_HDA=y
+CONFIG_HPET=y
+CONFIG_HYPERV=y
+CONFIG_HYPERV_TESTDEV=y
+CONFIG_I2C=y
+CONFIG_I440FX=y
+CONFIG_I8254=y
+CONFIG_I8257=y
+CONFIG_I8259=y
+CONFIG_I82801B11=y
+CONFIG_IDE_CORE=y
+CONFIG_IDE_ISA=y
+CONFIG_IDE_PCI=y
+CONFIG_IDE_PIIX=y
+CONFIG_IDE_QDEV=y
+CONFIG_IMX_USBPHY=y
+CONFIG_IOAPIC=y
+CONFIG_IOH3420=y
+CONFIG_IPACK=y
+CONFIG_IPMI=y
+CONFIG_IPMI_EXTERN=y
+CONFIG_IPMI_LOCAL=y
+CONFIG_IPMI_SSIF=y
+CONFIG_ISAPC=y
+CONFIG_ISA_BUS=y
+CONFIG_ISA_DEBUG=y
+CONFIG_ISA_IPMI_BT=y
+CONFIG_ISA_IPMI_KCS=y
+CONFIG_ISA_TESTDEV=y
+CONFIG_IVSHMEM_DEVICE=y
+CONFIG_LPC_ICH9=y
+CONFIG_LSI_SCSI_PCI=y
+CONFIG_MC146818RTC=y
+CONFIG_MEGASAS_SCSI_PCI=y
+CONFIG_MEM_DEVICE=y
+CONFIG_MICROVM=y
+CONFIG_MPTSAS_SCSI_PCI=y
+CONFIG_MSI_NONBROKEN=y
+CONFIG_MULTIPROCESS=y
+CONFIG_NE2000_COMMON=y
+CONFIG_NE2000_ISA=y
+CONFIG_NE2000_PCI=y
+CONFIG_NMC93XX_EEPROM=y
+CONFIG_NVDIMM=y
+CONFIG_NVME_PCI=y
+CONFIG_PAM=y
+CONFIG_PARALLEL=y
+CONFIG_PC=y
+CONFIG_PCI=y
+CONFIG_PCIE_PORT=y
+CONFIG_PCI_DEVICES=y
+CONFIG_PCI_EXPRESS=y
+CONFIG_PCI_EXPRESS_GENERIC_BRIDGE=y
+CONFIG_PCI_EXPRESS_Q35=y
+CONFIG_PCI_I440FX=y
+CONFIG_PCI_IPMI_BT=y
+CONFIG_PCI_IPMI_KCS=y
+CONFIG_PCI_TESTDEV=y
+CONFIG_PCKBD=y
+CONFIG_PCNET_COMMON=y
+CONFIG_PCNET_PCI=y
+CONFIG_PCSPK=y
+CONFIG_PC_ACPI=y
+CONFIG_PC_PCI=y
+CONFIG_PFLASH_CFI01=y
+CONFIG_PIIX3=y
+CONFIG_PS2=y
+CONFIG_PVPANIC_COMMON=y
+CONFIG_PVPANIC_ISA=y
+CONFIG_PVPANIC_PCI=y
+CONFIG_PXB=y
+CONFIG_Q35=y
+CONFIG_QXL=y
+CONFIG_REMOTE_PCIHOST=y
+CONFIG_ROCKER=y
+CONFIG_RTL8139_PCI=y
+CONFIG_SB16=y
+CONFIG_SCSI=y
+CONFIG_SD=y
+CONFIG_SDHCI=y
+CONFIG_SDHCI_PCI=y
+CONFIG_SERIAL=y
+CONFIG_SERIAL_ISA=y
+CONFIG_SERIAL_PCI=y
+CONFIG_SERIAL_PCI_MULTI=y
+CONFIG_SEV=y
+CONFIG_SGA=y
+CONFIG_SGX=y
+CONFIG_SMBIOS=y
+CONFIG_SMBUS=y
+CONFIG_SMBUS_EEPROM=y
+CONFIG_TEST_DEVICES=y
+CONFIG_TPM_BACKEND=y
+CONFIG_TPM_CRB=y
+CONFIG_TPM_EMULATOR=y
+CONFIG_TPM_PASSTHROUGH=y
+CONFIG_TPM_TIS=y
+CONFIG_TPM_TIS_ISA=y
+CONFIG_TULIP=y
+CONFIG_USB=y
+CONFIG_USB_AUDIO=y
+CONFIG_USB_EHCI=y
+CONFIG_USB_EHCI_PCI=y
+CONFIG_USB_NETWORK=y
+CONFIG_USB_OHCI=y
+CONFIG_USB_OHCI_PCI=y
+CONFIG_USB_SERIAL=y
+CONFIG_USB_SMARTCARD=y
+CONFIG_USB_STORAGE_BOT=y
+CONFIG_USB_STORAGE_CLASSIC=y
+CONFIG_USB_STORAGE_CORE=y
+CONFIG_USB_STORAGE_MTP=y
+CONFIG_USB_STORAGE_UAS=y
+CONFIG_USB_TABLET_WACOM=y
+CONFIG_USB_U2F=y
+CONFIG_USB_UHCI=y
+CONFIG_USB_XHCI=y
+CONFIG_USB_XHCI_NEC=y
+CONFIG_USB_XHCI_PCI=y
+CONFIG_USB_XHCI_SYSBUS=y
+CONFIG_VFIO=y
+CONFIG_VFIO_IGD=y
+CONFIG_VFIO_PCI=y
+CONFIG_VGA=y
+CONFIG_VGA_CIRRUS=y
+CONFIG_VGA_ISA=y
+CONFIG_VGA_PCI=y
+CONFIG_VHOST=y
+CONFIG_VHOST_USER_BLK=y
+CONFIG_VHOST_USER_GPU=y
+CONFIG_VHOST_USER_I2C=y
+CONFIG_VHOST_USER_INPUT=y
+CONFIG_VHOST_USER_RNG=y
+CONFIG_VHOST_USER_SCSI=y
+CONFIG_VHOST_USER_VGA=y
+CONFIG_VIRTIO=y
+CONFIG_VIRTIO_9P=y
+CONFIG_VIRTIO_BALLOON=y
+CONFIG_VIRTIO_BLK=y
+CONFIG_VIRTIO_CRYPTO=y
+CONFIG_VIRTIO_GPU=y
+CONFIG_VIRTIO_INPUT=y
+CONFIG_VIRTIO_INPUT_HOST=y
+CONFIG_VIRTIO_IOMMU=y
+CONFIG_VIRTIO_MEM=y
+CONFIG_VIRTIO_MEM_SUPPORTED=y
+CONFIG_VIRTIO_MMIO=y
+CONFIG_VIRTIO_NET=y
+CONFIG_VIRTIO_PCI=y
+CONFIG_VIRTIO_PMEM=y
+CONFIG_VIRTIO_PMEM_SUPPORTED=y
+CONFIG_VIRTIO_RNG=y
+CONFIG_VIRTIO_SCSI=y
+CONFIG_VIRTIO_SERIAL=y
+CONFIG_VIRTIO_VGA=y
+CONFIG_VMBUS=y
+CONFIG_VMMOUSE=y
+CONFIG_VMPORT=y
+CONFIG_VMWARE_VGA=y
+CONFIG_VMW_PVSCSI_SCSI_PCI=y
+CONFIG_VMXNET3_PCI=y
+CONFIG_VTD=y
+CONFIG_WDT_IB6300ESB=y
+CONFIG_WDT_IB700=y
+CONFIG_X86_FW_OVMF=y
+CONFIG_X86_IOMMU=y
+CONFIG_XEN_IGD_PASSTHROUGH=y
+CONFIG_XIO3130=y
+
+--- stderr ---
+
+
+Reading depfile: /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/i386-softmmu-config-devices.mak.d
+Configuring i386-softmmu-config-devices.h using configuration
+Configuring mips-softmmu-config-target.h using configuration
+Configuring mips-softmmu-config-devices.mak with command
+Running command: /home/mypc/Tools/diff/qemu-6.2.0/scripts/minikconf.py --defconfig mips-softmmu-config-devices.mak /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/mips-softmmu-config-devices.mak.d /home/mypc/Tools/diff/qemu-6.2.0/configs/devices/mips-softmmu/default.mak /home/mypc/Tools/diff/qemu-6.2.0/Kconfig CONFIG_TPM=y CONFIG_SPICE=y CONFIG_IVSHMEM=y CONFIG_VHOST_USER=y CONFIG_VHOST_VDPA=y CONFIG_VHOST_KERNEL=y CONFIG_VIRTFS=y CONFIG_LINUX=y CONFIG_MULTIPROCESS_ALLOWED=y CONFIG_TCG=y CONFIG_MIPS=y
+--- stdout ---
+CONFIG_AC97=y
+CONFIG_ACPI=y
+CONFIG_ACPI_PIIX4=y
+CONFIG_ACPI_SMBUS=y
+CONFIG_ADLIB=y
+CONFIG_AHCI=y
+CONFIG_AHCI_ICH9=y
+CONFIG_APM=y
+CONFIG_ATI_VGA=y
+CONFIG_BITBANG_I2C=y
+CONFIG_BOCHS_DISPLAY=y
+CONFIG_CAN_BUS=y
+CONFIG_CAN_CTUCANFD=y
+CONFIG_CAN_CTUCANFD_PCI=y
+CONFIG_CAN_PCI=y
+CONFIG_CAN_SJA1000=y
+CONFIG_CS4231A=y
+CONFIG_DDC=y
+CONFIG_E1000_PCI=y
+CONFIG_EDID=y
+CONFIG_EEPRO100_PCI=y
+CONFIG_EMPTY_SLOT=y
+CONFIG_ES1370=y
+CONFIG_ESP=y
+CONFIG_ESP_PCI=y
+CONFIG_FDC=y
+CONFIG_FDC_ISA=y
+CONFIG_FSDEV_9P=y
+CONFIG_GENERIC_LOADER=y
+CONFIG_GUEST_LOADER=y
+CONFIG_GUS=y
+CONFIG_HDA=y
+CONFIG_I2C=y
+CONFIG_I8254=y
+CONFIG_I8257=y
+CONFIG_I8259=y
+CONFIG_IDE_CORE=y
+CONFIG_IDE_ISA=y
+CONFIG_IDE_PCI=y
+CONFIG_IDE_PIIX=y
+CONFIG_IDE_QDEV=y
+CONFIG_IMX_USBPHY=y
+CONFIG_IPACK=y
+CONFIG_ISA_BUS=y
+CONFIG_ISA_SUPERIO=y
+CONFIG_ISA_TESTDEV=y
+CONFIG_LSI_SCSI_PCI=y
+CONFIG_MALTA=y
+CONFIG_MC146818RTC=y
+CONFIG_MEGASAS_SCSI_PCI=y
+CONFIG_MIPSNET=y
+CONFIG_MIPSSIM=y
+CONFIG_MIPS_CPS=y
+CONFIG_MIPS_ITU=y
+CONFIG_MPTSAS_SCSI_PCI=y
+CONFIG_NE2000_COMMON=y
+CONFIG_NE2000_ISA=y
+CONFIG_NE2000_PCI=y
+CONFIG_NMC93XX_EEPROM=y
+CONFIG_NVME_PCI=y
+CONFIG_PARALLEL=y
+CONFIG_PCI=y
+CONFIG_PCI_DEVICES=y
+CONFIG_PCI_TESTDEV=y
+CONFIG_PCKBD=y
+CONFIG_PCNET_COMMON=y
+CONFIG_PCNET_PCI=y
+CONFIG_PCSPK=y
+CONFIG_PFLASH_CFI01=y
+CONFIG_PIIX4=y
+CONFIG_PS2=y
+CONFIG_PTIMER=y
+CONFIG_PVPANIC_COMMON=y
+CONFIG_PVPANIC_PCI=y
+CONFIG_RTL8139_PCI=y
+CONFIG_SB16=y
+CONFIG_SCSI=y
+CONFIG_SD=y
+CONFIG_SDHCI=y
+CONFIG_SDHCI_PCI=y
+CONFIG_SEMIHOSTING=y
+CONFIG_SERIAL=y
+CONFIG_SERIAL_ISA=y
+CONFIG_SERIAL_PCI=y
+CONFIG_SERIAL_PCI_MULTI=y
+CONFIG_SMBUS=y
+CONFIG_SMBUS_EEPROM=y
+CONFIG_TEST_DEVICES=y
+CONFIG_TULIP=y
+CONFIG_USB=y
+CONFIG_USB_AUDIO=y
+CONFIG_USB_EHCI=y
+CONFIG_USB_EHCI_PCI=y
+CONFIG_USB_NETWORK=y
+CONFIG_USB_OHCI=y
+CONFIG_USB_OHCI_PCI=y
+CONFIG_USB_SERIAL=y
+CONFIG_USB_SMARTCARD=y
+CONFIG_USB_STORAGE_BOT=y
+CONFIG_USB_STORAGE_CLASSIC=y
+CONFIG_USB_STORAGE_CORE=y
+CONFIG_USB_STORAGE_MTP=y
+CONFIG_USB_STORAGE_UAS=y
+CONFIG_USB_TABLET_WACOM=y
+CONFIG_USB_U2F=y
+CONFIG_USB_UHCI=y
+CONFIG_USB_XHCI=y
+CONFIG_USB_XHCI_NEC=y
+CONFIG_USB_XHCI_PCI=y
+CONFIG_VFIO=y
+CONFIG_VFIO_PCI=y
+CONFIG_VGA=y
+CONFIG_VGA_CIRRUS=y
+CONFIG_VGA_ISA=y
+CONFIG_VGA_ISA_MM=y
+CONFIG_VGA_PCI=y
+CONFIG_VHOST=y
+CONFIG_VHOST_USER_BLK=y
+CONFIG_VHOST_USER_GPU=y
+CONFIG_VHOST_USER_I2C=y
+CONFIG_VHOST_USER_INPUT=y
+CONFIG_VHOST_USER_RNG=y
+CONFIG_VHOST_USER_SCSI=y
+CONFIG_VIRTIO=y
+CONFIG_VIRTIO_9P=y
+CONFIG_VIRTIO_BALLOON=y
+CONFIG_VIRTIO_BLK=y
+CONFIG_VIRTIO_CRYPTO=y
+CONFIG_VIRTIO_GPU=y
+CONFIG_VIRTIO_INPUT=y
+CONFIG_VIRTIO_INPUT_HOST=y
+CONFIG_VIRTIO_IOMMU=y
+CONFIG_VIRTIO_NET=y
+CONFIG_VIRTIO_PCI=y
+CONFIG_VIRTIO_RNG=y
+CONFIG_VIRTIO_SCSI=y
+CONFIG_VIRTIO_SERIAL=y
+CONFIG_VMWARE_VGA=y
+CONFIG_VMW_PVSCSI_SCSI_PCI=y
+CONFIG_VMXNET3_PCI=y
+CONFIG_WDT_IB6300ESB=y
+CONFIG_WDT_IB700=y
+
+--- stderr ---
+
+
+Reading depfile: /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/mips-softmmu-config-devices.mak.d
+Configuring mips-softmmu-config-devices.h using configuration
+Configuring arm-softmmu-config-target.h using configuration
+Configuring arm-softmmu-config-devices.mak with command
+Running command: /home/mypc/Tools/diff/qemu-6.2.0/scripts/minikconf.py --defconfig arm-softmmu-config-devices.mak /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/arm-softmmu-config-devices.mak.d /home/mypc/Tools/diff/qemu-6.2.0/configs/devices/arm-softmmu/default.mak /home/mypc/Tools/diff/qemu-6.2.0/Kconfig CONFIG_TPM=y CONFIG_SPICE=y CONFIG_IVSHMEM=y CONFIG_VHOST_USER=y CONFIG_VHOST_VDPA=y CONFIG_VHOST_KERNEL=y CONFIG_VIRTFS=y CONFIG_LINUX=y CONFIG_MULTIPROCESS_ALLOWED=y CONFIG_TCG=y CONFIG_ARM=y
+--- stdout ---
+CONFIG_A15MPCORE=y
+CONFIG_A9MPCORE=y
+CONFIG_A9SCU=y
+CONFIG_A9_GTIMER=y
+CONFIG_AC97=y
+CONFIG_ACPI=y
+CONFIG_ACPI_APEI=y
+CONFIG_ACPI_HW_REDUCED=y
+CONFIG_ACPI_MEMORY_HOTPLUG=y
+CONFIG_ACPI_NVDIMM=y
+CONFIG_ACPI_PCI=y
+CONFIG_ADM1272=y
+CONFIG_ADS7846=y
+CONFIG_AHCI=y
+CONFIG_AHCI_ICH9=y
+CONFIG_ALLWINNER_A10=y
+CONFIG_ALLWINNER_A10_PIC=y
+CONFIG_ALLWINNER_A10_PIT=y
+CONFIG_ALLWINNER_EMAC=y
+CONFIG_ALLWINNER_H3=y
+CONFIG_ALLWINNER_SUN8I_EMAC=y
+CONFIG_ARM11MPCORE=y
+CONFIG_ARM11SCU=y
+CONFIG_ARMSSE=y
+CONFIG_ARMSSE_CPUID=y
+CONFIG_ARMSSE_CPU_PWRCTRL=y
+CONFIG_ARMSSE_MHU=y
+CONFIG_ARM_COMPATIBLE_SEMIHOSTING=y
+CONFIG_ARM_GIC=y
+CONFIG_ARM_MPTIMER=y
+CONFIG_ARM_SMMUV3=y
+CONFIG_ARM_TIMER=y
+CONFIG_ARM_V7M=y
+CONFIG_ARM_VIRT=y
+CONFIG_ASPEED_SOC=y
+CONFIG_AT24C=y
+CONFIG_ATI_VGA=y
+CONFIG_BITBANG_I2C=y
+CONFIG_BLIZZARD=y
+CONFIG_BOCHS_DISPLAY=y
+CONFIG_CADENCE=y
+CONFIG_CAN_BUS=y
+CONFIG_CAN_CTUCANFD=y
+CONFIG_CAN_CTUCANFD_PCI=y
+CONFIG_CAN_PCI=y
+CONFIG_CAN_SJA1000=y
+CONFIG_CHEETAH=y
+CONFIG_CMSDK_APB_DUALTIMER=y
+CONFIG_CMSDK_APB_TIMER=y
+CONFIG_CMSDK_APB_UART=y
+CONFIG_CMSDK_APB_WATCHDOG=y
+CONFIG_COLLIE=y
+CONFIG_CUBIEBOARD=y
+CONFIG_DDC=y
+CONFIG_DIGIC=y
+CONFIG_DIMM=y
+CONFIG_DPS310=y
+CONFIG_DS1338=y
+CONFIG_E1000E_PCI_EXPRESS=y
+CONFIG_E1000_PCI=y
+CONFIG_ECC=y
+CONFIG_EDID=y
+CONFIG_EDU=y
+CONFIG_EEPRO100_PCI=y
+CONFIG_EMC141X=y
+CONFIG_EMCRAFT_SF2=y
+CONFIG_ES1370=y
+CONFIG_ESP=y
+CONFIG_ESP_PCI=y
+CONFIG_EXYNOS4=y
+CONFIG_FRAMEBUFFER=y
+CONFIG_FSDEV_9P=y
+CONFIG_FSL_IMX25=y
+CONFIG_FSL_IMX31=y
+CONFIG_FSL_IMX6=y
+CONFIG_FSL_IMX6UL=y
+CONFIG_FSL_IMX7=y
+CONFIG_FTGMAC100=y
+CONFIG_FW_CFG_DMA=y
+CONFIG_GENERIC_LOADER=y
+CONFIG_GPIO_KEY=y
+CONFIG_GPIO_PWR=y
+CONFIG_GUEST_LOADER=y
+CONFIG_GUMSTIX=y
+CONFIG_HDA=y
+CONFIG_HIGHBANK=y
+CONFIG_I2C=y
+CONFIG_I82801B11=y
+CONFIG_IDE_CORE=y
+CONFIG_IDE_QDEV=y
+CONFIG_IMX=y
+CONFIG_IMX_FEC=y
+CONFIG_IMX_I2C=y
+CONFIG_IMX_USBPHY=y
+CONFIG_INTEGRATOR=y
+CONFIG_INTEGRATOR_DEBUG=y
+CONFIG_IOH3420=y
+CONFIG_IOTKIT_SECCTL=y
+CONFIG_IOTKIT_SYSCTL=y
+CONFIG_IOTKIT_SYSINFO=y
+CONFIG_IPACK=y
+CONFIG_IVSHMEM_DEVICE=y
+CONFIG_LAN9118=y
+CONFIG_LED=y
+CONFIG_LM832X=y
+CONFIG_LSI_SCSI_PCI=y
+CONFIG_MAINSTONE=y
+CONFIG_MARVELL_88W8618=y
+CONFIG_MAX111X=y
+CONFIG_MAX34451=y
+CONFIG_MAX7310=y
+CONFIG_MEGASAS_SCSI_PCI=y
+CONFIG_MEM_DEVICE=y
+CONFIG_MICROBIT=y
+CONFIG_MICRODRIVE=y
+CONFIG_MPS2=y
+CONFIG_MPS2_FPGAIO=y
+CONFIG_MPS2_SCC=y
+CONFIG_MPTSAS_SCSI_PCI=y
+CONFIG_MSF2=y
+CONFIG_MSI_NONBROKEN=y
+CONFIG_MUSCA=y
+CONFIG_MUSICPAL=y
+CONFIG_NAND=y
+CONFIG_NE2000_COMMON=y
+CONFIG_NE2000_PCI=y
+CONFIG_NETDUINO2=y
+CONFIG_NETDUINOPLUS2=y
+CONFIG_NMC93XX_EEPROM=y
+CONFIG_NPCM7XX=y
+CONFIG_NRF51_SOC=y
+CONFIG_NSERIES=y
+CONFIG_NVDIMM=y
+CONFIG_NVME_PCI=y
+CONFIG_OMAP=y
+CONFIG_ONENAND=y
+CONFIG_OR_IRQ=y
+CONFIG_PCA954X=y
+CONFIG_PCA9552=y
+CONFIG_PCI=y
+CONFIG_PCIE_PORT=y
+CONFIG_PCI_DEVICES=y
+CONFIG_PCI_EXPRESS=y
+CONFIG_PCI_EXPRESS_DESIGNWARE=y
+CONFIG_PCI_EXPRESS_GENERIC_BRIDGE=y
+CONFIG_PCI_TESTDEV=y
+CONFIG_PCMCIA=y
+CONFIG_PCNET_COMMON=y
+CONFIG_PCNET_PCI=y
+CONFIG_PFLASH_CFI01=y
+CONFIG_PFLASH_CFI02=y
+CONFIG_PL011=y
+CONFIG_PL022=y
+CONFIG_PL031=y
+CONFIG_PL041=y
+CONFIG_PL050=y
+CONFIG_PL061=y
+CONFIG_PL080=y
+CONFIG_PL110=y
+CONFIG_PL181=y
+CONFIG_PL190=y
+CONFIG_PL310=y
+CONFIG_PL330=y
+CONFIG_PLATFORM_BUS=y
+CONFIG_PMBUS=y
+CONFIG_PS2=y
+CONFIG_PTIMER=y
+CONFIG_PVPANIC_COMMON=y
+CONFIG_PVPANIC_PCI=y
+CONFIG_PXA2XX=y
+CONFIG_PXB=y
+CONFIG_RASPI=y
+CONFIG_REALVIEW=y
+CONFIG_REGISTER=y
+CONFIG_ROCKER=y
+CONFIG_RTL8139_PCI=y
+CONFIG_SABRELITE=y
+CONFIG_SCSI=y
+CONFIG_SD=y
+CONFIG_SDHCI=y
+CONFIG_SDHCI_PCI=y
+CONFIG_SEMIHOSTING=y
+CONFIG_SERIAL=y
+CONFIG_SERIAL_PCI=y
+CONFIG_SERIAL_PCI_MULTI=y
+CONFIG_SII9022=y
+CONFIG_SMBIOS=y
+CONFIG_SMBUS=y
+CONFIG_SMBUS_EEPROM=y
+CONFIG_SMC91C111=y
+CONFIG_SPITZ=y
+CONFIG_SPLIT_IRQ=y
+CONFIG_SSD0303=y
+CONFIG_SSD0323=y
+CONFIG_SSE_COUNTER=y
+CONFIG_SSE_TIMER=y
+CONFIG_SSI=y
+CONFIG_SSI_M25P80=y
+CONFIG_SSI_SD=y
+CONFIG_STELLARIS=y
+CONFIG_STELLARIS_ENET=y
+CONFIG_STELLARIS_GPTM=y
+CONFIG_STELLARIS_INPUT=y
+CONFIG_STM32F100_SOC=y
+CONFIG_STM32F205_SOC=y
+CONFIG_STM32F2XX_ADC=y
+CONFIG_STM32F2XX_SPI=y
+CONFIG_STM32F2XX_SYSCFG=y
+CONFIG_STM32F2XX_TIMER=y
+CONFIG_STM32F2XX_USART=y
+CONFIG_STM32F405_SOC=y
+CONFIG_STM32F4XX_EXTI=y
+CONFIG_STM32F4XX_SYSCFG=y
+CONFIG_STM32VLDISCOVERY=y
+CONFIG_STRONGARM=y
+CONFIG_SX1=y
+CONFIG_TEST_DEVICES=y
+CONFIG_TMP105=y
+CONFIG_TMP421=y
+CONFIG_TOSA=y
+CONFIG_TPM_BACKEND=y
+CONFIG_TPM_EMULATOR=y
+CONFIG_TPM_PASSTHROUGH=y
+CONFIG_TPM_TIS=y
+CONFIG_TPM_TIS_SYSBUS=y
+CONFIG_TSC2005=y
+CONFIG_TSC210X=y
+CONFIG_TULIP=y
+CONFIG_TUSB6010=y
+CONFIG_TWL92230=y
+CONFIG_TZ_MPC=y
+CONFIG_TZ_MSC=y
+CONFIG_TZ_PPC=y
+CONFIG_UNIMP=y
+CONFIG_USB=y
+CONFIG_USB_AUDIO=y
+CONFIG_USB_DWC2=y
+CONFIG_USB_EHCI=y
+CONFIG_USB_EHCI_PCI=y
+CONFIG_USB_EHCI_SYSBUS=y
+CONFIG_USB_MUSB=y
+CONFIG_USB_NETWORK=y
+CONFIG_USB_OHCI=y
+CONFIG_USB_OHCI_PCI=y
+CONFIG_USB_SERIAL=y
+CONFIG_USB_SMARTCARD=y
+CONFIG_USB_STORAGE_BOT=y
+CONFIG_USB_STORAGE_CLASSIC=y
+CONFIG_USB_STORAGE_CORE=y
+CONFIG_USB_STORAGE_MTP=y
+CONFIG_USB_STORAGE_UAS=y
+CONFIG_USB_TABLET_WACOM=y
+CONFIG_USB_U2F=y
+CONFIG_USB_UHCI=y
+CONFIG_USB_XHCI=y
+CONFIG_USB_XHCI_NEC=y
+CONFIG_USB_XHCI_PCI=y
+CONFIG_VERSATILE=y
+CONFIG_VERSATILE_I2C=y
+CONFIG_VERSATILE_PCI=y
+CONFIG_VEXPRESS=y
+CONFIG_VFIO=y
+CONFIG_VFIO_AMD_XGBE=y
+CONFIG_VFIO_PCI=y
+CONFIG_VFIO_PLATFORM=y
+CONFIG_VFIO_XGMAC=y
+CONFIG_VGA=y
+CONFIG_VGA_CIRRUS=y
+CONFIG_VGA_PCI=y
+CONFIG_VHOST=y
+CONFIG_VHOST_USER_BLK=y
+CONFIG_VHOST_USER_GPU=y
+CONFIG_VHOST_USER_I2C=y
+CONFIG_VHOST_USER_INPUT=y
+CONFIG_VHOST_USER_RNG=y
+CONFIG_VHOST_USER_SCSI=y
+CONFIG_VIRTIO=y
+CONFIG_VIRTIO_9P=y
+CONFIG_VIRTIO_BALLOON=y
+CONFIG_VIRTIO_BLK=y
+CONFIG_VIRTIO_CRYPTO=y
+CONFIG_VIRTIO_GPU=y
+CONFIG_VIRTIO_INPUT=y
+CONFIG_VIRTIO_INPUT_HOST=y
+CONFIG_VIRTIO_IOMMU=y
+CONFIG_VIRTIO_MMIO=y
+CONFIG_VIRTIO_NET=y
+CONFIG_VIRTIO_PCI=y
+CONFIG_VIRTIO_RNG=y
+CONFIG_VIRTIO_SCSI=y
+CONFIG_VIRTIO_SERIAL=y
+CONFIG_VMWARE_VGA=y
+CONFIG_VMW_PVSCSI_SCSI_PCI=y
+CONFIG_VMXNET3_PCI=y
+CONFIG_WDT_IB6300ESB=y
+CONFIG_WDT_IMX2=y
+CONFIG_WM8750=y
+CONFIG_XGMAC=y
+CONFIG_XILINX=y
+CONFIG_XILINX_AXI=y
+CONFIG_XILINX_SPI=y
+CONFIG_XILINX_SPIPS=y
+CONFIG_XIO3130=y
+CONFIG_Z2=y
+CONFIG_ZAURUS=y
+CONFIG_ZYNQ=y
+CONFIG_ZYNQ_DEVCFG=y
+
+--- stderr ---
+
+
+Reading depfile: /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/arm-softmmu-config-devices.mak.d
+Configuring arm-softmmu-config-devices.h using configuration
+Dependency capstone found: YES 5.0.0 (cached)
+Using cached compile:
+Cached command line:   
+
+Code:
+ #include <capstone.h>
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'slirp' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: 
+Called `/usr/bin/pkg-config --modversion slirp` -> 1
+
+Run-time dependency slirp found: NO (tried pkgconfig)
+Configuring libslirp-version.h using configuration
+Running compile:
+Working directory:  /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp01ja57_a
+Command line:  cc -m64 -mcx16 /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp01ja57_a/testfile.c -o /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmp01ja57_a/output.exe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lfdt -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library fdt found: YES
+Using cached compile:
+Cached command line:   
+
+Code:
+ 
+       #include <libfdt.h>
+       #include <libfdt_env.h>
+       int main(void) { fdt_check_full(NULL, 0); return 0; }
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpxmsi9kri/testfile.c: In function 'main':
+/home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmpxmsi9kri/testfile.c:4:25: warning: implicit declaration of function 'fdt_check_full'; did you mean 'fdt_check_header'? [-Wimplicit-function-declaration]
+        int main(void) { fdt_check_full(NULL, 0); return 0; }
+                         ^~~~~~~~~~~~~~
+                         fdt_check_header
+/tmp/ccOLFPvR.o: In function `main':
+testfile.c:(.text+0x14): undefined reference to `fdt_check_full'
+collect2: error: ld returned 1 exit status
+
+Configuring config-host.h using configuration
+Program scripts/hxtool found: YES (/home/mypc/Tools/diff/qemu-6.2.0/scripts/hxtool)
+Program scripts/shaderinclude.pl found: YES (/home/mypc/Tools/diff/qemu-6.2.0/scripts/shaderinclude.pl)
+Program scripts/qapi-gen.py found: YES (/home/mypc/Tools/diff/qemu-6.2.0/scripts/qapi-gen.py)
+Program scripts/qemu-version.sh found: YES (/home/mypc/Tools/diff/qemu-6.2.0/scripts/qemu-version.sh)
+
+Executing subproject libvhost-user 
+
+Project name: libvhost-user
+Project version: undefined
+C compiler for the host machine: cc -m64 -mcx16 (gcc 7.5.0 "cc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0")
+C linker for the host machine: cc -m64 -mcx16 ld.bfd 2.30
+C compiler for the build machine: cc -m64 -mcx16 (gcc 7.5.0 "cc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0")
+C linker for the build machine: cc -m64 -mcx16 ld.bfd 2.30
+Dependency threads found: YES unknown (cached)
+Dependency glib-2.0 found: YES 6.2.0 (overridden)
+Build targets in project: 10
+Subproject libvhost-user finished.
+
+Program cat found: YES (/bin/cat)
+Program scripts/decodetree.py found: YES (/home/mypc/Tools/diff/qemu-6.2.0/scripts/decodetree.py)
+Program ../scripts/modules/module_block.py found: YES (/home/mypc/Tools/diff/qemu-6.2.0/block/../scripts/modules/module_block.py)
+Program ../scripts/block-coroutine-wrapper.py found: YES (/home/mypc/Tools/diff/qemu-6.2.0/block/../scripts/block-coroutine-wrapper.py)
+Program scripts/modinfo-collect.py found: YES (/home/mypc/Tools/diff/qemu-6.2.0/scripts/modinfo-collect.py)
+Program scripts/modinfo-generate.py found: YES (/home/mypc/Tools/diff/qemu-6.2.0/scripts/modinfo-generate.py)
+Program nm found: YES
+Program scripts/undefsym.py found: YES (/home/mypc/Tools/diff/qemu-6.2.0/scripts/undefsym.py)
+Program scripts/feature_to_c.sh found: YES (/home/mypc/Tools/diff/qemu-6.2.0/scripts/feature_to_c.sh)
+Configuring 50-qemu-virtiofsd.json using configuration
+Configuring 50-edk2-i386-secure.json using configuration
+Configuring 50-edk2-x86_64-secure.json using configuration
+Configuring 60-edk2-aarch64.json using configuration
+Configuring 60-edk2-arm.json using configuration
+Configuring 60-edk2-i386.json using configuration
+Configuring 60-edk2-x86_64.json using configuration
+Program qemu-keymap found: NO
+Program cp found: YES (/bin/cp)
+Program sphinx-build-3 sphinx-build found: NO
+Program python3 found: YES (/usr/bin/python3)
+Adding benchmark "benchmark-crypto-cipher"
+Adding benchmark "benchmark-crypto-hash"
+Adding benchmark "benchmark-crypto-hmac"
+Adding test "decodetree"
+Adding test "fp-test-float-to-float"
+Adding test "fp-test-float-to-int"
+Adding test "fp-test-float-to-uint"
+Adding test "fp-test-int-to-float"
+Adding test "fp-test-round-to-integer"
+Adding test "fp-test-uint-to-float"
+Adding test "fp-test-add"
+Adding test "fp-test-div"
+Adding test "fp-test-eq_signaling"
+Adding test "fp-test-le"
+Adding test "fp-test-le_quiet"
+Adding test "fp-test-lt_quiet"
+Adding test "fp-test-mul"
+Adding test "fp-test-rem"
+Adding test "fp-test-sqrt"
+Adding test "fp-test-sub"
+Adding test "fp-test-mulAdd"
+Adding test "fp-test-log2"
+Adding test "check-block-qdict"
+Adding test "check-qdict"
+Adding test "check-qjson"
+Adding test "check-qlist"
+Adding test "check-qlit"
+Adding test "check-qnull"
+Adding test "check-qnum"
+Adding test "check-qobject"
+Adding test "check-qom-interface"
+Adding test "check-qom-proplist"
+Adding test "check-qstring"
+Adding test "ptimer-test"
+Adding test "rcutorture"
+Adding test "test-aio"
+Adding test "test-aio-multithread"
+Adding test "test-authz-list"
+Adding test "test-authz-listfile"
+Adding test "test-authz-simple"
+Adding test "test-base64"
+Adding test "test-bdrv-drain"
+Adding test "test-bdrv-graph-mod"
+Adding test "test-bitcnt"
+Adding test "test-bitmap"
+Adding test "test-bitops"
+Adding test "test-block-backend"
+Adding test "test-block-iothread"
+Adding test "test-blockjob"
+Adding test "test-blockjob-txn"
+Adding test "test-bufferiszero"
+Adding test "test-char"
+Adding test "test-clone-visitor"
+Adding test "test-coroutine"
+Adding test "test-crypto-afsplit"
+Adding test "test-crypto-block"
+Adding test "test-crypto-cipher"
+Adding test "test-crypto-hash"
+Adding test "test-crypto-hmac"
+Adding test "test-crypto-ivgen"
+Adding test "test-crypto-pbkdf"
+Adding test "test-crypto-secret"
+Adding test "test-crypto-tlscredsx509"
+Adding test "test-crypto-tlssession"
+Adding test "test-crypto-xts"
+Adding test "test-cutils"
+Adding test "test-div128"
+Adding test "test-forward-visitor"
+Adding test "test-hbitmap"
+Adding test "test-image-locking"
+Adding test "test-int128"
+Adding test "test-io-channel-buffer"
+Adding test "test-io-channel-command"
+Adding test "test-io-channel-file"
+Adding test "test-io-channel-socket"
+Adding test "test-io-channel-tls"
+Adding test "test-io-task"
+Adding test "test-iov"
+Adding test "test-keyval"
+Adding test "test-logging"
+Adding test "test-mul64"
+Adding test "test-opts-visitor"
+Adding test "test-qapi-util"
+Adding test "test-qdev-global-props"
+Adding test "test-qdist"
+Adding test "test-qemu-opts"
+Adding test "test-qga"
+Adding test "test-qgraph"
+Adding test "test-qht"
+Adding test "test-qmp-cmds"
+Adding test "test-qmp-event"
+Adding test "test-qobject-input-visitor"
+Adding test "test-qobject-output-visitor"
+Adding test "test-rcu-list"
+Adding test "test-rcu-simpleq"
+Adding test "test-rcu-slist"
+Adding test "test-rcu-tailq"
+Adding test "test-replication"
+Adding test "test-shift128"
+Adding test "test-smp-parse"
+Adding test "test-string-input-visitor"
+Adding test "test-string-output-visitor"
+Adding test "test-thread-pool"
+Adding test "test-throttle"
+Adding test "test-timed-average"
+Adding test "test-util-sockets"
+Adding test "test-uuid"
+Adding test "test-visitor-serialization"
+Adding test "test-vmstate"
+Adding test "test-write-threshold"
+Adding test "test-x86-cpuid"
+Adding test "test-xbzrle"
+Adding test "test-yank"
+Adding test "QAPI schema regression tests"
+Program diff found: YES (/usr/bin/diff)
+Program dbus-daemon found: YES (/usr/bin/dbus-daemon)
+Program gdbus-codegen found: YES (/usr/bin/gdbus-codegen)
+Adding test "qtest-i386/pxe-test"
+Adding test "qtest-i386/test-netfilter"
+Adding test "qtest-i386/test-filter-mirror"
+Adding test "qtest-i386/ahci-test"
+Adding test "qtest-i386/endianness-test"
+Adding test "qtest-i386/boot-serial-test"
+Adding test "qtest-i386/test-filter-redirector"
+Adding test "qtest-i386/ipmi-kcs-test"
+Adding test "qtest-i386/ipmi-bt-test"
+Adding test "qtest-i386/wdt_ib700-test"
+Adding test "qtest-i386/pvpanic-test"
+Adding test "qtest-i386/pvpanic-pci-test"
+Adding test "qtest-i386/intel-hda-test"
+Adding test "qtest-i386/i82801b11-test"
+Adding test "qtest-i386/ioh3420-test"
+Adding test "qtest-i386/lpc-ich9-test"
+Adding test "qtest-i386/usb-hcd-uhci-test"
+Adding test "qtest-i386/usb-hcd-ehci-test"
+Adding test "qtest-i386/usb-hcd-xhci-test"
+Adding test "qtest-i386/tpm-crb-test"
+Adding test "qtest-i386/tpm-crb-swtpm-test"
+Adding test "qtest-i386/tpm-tis-test"
+Adding test "qtest-i386/tpm-tis-swtpm-test"
+Adding test "qtest-i386/rtl8139-test"
+Adding test "qtest-i386/fuzz-e1000e-test"
+Adding test "qtest-i386/am53c974-test"
+Adding test "qtest-i386/bios-tables-test"
+Adding test "qtest-i386/display-vga-test"
+Adding test "qtest-i386/ivshmem-test"
+Adding test "qtest-i386/fdc-test"
+Adding test "qtest-i386/ide-test"
+Adding test "qtest-i386/hd-geo-test"
+Adding test "qtest-i386/boot-order-test"
+Adding test "qtest-i386/rtc-test"
+Adding test "qtest-i386/i440fx-test"
+Adding test "qtest-i386/fw_cfg-test"
+Adding test "qtest-i386/device-plug-test"
+Adding test "qtest-i386/drive_del-test"
+Adding test "qtest-i386/tco-test"
+Adding test "qtest-i386/cpu-plug-test"
+Adding test "qtest-i386/q35-test"
+Adding test "qtest-i386/vmgenid-test"
+Adding test "qtest-i386/migration-test"
+Adding test "qtest-i386/test-x86-cpuid-compat"
+Adding test "qtest-i386/numa-test"
+Adding test "qtest-i386/fuzz-megasas-test"
+Adding test "qtest-i386/fuzz-virtio-scsi-test"
+Adding test "qtest-i386/fuzz-sb16-test"
+Adding test "qtest-i386/fuzz-sdcard-test"
+Adding test "qtest-i386/cdrom-test"
+Adding test "qtest-i386/device-introspect-test"
+Adding test "qtest-i386/machine-none-test"
+Adding test "qtest-i386/qmp-test"
+Adding test "qtest-i386/qmp-cmd-test"
+Adding test "qtest-i386/qom-test"
+Adding test "qtest-i386/test-hmp"
+Adding test "qtest-i386/qos-test"
+Adding test "qtest-mips/endianness-test"
+Adding test "qtest-mips/display-vga-test"
+Adding test "qtest-mips/fuzz-megasas-test"
+Adding test "qtest-mips/fuzz-virtio-scsi-test"
+Adding test "qtest-mips/fuzz-sb16-test"
+Adding test "qtest-mips/fuzz-sdcard-test"
+Adding test "qtest-mips/cdrom-test"
+Adding test "qtest-mips/device-introspect-test"
+Adding test "qtest-mips/machine-none-test"
+Adding test "qtest-mips/qmp-test"
+Adding test "qtest-mips/qmp-cmd-test"
+Adding test "qtest-mips/qom-test"
+Adding test "qtest-mips/test-hmp"
+Adding test "qtest-mips/qos-test"
+Adding test "qtest-arm/sse-timer-test"
+Adding test "qtest-arm/cmsdk-apb-dualtimer-test"
+Adding test "qtest-arm/cmsdk-apb-timer-test"
+Adding test "qtest-arm/cmsdk-apb-watchdog-test"
+Adding test "qtest-arm/pflash-cfi02-test"
+Adding test "qtest-arm/aspeed_hace-test"
+Adding test "qtest-arm/aspeed_smc-test"
+Adding test "qtest-arm/npcm7xx_adc-test"
+Adding test "qtest-arm/npcm7xx_gpio-test"
+Adding test "qtest-arm/npcm7xx_pwm-test"
+Adding test "qtest-arm/npcm7xx_rng-test"
+Adding test "qtest-arm/npcm7xx_smbus-test"
+Adding test "qtest-arm/npcm7xx_timer-test"
+Adding test "qtest-arm/npcm7xx_watchdog_timer-test"
+Adding test "qtest-arm/npcm7xx_emc-test"
+Adding test "qtest-arm/arm-cpu-features"
+Adding test "qtest-arm/microbit-test"
+Adding test "qtest-arm/test-arm-mptimer"
+Adding test "qtest-arm/boot-serial-test"
+Adding test "qtest-arm/hexloader-test"
+Adding test "qtest-arm/fuzz-megasas-test"
+Adding test "qtest-arm/fuzz-virtio-scsi-test"
+Adding test "qtest-arm/fuzz-sb16-test"
+Adding test "qtest-arm/fuzz-sdcard-test"
+Adding test "qtest-arm/cdrom-test"
+Adding test "qtest-arm/device-introspect-test"
+Adding test "qtest-arm/machine-none-test"
+Adding test "qtest-arm/qmp-test"
+Adding test "qtest-arm/qmp-cmd-test"
+Adding test "qtest-arm/qom-test"
+Adding test "qtest-arm/test-hmp"
+Adding test "qtest-arm/qos-test"
+Program initrd-stress.sh found: YES (/home/mypc/Tools/diff/qemu-6.2.0/tests/migration/initrd-stress.sh)
+Build targets in project: 499
+
+qemu 6.2.0
+
+  Directories
+    Install prefix               : /usr/local
+    BIOS directory               : share/qemu
+    firmware path                : /usr/local/share/qemu-firmware
+    binary directory             : bin
+    library directory            : lib
+    module directory             : lib/qemu
+    libexec directory            : libexec
+    include directory            : include
+    config directory             : /usr/local/etc
+    local state directory        : /usr/local/var
+    Manual directory             : share/man
+    Doc directory                : /usr/local/share/doc
+    Build directory              : /home/mypc/Tools/diff/qemu-6.2.0/build
+    Source path                  : /home/mypc/Tools/diff/qemu-6.2.0
+    GIT submodules               : ui/keycodemapdb meson tests/fp/berkeley-testfloat-3 tests/fp/berkeley-softfloat-3 dtc capstone slirp
+
+  Host binaries
+    git                          : git
+    make                         : make
+    python                       : /usr/bin/python3 (version: 3.6)
+    sphinx-build                 : NO
+    genisoimage                  : /usr/bin/genisoimage
+    smbd                         : "/usr/sbin/smbd"
+
+  Configurable features
+    Documentation                : NO
+    system-mode emulation        : YES
+    user-mode emulation          : NO
+    block layer                  : YES
+    Install blobs                : YES
+    module support               : NO
+    fuzzing support              : NO
+    Audio drivers                : pa oss
+    Trace backends               : log
+    QOM debugging                : YES
+    vhost-kernel support         : YES
+    vhost-net support            : YES
+    vhost-crypto support         : YES
+    vhost-scsi support           : YES
+    vhost-vsock support          : YES
+    vhost-user support           : YES
+    vhost-user-blk server support: YES
+    vhost-user-fs support        : YES
+    vhost-vdpa support           : YES
+    build guest agent            : YES
+
+  Compilation
+    host CPU                     : x86_64
+    host endianness              : little
+    C compiler                   : cc -m64 -mcx16
+    Host C compiler              : cc -m64 -mcx16
+    C++ compiler                 : c++ -m64 -mcx16
+    CFLAGS                       : -O0 -g
+    CXXFLAGS                     : -O0 -g
+    QEMU_CFLAGS                  : -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -Wstrict-prototypes -Wredundant-decls -Wundef -Wwrite-strings -Wmissing-prototypes -fno-strict-aliasing -fno-common -fwrapv -Wold-style-declaration -Wold-style-definition -Wtype-limits -Wformat-security -Wformat-y2k -Winit-self -Wignored-qualifiers -Wempty-body -Wnested-externs -Wendif-labels -Wexpansion-to-defined -Wimplicit-fallthrough=2 -Wno-missing-include-dirs -Wno-shift-negative-value -Wno-psabi -fstack-protector-strong
+    QEMU_LDFLAGS                 : -Wl,--warn-common -Wl,-z,relro -Wl,-z,now  -fstack-protector-strong
+    profiler                     : NO
+    link-time optimization (LTO) : NO
+    PIE                          : YES
+    static build                 : NO
+    malloc trim support          : YES
+    membarrier                   : NO
+    debug stack usage            : NO
+    mutex debugging              : YES
+    memory allocator             : system
+    avx2 optimization            : YES
+    avx512f optimization         : NO
+    gprof enabled                : NO
+    gcov                         : NO
+    thread sanitizer             : NO
+    CFI support                  : NO
+    strip binaries               : NO
+    sparse                       : NO
+    mingw32 support              : NO
+
+  Targets and accelerators
+    KVM support                  : YES
+    HAX support                  : NO
+    HVF support                  : NO
+    WHPX support                 : NO
+    NVMM support                 : NO
+    Xen support                  : YES
+    xen ctrl version             : 40900
+    TCG support                  : YES
+    TCG backend                  : native (x86_64)
+    TCG plugins                  : YES
+    TCG debug enabled            : YES
+    target list                  : i386-softmmu mips-softmmu arm-softmmu
+    default devices              : YES
+    out of process emulation     : YES
+
+  Block layer support
+    coroutine backend            : ucontext
+    coroutine pool               : YES
+    Block whitelist (rw)         : 
+    Block whitelist (ro)         : 
+    Use block whitelist in tools : NO
+    VirtFS support               : YES
+    build virtiofs daemon        : YES
+    Live block migration         : YES
+    replication support          : YES
+    bochs support                : YES
+    cloop support                : YES
+    dmg support                  : YES
+    qcow v1 support              : YES
+    vdi support                  : YES
+    vvfat support                : YES
+    qed support                  : YES
+    parallels support            : YES
+    vmi support                  : YES
+    tcg taint support            : YES
+    FUSE exports                 : NO
+
+  Crypto
+    TLS priority                 : "NORMAL"
+    GNUTLS support               : [1;32mYES[0m [1;36m3.5.18[0m
+      GNUTLS crypto              : NO
+    libgcrypt                    : NO
+    nettle                       : [1;32mYES[0m [1;36m3.4.1[0m
+      XTS                        : NO
+    crypto afalg                 : NO
+    rng-none                     : NO
+    Linux keyring                : YES
+
+  Dependencies
+    SDL support                  : YES
+    SDL image support            : [1;32mYES[0m [1;36m2.0.3[0m
+    GTK support                  : NO
+    pixman                       : [1;32mYES[0m [1;36m0.34.0[0m
+    VTE support                  : NO
+    slirp support                : internal
+    libtasn1                     : [1;32mYES[0m [1;36m4.13[0m
+    PAM                          : NO
+    iconv support                : YES
+    curses support               : YES
+    virgl support                : NO
+    curl support                 : [1;32mYES[0m [1;36m7.58.0[0m
+    Multipath support            : NO
+    VNC support                  : YES
+    VNC SASL support             : YES
+    VNC JPEG support             : YES
+    VNC PNG support              : [1;32mYES[0m [1;36m1.6.34[0m
+    OSS support                  : YES
+    ALSA support                 : [1;32mYES[0m [1;36m1.1.3[0m
+    PulseAudio support           : [1;32mYES[0m [1;36m11.1[0m
+    JACK support                 : NO
+    brlapi support               : YES
+    vde support                  : NO
+    netmap support               : NO
+    l2tpv3 support               : YES
+    Linux AIO support            : YES
+    Linux io_uring support       : NO
+    ATTR/XATTR support           : YES
+    RDMA support                 : NO
+    PVRDMA support               : NO
+    fdt support                  : internal
+    libcap-ng support            : YES
+    bpf support                  : NO
+    spice protocol support       : [1;32mYES[0m [1;36m0.12.13[0m
+      spice server support       : [1;32mYES[0m [1;36m0.14.0[0m
+    rbd support                  : YES
+    xfsctl support               : YES
+    smartcard support            : NO
+    U2F support                  : NO
+    libusb                       : [1;32mYES[0m [1;36m1.0.21[0m
+    usb net redir                : [1;32mYES[0m [1;36m0.7.1[0m
+    OpenGL support               : NO
+    GBM                          : NO
+    libiscsi support             : [1;32mYES[0m [1;36m1.17.0[0m
+    libnfs support               : NO
+    seccomp support              : [1;32mYES[0m [1;36m2.5.1[0m
+    GlusterFS support            : NO
+    TPM support                  : YES
+    libssh support               : NO
+    lzo support                  : NO
+    snappy support               : NO
+    bzip2 support                : YES
+    lzfse support                : NO
+    zstd support                 : NO
+    NUMA host support            : YES
+    libxml2                      : [1;32mYES[0m [1;36m2.9.4[0m
+    capstone                     : [1;32mYES[0m [1;36m5.0.0[0m
+    libpmem support              : NO
+    libdaxctl support            : NO
+    libudev                      : [1;32mYES[0m [1;36m237[0m
+    FUSE lseek                   : NO
+    selinux                      : NO
+
+  Subprojects
+    libvhost-user                : YES
+
+Found ninja-1.8.2 at /usr/bin/ninja
+Running compile:
+Working directory:  /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmptcfvgssn
+Command line:  cc -m64 -mcx16 /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmptcfvgssn/testfile.c -o /home/mypc/Tools/diff/qemu-6.2.0/build/meson-private/tmptcfvgssn/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 --print-search-dirs 
+
+Code:
+ 
+Compiler stdout:
+ install: /usr/lib/gcc/x86_64-linux-gnu/7/
+programs: =/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/bin/
+libraries: =/usr/lib/gcc/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/7/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../lib/:/lib/x86_64-linux-gnu/7/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/7/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../../x86_64-linux-gnu/lib/:/usr/lib/gcc/x86_64-linux-gnu/7/../../../:/lib/:/usr/lib/
+
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /tmp/tmpr2a7jocm
+Command line:  c++ -m64 -mcx16 /tmp/tmpr2a7jocm/testfile.cpp -o /tmp/tmpr2a7jocm/output.obj -D_FILE_OFFSET_BITS=64 -c -std=gnu++11 
+
+Code:
+ int i = static_cast<int>(0);
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Compiler accepts -std=gnu++11: YES
+Command line for building ['libcommon.fa'] is long, using a response file
+Command line for building ['libqemu-arm-softmmu.fa'] is long, using a response file
+Command line for building ['qemu-system-arm'] is long, using a response file

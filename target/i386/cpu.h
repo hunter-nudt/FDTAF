@@ -1430,11 +1430,14 @@ typedef struct HVFX86LazyFlags {
 } HVFX86LazyFlags;
 
 typedef struct CPUX86State {
+    uint8_t taint_temps[8];
     /* standard registers */
     target_ulong regs[CPU_NB_REGS];
-    target_ulong tempidx;   /*added for DECAF*/
-    target_ulong tempidx2;  /*added for DECAF*/
     target_ulong eip;
+#ifdef CONFIG_TCG_TAINT
+    target_ulong taint_regs[CPU_NB_REGS];
+    target_ulong taint_eip;
+#endif /* CONFIG_TCG_TAINT */
     target_ulong eflags; /* eflags register. During CPU emulation, CC
                         flags and DF are set to zero because they are
                         stored elsewhere */
@@ -1444,6 +1447,12 @@ typedef struct CPUX86State {
     target_ulong cc_src;
     target_ulong cc_src2;
     uint32_t cc_op;
+#ifdef CONFIG_TCG_TAINT
+    target_ulong taint_cc_dst;
+    target_ulong taint_cc_src;
+    target_ulong taint_cc_src2;
+    uint32_t taint_cc_op;
+#endif /* CONFIG_TCG_TAINT */
     int32_t df; /* D flag : 1 if D = 0, -1 if D = 1 */
     uint32_t hflags; /* TB flags, see HF_xxx constants. These flags
                         are known at translation time. */
@@ -1451,6 +1460,7 @@ typedef struct CPUX86State {
 
     /* segments */
     SegmentCache segs[6]; /* selector values */
+    SegmentCache taint_segs[6]; /* taint selector values */
     SegmentCache ldt;
     SegmentCache tr;
     SegmentCache gdt; /* only base and limit are used */
@@ -1460,6 +1470,9 @@ typedef struct CPUX86State {
     int32_t a20_mask;
 
     BNDReg bnd_regs[4];
+#ifdef CONFIG_TCG_TAINT
+    BNDReg taint_bnd_regs[4];
+#endif /* CONFIG_TCG_TAINT */
     BNDCSReg bndcs_regs;
     uint64_t msr_bndcfgs;
     uint64_t efer;

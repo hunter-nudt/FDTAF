@@ -50,6 +50,7 @@ typedef struct OptContext {
     TCGContext *tcg;
     TCGOp *prev_mb;
     TCGTempSet temps_used;
+    // TCGTempSet shadow_temps_used;
 
     /* In flight values from optimization. */
     uint64_t a_mask;  /* mask bit is 0 iff value identical to first input */
@@ -149,10 +150,20 @@ static void init_ts_info(OptContext *ctx, TCGTemp *ts)
     size_t idx = temp_idx(ts);
     TempOptInfo *ti;
 
+    // if (ts >= tcg_ctx->shadow_temps) {
+    //     if (test_bit(idx, ctx->shadow_temps_used.l)) {
+    //         return;
+    //     }
+    //     else {
+    //         set_bit(idx, ctx->shadow_temps_used.l);
+    //     }
+    // }
+    // else {
     if (test_bit(idx, ctx->temps_used.l)) {
         return;
     }
     set_bit(idx, ctx->temps_used.l);
+    // }
 
     ti = ts->state_ptr;
     if (ti == NULL) {
@@ -2016,6 +2027,7 @@ void tcg_optimize(TCGContext *s)
     nb_temps = s->nb_temps;
     for (i = 0; i < nb_temps; ++i) {
         s->temps[i].state_ptr = NULL;
+        // s->shadow_temps[i].state_ptr = NULL;
     }
 
     QTAILQ_FOREACH_SAFE(op, &s->ops, link, op_next) {

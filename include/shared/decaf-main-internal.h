@@ -90,10 +90,10 @@ extern HMPCommand DECAF_info_cmds[];
 extern void decaf_bdrv_open(int index, void *opaque);
 
 /****** Functions used internally ******/
-extern void decaf_nic_receive(const uint8_t * buf, const int size, const int cur_pos, const int start, const int stop);
-extern void decaf_nic_send(const uint32_t addr, const int size, const uint8_t * buf);
-extern void decaf_nic_in(const uint32_t addr, const int size);
-extern void decaf_nic_out(const uint32_t addr, const int size);
+extern void decaf_nic_receive(uint8_t * buf, int size, int cur_pos, int start, int stop);
+extern void decaf_nic_send(uint32_t addr, int size, uint8_t * buf);
+extern void decaf_nic_in(uint32_t addr, int size);
+extern void decaf_nic_out(uint32_t addr, int size);
 
 extern void decaf_read_keystroke(void *s);
 

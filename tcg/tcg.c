@@ -1035,6 +1035,11 @@ void tcg_temp_free_internal(TCGTemp *ts)
     }
 #endif
 
+#ifdef CONFIG_TCG_TAINT
+    if (taint_tracking_enabled) 
+        return;
+#endif /* CONFIG_TCG_TAINT */
+
     tcg_debug_assert(ts->kind < TEMP_GLOBAL);
     tcg_debug_assert(ts->temp_allocated != 0);
     ts->temp_allocated = 0;
@@ -4170,6 +4175,17 @@ int tcg_gen_code(TCGContext *s, TranslationBlock *tb)
     int i, num_insns;
     TCGOp *op;
 
+#if 0
+    if (taint_tracking_enabled) {
+        printf("\nall ops, not optimized\n");
+        QTAILQ_FOREACH(op, &s->ops, link) {
+            TCGOpcode opc = op->opc;
+            printf("%p\t%x\t%lx\t%lx\t%lx\n", op, opc, op->args[0],op->args[1],op->args[2]);
+        }
+        printf("\n\n\n");
+    }
+#endif
+
 #ifdef CONFIG_PROFILER
     {
         int n = 0;
@@ -4384,8 +4400,7 @@ int tcg_gen_code(TCGContext *s, TranslationBlock *tb)
                         (uintptr_t)s->code_buf,
                         tcg_ptr_byte_diff(s->code_ptr, s->code_buf));
 #endif
-
-    return tcg_current_code_size(s);
+    return tcg_current_code_size(s);  
 }
 
 #ifdef CONFIG_PROFILER
