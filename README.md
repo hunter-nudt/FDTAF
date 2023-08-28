@@ -21,7 +21,7 @@ ninja --version
 
 ```
 cd fdtaf
-./install_depends.sh
+.install_depends.sh
 ./configure --enable-debug --target-list=i386-softmmu,mips-softmmu,arm-softmmu,mipsel-softmmu
 make -j3
 ```
@@ -77,7 +77,7 @@ disable_taint
 
 ### Taint log
 
-FDTAF在TCG的跳转处理函数部分进行污点检测，若存有跳转地址的寄存器被污染，在monitor界面将会输入：
+FDTAF在TCG的跳转处理函数部分进行污点检测，若存有跳转地址的寄存器被污染，在monitor界面将会打印：
 
 ```
 PC HAS BEEN TAINTED!
