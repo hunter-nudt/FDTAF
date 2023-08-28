@@ -60,10 +60,12 @@
 # define dh_alias_env ptr
 # define dh_alias_cs ptr
 # define dh_alias_tb ptr
+# define dh_alias_db ptr
 # define dh_ctype_tl target_ulong
 # define dh_ctype_env CPUArchState *
 # define dh_ctype_cs CPUState *
 # define dh_ctype_tb TranslationBlock *
+# define dh_ctype_db DisasContextBase *
 #endif
 
 /* We can't use glue() here because it falls foul of C preprocessor

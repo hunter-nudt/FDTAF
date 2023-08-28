@@ -182,18 +182,34 @@ static void tap_send_completed(NetClientState *nc, ssize_t len)
     tap_read_poll(s, true);
 }
 
+#if 0
+static void debug_func(void)
+{
+
+}
+#endif
+
 static void tap_send(void *opaque)
 {
     TAPState *s = opaque;
     int size;
     int packets = 0;
-
+#if 0
+    printf("**************\n");
+#endif    
     while (true) {
         uint8_t *buf = s->buf;
         uint8_t min_pkt[ETH_ZLEN];
         size_t min_pktsz = sizeof(min_pkt);
 
         size = tap_read_packet(s->fd, s->buf, sizeof(s->buf));
+#if 0
+        printf("%d\n",size);
+           
+        if(size == 528) {
+            debug_func();
+        }
+#endif        
         if (size <= 0) {
             break;
         }
@@ -229,6 +245,9 @@ static void tap_send(void *opaque)
             break;
         }
     }
+#if 0
+    printf("**************\n");
+#endif    
 }
 
 static bool tap_has_ufo(NetClientState *nc)

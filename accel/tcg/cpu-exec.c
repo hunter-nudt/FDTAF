@@ -47,6 +47,14 @@
 #include "tb-context.h"
 #include "internal.h"
 
+#include "shared/fdtaf-callback-to-qemu.h"
+#include "shared/fdtaf-taint-tcg.h"
+#include "shared/fdtaf-taint-memory-basic.h"
+#include "shared/fdtaf-taint-memory.h"
+#include "shared/fdtaf-taint-propagate-msg.h"
+
+bool taint_start = false;
+unsigned long ins_no = 0;
 /* -icount align implementation. */
 
 typedef struct SyncClocks {
@@ -318,6 +326,12 @@ const void *HELPER(lookup_tb_ptr)(CPUArchState *env)
 
     cpu_get_tb_cpu_state(env, &pc, &cs_base, &flags);
 
+    if (taint_start == true) {
+        if (check_taint_pc(env)) {
+            taint_start = false;
+        }
+    }
+    
     cflags = curr_cflags(cpu);
     if (check_for_breakpoints(cpu, pc, &cflags)) {
         cpu_loop_exit(cpu);
@@ -329,6 +343,13 @@ const void *HELPER(lookup_tb_ptr)(CPUArchState *env)
     }
 
     log_cpu_exec(pc, cpu, tb);
+
+#ifdef CONFIG_TCG_TAINT
+    if(taint_start && taint_tracking_enabled) {
+        ins_no++;
+        guest_ins_flow(tb, cpu);
+    }
+#endif  /* CONFIG_TCG_TAINT */
 
     return tb->tc.ptr;
 }
@@ -352,6 +373,13 @@ cpu_tb_exec(CPUState *cpu, TranslationBlock *itb, int *tb_exit)
     const void *tb_ptr = itb->tc.ptr;
 
     log_cpu_exec(itb->pc, cpu, itb);
+
+#ifdef CONFIG_TCG_TAINT
+    if(taint_start && taint_tracking_enabled) {
+        ins_no++;
+        guest_ins_flow(itb, cpu);
+    }
+#endif  /* CONFIG_TCG_TAINT */
 
     qemu_thread_jit_execute();
     ret = tcg_qemu_tb_exec(env, tb_ptr);
@@ -970,8 +998,6 @@ int cpu_exec(CPUState *cpu)
                 break;
             }
 
-            //test_hello_world();
-            //test_hello();
             tb = tb_lookup(cpu, pc, cs_base, flags, cflags);
             if (tb == NULL) {
                 mmap_lock();

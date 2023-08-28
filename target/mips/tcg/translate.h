@@ -180,6 +180,7 @@ extern TCGv_i64 cpu_gpr_hi[32];
 extern TCGv cpu_HI[MIPS_DSP_ACC], cpu_LO[MIPS_DSP_ACC];
 extern TCGv_i32 fpu_fcr0, fpu_fcr31;
 extern TCGv_i64 fpu_f64[32];
+extern TCGv_i64 shadow_fpu_f64[32];
 extern TCGv bcond;
 
 #define LOG_DISAS(...)                                                        \

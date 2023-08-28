@@ -42,6 +42,10 @@
 #include "trace.h"
 #include "qom/object.h"
 
+#include "shared/fdtaf-taint-memory.h"
+#include "shared/fdtaf-tcpip-parser.h"
+static int repeat = 0;
+
 static const uint8_t bcast[] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 
 /* #define E1000_DEBUG */
@@ -896,6 +900,39 @@ e1000_receiver_overrun(E1000State *s, size_t size)
     set_ics(s, 0, E1000_ICS_RXO);
 }
 
+static void fdtaf_taint_mark(const struct iovec *iov, hwaddr ba)
+{
+    int http_head = 0;
+    int http_len = 0;
+    int taint_head = 0;
+    int taint_len = 0;
+    int is_http;
+    int is_url_right;
+    int is_taint;
+    uint8_t *taint = NULL; 
+    uint8_t *url;
+    url = (uint8_t *)g_malloc0(200);
+    is_http = match_http_data(iov->iov_base, url, &http_head, &http_len);
+    is_url_right = strncmp((char *)url, "/cgi-bin/New_GUI/Set/Diagnostics.asp", 
+                                sizeof("/cgi-bin/New_GUI/Set/Diagnostics.asp"));
+    if(is_http && !is_url_right) {
+        is_taint = match_taint_data(iov->iov_base, &taint_head, &taint_len);
+        if (is_taint) {
+            // fresh_taint_memory();
+            if(repeat == 0) {
+                taint = (uint8_t *)malloc(taint_len);
+                memset(taint, 0xFF, taint_len);
+                taint_mem(ba + taint_head + 88, 4, taint);
+                printf("TAINT MARKED!\n");
+                free(taint);
+                taint = NULL;
+                repeat = 1;
+                taint_start = true;
+            }
+        } 
+    }
+}
+
 static ssize_t
 e1000_receive_iov(NetClientState *nc, const struct iovec *iov, int iovcnt)
 {
@@ -988,6 +1025,11 @@ e1000_receive_iov(NetClientState *nc, const struct iovec *iov, int iovcnt)
                 if (copy_size > s->rxbuf_size) {
                     copy_size = s->rxbuf_size;
                 }
+#ifdef CONFIG_TCG_TAINT
+                if(taint_tracking_enabled) {
+                    fdtaf_taint_mark(iov, ba);
+                }                 
+#endif
                 do {
                     iov_copy = MIN(copy_size, iov->iov_len - iov_ofs);
                     pci_dma_write(d, ba, iov->iov_base + iov_ofs, iov_copy);

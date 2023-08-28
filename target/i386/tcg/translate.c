@@ -32,7 +32,7 @@
 
 #include "exec/log.h"
 
-#include "shared/decaf-taint-tcg.h"
+#include "shared/fdtaf-taint-tcg.h"
 
 #define PREFIX_REPZ   0x01
 #define PREFIX_REPNZ  0x02

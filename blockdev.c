@@ -3852,7 +3852,7 @@ QemuOptsList qemu_drive_opts = {
 };
 
 #if 0
-void decaf_blocks_init(void)
+void fdtaf_blocks_init(void)
 {
     BlockBackend *blk;
     DriveInfo *dinfo;
@@ -3862,7 +3862,7 @@ void decaf_blocks_init(void)
         dinfo = blk_legacy_dinfo(blk);
         bs = blk_bs(blk);
         if (dinfo->type == IF_DEFAULT || dinfo->type == IF_SCSI || dinfo->type == IF_IDE ) {
-            decaf_bdrv_open(index,(void *)bs);
+            fdtaf_bdrv_open(index,(void *)bs);
             ++index;
         }
     }

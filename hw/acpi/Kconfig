@@ -20,6 +20,7 @@ config ACPI_CPU_HOTPLUG
 
 config ACPI_MEMORY_HOTPLUG
     bool
+    default y
     select MEM_DEVICE
 
 config ACPI_NVDIMM
@@ -32,7 +33,7 @@ config ACPI_PIIX4
 
 config ACPI_PCIHP
     bool
-    depends on ACPI
+    default y
 
 config ACPI_HMAT
     bool

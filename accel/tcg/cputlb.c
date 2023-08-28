@@ -41,11 +41,12 @@
 #endif
 #include "tcg/tcg-ldst.h"
 
-#include "shared/decaf-main.h"
-#include "shared/decaf-linux-vmi.h"
-#include "shared/decaf-callback-common.h"
-#include "shared/decaf-callback-to-qemu.h"
-#include "shared/decaf-taint-memory.h"
+#include "shared/fdtaf-main.h"
+#include "shared/fdtaf-linux-vmi.h"
+#include "shared/fdtaf-callback-common.h"
+#include "shared/fdtaf-callback-to-qemu.h"
+#include "shared/fdtaf-taint-memory-basic.h"
+#include "shared/fdtaf-taint-memory.h"
 
 /* DEBUG defines, enable DEBUG_TLB_LOG to log to the CPU_LOG_MMU target */
 /* #define DEBUG_TLB */
@@ -1249,8 +1250,8 @@ void tlb_set_page_with_attrs(CPUState *cpu, target_ulong vaddr,
 
     if (prot & PAGE_EXEC) {
         tn.addr_code = address;
-        if (decaf_is_callback_needed(DECAF_TLB_EXEC_CB))
-        	decaf_invoke_tlb_exec_callback(cpu, vaddr);
+        if (fdtaf_is_callback_needed(FDTAF_TLB_EXEC_CB))
+        	fdtaf_invoke_tlb_exec_callback(cpu, vaddr);
         // static int count = 0;
         // if(count == 0) {
         //     count = find_linux(cpu);

@@ -75,7 +75,13 @@ struct mips_def_t {
 };
 
 extern const char regnames[32][3];
+#ifdef CONFIG_TCG_TAINT
+extern const char taint_regnames[32][9];
+#endif 	/* CONFIG_TCG_TAINT */
 extern const char fregnames[32][4];
+#ifdef CONFIG_TCG_TAINT
+extern const char taint_fregnames[32][10];
+#endif 	/* CONFIG_TCG_TAINT */
 
 extern const struct mips_def_t mips_defs[];
 extern const int mips_defs_number;

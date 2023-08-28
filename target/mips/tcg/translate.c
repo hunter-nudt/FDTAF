@@ -38,6 +38,10 @@
 #include "fpu_helper.h"
 #include "translate.h"
 
+#include "shared/fdtaf-taint-tcg.h"
+#include "shared/fdtaf-callback-common.h"
+#include "shared/fdtaf-callback-to-qemu.h"
+
 /*
  * Many sysemu-only helpers are not reachable for user-only.
  * Define stub generators here, so that we need not either sprinkle
@@ -1211,6 +1215,19 @@ static TCGv_i32 hflags;
 TCGv_i32 fpu_fcr0, fpu_fcr31;
 TCGv_i64 fpu_f64[32];
 
+#ifdef CONFIG_TCG_TAINT
+/*shadow global register indices */
+TCGv shadow_cpu_gpr[32], shadow_cpu_PC;
+TCGv_i64 shadow_cpu_gpr_hi[32];
+TCGv shadow_cpu_HI[MIPS_DSP_ACC], shadow_cpu_LO[MIPS_DSP_ACC];
+static TCGv shadow_cpu_dspctrl, shadow_btarget;
+TCGv shadow_bcond;
+static TCGv shadow_cpu_lladdr, shadow_cpu_llval;
+static TCGv_i32 shadow_hflags;
+TCGv_i32 shadow_fpu_fcr0, shadow_fpu_fcr31;
+TCGv_i64 shadow_fpu_f64[32];
+#endif 	/* CONFIG_TCG_TAINT */
+
 #include "exec/gen-icount.h"
 
 #define DISAS_STOP       DISAS_TARGET_0
@@ -1219,10 +1236,20 @@ TCGv_i64 fpu_f64[32];
 static const char regnames_HI[][4] = {
     "HI0", "HI1", "HI2", "HI3",
 };
+#ifdef CONFIG_TCG_TAINT
+static const char taint_regnames_HI[][10] = {
+    "taint_HI0", "taint_HI1", "taint_HI2", "taint_HI3",
+};
+#endif 	/* CONFIG_TCG_TAINT */
 
 static const char regnames_LO[][4] = {
     "LO0", "LO1", "LO2", "LO3",
 };
+#ifdef CONFIG_TCG_TAINT
+static const char taint_regnames_LO[][10] = {
+    "taint_LO0", "taint_LO1", "taint_LO2", "taint_LO3",
+};
+#endif 	/* CONFIG_TCG_TAINT */
 
 /* General purpose registers moves. */
 void gen_load_gpr(TCGv t, int reg)
@@ -16053,6 +16080,15 @@ static void mips_tr_translate_insn(DisasContextBase *dcbase, CPUState *cs)
         return;
     }
 
+    if(fdtaf_is_callback_needed(FDTAF_INSN_BEFORE_CB)) {
+        TCGv_ptr tmp_cs = tcg_const_ptr((tcg_target_ulong)cs);
+        TCGv_i32 tmp_pc = tcg_const_i32(env->active_tc.PC);
+        TCGv_i32 tmp_opc = tcg_const_i32(ctx->opcode);
+        gen_helper_fdtaf_invoke_insn_before_callback(tmp_cs, tmp_pc, tmp_opc);
+        tcg_temp_free_ptr(tmp_cs);
+        tcg_temp_free_i32(tmp_pc);
+        tcg_temp_free_i32(tmp_opc);  
+    }
     if (ctx->hflags & MIPS_HFLAG_BMASK) {
         if (!(ctx->hflags & (MIPS_HFLAG_BDS16 | MIPS_HFLAG_BDS32 |
                              MIPS_HFLAG_FBNSLOT))) {
@@ -16137,16 +16173,28 @@ void gen_intermediate_code(CPUState *cs, TranslationBlock *tb, int max_insns)
     translator_loop(&mips_tr_ops, &ctx.base, cs, tb, max_insns);
 }
 
+#ifdef CONFIG_TCG_TAINT
+
+#endif 	/* CONFIG_TCG_TAINT */
 void mips_tcg_init(void)
 {
     int i;
 
     cpu_gpr[0] = NULL;
-    for (i = 1; i < 32; i++)
+    shadow_cpu_gpr[0] = NULL;
+    for (i = 1; i < 32; i++) {
         cpu_gpr[i] = tcg_global_mem_new(cpu_env,
                                         offsetof(CPUMIPSState,
                                                  active_tc.gpr[i]),
                                         regnames[i]);
+#ifdef CONFIG_TCG_TAINT
+        shadow_cpu_gpr[i] = tcg_global_mem_new(cpu_env,
+                                        offsetof(CPUMIPSState,
+                                                 active_tc.taint_gpr[i]),
+                                        taint_regnames[i]);
+        shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_gpr[i]))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_gpr[i]));
+#endif 	/* CONFIG_TCG_TAINT */
+    }
 #if defined(TARGET_MIPS64)
     cpu_gpr_hi[0] = NULL;
 
@@ -16163,43 +16211,114 @@ void mips_tcg_init(void)
         int off = offsetof(CPUMIPSState, active_fpu.fpr[i].wr.d[0]);
 
         fpu_f64[i] = tcg_global_mem_new_i64(cpu_env, off, fregnames[i]);
+#ifdef CONFIG_TCG_TAINT
+        int taint_off = offsetof(CPUMIPSState, active_fpu.taint_fpr[i].wr.d[0]);
+
+        shadow_fpu_f64[i] = tcg_global_mem_new_i64(cpu_env, taint_off, taint_fregnames[i]);
+
+        shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)fpu_f64[i]))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_fpu_f64[i]));
+#endif 	/* CONFIG_TCG_TAINT */
+
     }
     msa_translate_init();
     cpu_PC = tcg_global_mem_new(cpu_env,
                                 offsetof(CPUMIPSState, active_tc.PC), "PC");
+#ifdef CONFIG_TCG_TAINT
+    shadow_cpu_PC = tcg_global_mem_new(cpu_env,
+                                offsetof(CPUMIPSState, active_tc.taint_PC), "taint_PC");
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_PC))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_PC));
+#endif 	/* CONFIG_TCG_TAINT */                                
     for (i = 0; i < MIPS_DSP_ACC; i++) {
         cpu_HI[i] = tcg_global_mem_new(cpu_env,
                                        offsetof(CPUMIPSState, active_tc.HI[i]),
                                        regnames_HI[i]);
+#ifdef CONFIG_TCG_TAINT
+        shadow_cpu_HI[i] = tcg_global_mem_new(cpu_env,
+                                       offsetof(CPUMIPSState, active_tc.taint_HI[i]),
+                                       taint_regnames_HI[i]);
+        shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_HI[i]))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_HI[i]));
+#endif 	/* CONFIG_TCG_TAINT */                                        
         cpu_LO[i] = tcg_global_mem_new(cpu_env,
                                        offsetof(CPUMIPSState, active_tc.LO[i]),
                                        regnames_LO[i]);
+#ifdef CONFIG_TCG_TAINT
+        shadow_cpu_LO[i] = tcg_global_mem_new(cpu_env,
+                                       offsetof(CPUMIPSState, active_tc.taint_LO[i]),
+                                       taint_regnames_LO[i]);
+        shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_LO[i]))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_LO[i]));
+#endif 	/* CONFIG_TCG_TAINT */
     }
     cpu_dspctrl = tcg_global_mem_new(cpu_env,
                                      offsetof(CPUMIPSState,
                                               active_tc.DSPControl),
                                      "DSPControl");
+#ifdef CONFIG_TCG_TAINT
+    shadow_cpu_dspctrl = tcg_global_mem_new(cpu_env,
+                                     offsetof(CPUMIPSState,
+                                              active_tc.taint_DSPControl),
+                                     "taint_DSPControl");
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_dspctrl))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_dspctrl));
+#endif 	/* CONFIG_TCG_TAINT */
     bcond = tcg_global_mem_new(cpu_env,
                                offsetof(CPUMIPSState, bcond), "bcond");
+#ifdef CONFIG_TCG_TAINT
+    shadow_bcond = tcg_global_mem_new(cpu_env,
+                               offsetof(CPUMIPSState, taint_bcond), "taint_bcond");
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)bcond))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_bcond));
+#endif 	/* CONFIG_TCG_TAINT */
     btarget = tcg_global_mem_new(cpu_env,
                                  offsetof(CPUMIPSState, btarget), "btarget");
+#ifdef CONFIG_TCG_TAINT
+    shadow_btarget = tcg_global_mem_new(cpu_env,
+                                 offsetof(CPUMIPSState, taint_btarget), "taint_btarget");
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)btarget))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_btarget));
+#endif 	/* CONFIG_TCG_TAINT */
     hflags = tcg_global_mem_new_i32(cpu_env,
                                     offsetof(CPUMIPSState, hflags), "hflags");
-
+#ifdef CONFIG_TCG_TAINT
+    shadow_hflags = tcg_global_mem_new_i32(cpu_env,
+                                    offsetof(CPUMIPSState, taint_hflags), "taint_hflags");
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)hflags))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_hflags));
+#endif 	/* CONFIG_TCG_TAINT */
     fpu_fcr0 = tcg_global_mem_new_i32(cpu_env,
                                       offsetof(CPUMIPSState, active_fpu.fcr0),
                                       "fcr0");
+#ifdef CONFIG_TCG_TAINT
+    shadow_fpu_fcr0 = tcg_global_mem_new_i32(cpu_env,
+                                      offsetof(CPUMIPSState, active_fpu.taint_fcr0),
+                                      "taint_fcr0");
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)fpu_fcr0))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_fpu_fcr0));
+#endif 	/* CONFIG_TCG_TAINT */
     fpu_fcr31 = tcg_global_mem_new_i32(cpu_env,
                                        offsetof(CPUMIPSState, active_fpu.fcr31),
                                        "fcr31");
+#ifdef CONFIG_TCG_TAINT
+    shadow_fpu_fcr31 = tcg_global_mem_new_i32(cpu_env,
+                                       offsetof(CPUMIPSState, active_fpu.taint_fcr31),
+                                       "taint_fcr31");
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)fpu_fcr31))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_fpu_fcr31));
+#endif 	/* CONFIG_TCG_TAINT */
     cpu_lladdr = tcg_global_mem_new(cpu_env, offsetof(CPUMIPSState, lladdr),
                                     "lladdr");
+#ifdef CONFIG_TCG_TAINT
+    shadow_cpu_lladdr = tcg_global_mem_new(cpu_env, offsetof(CPUMIPSState, taint_lladdr),
+                                    "taint_lladdr");
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_lladdr))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_fpu_fcr31));
+#endif 	/* CONFIG_TCG_TAINT */
     cpu_llval = tcg_global_mem_new(cpu_env, offsetof(CPUMIPSState, llval),
                                    "llval");
+#ifdef CONFIG_TCG_TAINT
+    shadow_cpu_llval = tcg_global_mem_new(cpu_env, offsetof(CPUMIPSState, taint_llval),
+                                   "taint_llval");
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_llval))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_llval));
+#endif 	/* CONFIG_TCG_TAINT */
 
     if (TARGET_LONG_BITS == 32) {
         mxu_translate_init();
     }
+#ifdef CONFIG_TCG_TAINT  
+    taint_temps = tcg_global_mem_new_i64(cpu_env, offsetof(CPUMIPSState, taint_temps), "taint_temps");
+#endif
 }
 
 void restore_state_to_opc(CPUMIPSState *env, TranslationBlock *tb,

@@ -501,6 +501,7 @@ static MemoryRegionSection flatview_do_translate(FlatView *fv,
             plen_out, is_mmio);
 
     iommu_mr = memory_region_get_iommu(section->mr);
+
     if (unlikely(iommu_mr)) {
         return address_space_translate_iommu(iommu_mr, xlat,
                                              plen_out, page_mask_out,

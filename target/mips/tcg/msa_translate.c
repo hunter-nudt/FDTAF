@@ -16,6 +16,7 @@
 #include "translate.h"
 #include "fpu_helper.h"
 #include "internal.h"
+#include "shared/fdtaf-taint-tcg.h"
 
 static int elm_n(DisasContext *ctx, int x);
 static int elm_df(DisasContext *ctx, int x);
@@ -53,6 +54,26 @@ static const char msaregnames[][6] = {
     "w28.d0", "w28.d1", "w29.d0", "w29.d1",
     "w30.d0", "w30.d1", "w31.d0", "w31.d1",
 };
+#ifdef CONFIG_TCG_TAINT
+static const char taint_msaregnames[][12] = {
+    "taint_w0.d0",  "taint_w0.d1",  "taint_w1.d0",  "taint_w1.d1",
+    "taint_w2.d0",  "taint_w2.d1",  "taint_w3.d0",  "taint_w3.d1",
+    "taint_w4.d0",  "taint_w4.d1",  "taint_w5.d0",  "taint_w5.d1",
+    "taint_w6.d0",  "taint_w6.d1",  "taint_w7.d0",  "taint_w7.d1",
+    "taint_w8.d0",  "taint_w8.d1",  "taint_w9.d0",  "taint_w9.d1",
+    "taint_w10.d0", "taint_w10.d1", "taint_w11.d0", "taint_w11.d1",
+    "taint_w12.d0", "taint_w12.d1", "taint_w13.d0", "taint_w13.d1",
+    "taint_w14.d0", "taint_w14.d1", "taint_w15.d0", "taint_w15.d1",
+    "taint_w16.d0", "taint_w16.d1", "taint_w17.d0", "taint_w17.d1",
+    "taint_w18.d0", "taint_w18.d1", "taint_w19.d0", "taint_w19.d1",
+    "taint_w20.d0", "taint_w20.d1", "taint_w21.d0", "taint_w21.d1",
+    "taint_w22.d0", "taint_w22.d1", "taint_w23.d0", "taint_w23.d1",
+    "taint_w24.d0", "taint_w24.d1", "taint_w25.d0", "taint_w25.d1",
+    "taint_w26.d0", "taint_w26.d1", "taint_w27.d0", "taint_w27.d1",
+    "taint_w28.d0", "taint_w28.d1", "taint_w29.d0", "taint_w29.d1",
+    "taint_w30.d0", "taint_w30.d1", "taint_w31.d0", "taint_w31.d1",
+};
+#endif 	/* CONFIG_TCG_TAINT */
 
 /* Encoding of Operation Field (must be indexed by CPUMIPSMSADataFormat) */
 struct dfe {
@@ -126,6 +147,9 @@ static int bit_df(DisasContext *ctx, int x)
 }
 
 static TCGv_i64 msa_wr_d[64];
+#ifdef CONFIG_TCG_TAINT
+static TCGv_i64 shadow_msa_wr_d[64];
+#endif 	/* CONFIG_TCG_TAINT */
 
 void msa_translate_init(void)
 {
@@ -133,17 +157,32 @@ void msa_translate_init(void)
 
     for (i = 0; i < 32; i++) {
         int off;
+        int taint_off;
 
         /*
          * The MSA vector registers are mapped on the
          * scalar floating-point unit (FPU) registers.
          */
         off = offsetof(CPUMIPSState, active_fpu.fpr[i].wr.d[0]);
+#ifdef CONFIG_TCG_TAINT
+        taint_off = offsetof(CPUMIPSState, active_fpu.taint_fpr[i].wr.d[0]);
+#endif 	/* CONFIG_TCG_TAINT */
         msa_wr_d[i * 2] = fpu_f64[i];
-
+#ifdef CONFIG_TCG_TAINT
+        shadow_msa_wr_d[i * 2] = shadow_fpu_f64[i];
+        shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)msa_wr_d[i * 2]))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_msa_wr_d[i * 2]));
+#endif 	/* CONFIG_TCG_TAINT */
         off = offsetof(CPUMIPSState, active_fpu.fpr[i].wr.d[1]);
+#ifdef CONFIG_TCG_TAINT
+        taint_off = offsetof(CPUMIPSState, active_fpu.taint_fpr[i].wr.d[1]);
+#endif 	/* CONFIG_TCG_TAINT */
         msa_wr_d[i * 2 + 1] =
                 tcg_global_mem_new_i64(cpu_env, off, msaregnames[i * 2 + 1]);
+#ifdef CONFIG_TCG_TAINT
+        shadow_msa_wr_d[i * 2 + 1] =
+                tcg_global_mem_new_i64(cpu_env, taint_off, taint_msaregnames[i * 2 + 1]);
+        shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)msa_wr_d[i * 2 + 1]))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_msa_wr_d[i * 2 + 1]));
+#endif 	/* CONFIG_TCG_TAINT */
     }
 }
 

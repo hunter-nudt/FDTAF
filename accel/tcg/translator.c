@@ -20,9 +20,11 @@
 #include "exec/helper-proto.h"
 #include "exec/helper-gen.h"
 
-#include "shared/decaf-callback-to-qemu.h"
-#include "shared/decaf-taint-tcg.h"
-#include "shared/decaf-taint-memory.h"
+#include "shared/fdtaf-callback-to-qemu.h"
+#include "shared/fdtaf-taint-tcg.h"
+#include "shared/fdtaf-taint-memory-basic.h"
+#include "shared/fdtaf-taint-memory.h"
+#include "shared/fdtaf-taint-propagate-msg.h"
 
 TCGOp *old_first_op;
 
@@ -83,14 +85,20 @@ void translator_loop(const TranslatorOps *ops, DisasContextBase *db,
     tcg_clear_temp_count();
 
     /* Running callback function when gen a new block */
-    if(decaf_is_block_begin_callback_needed(tb->pc))
-    {
+    if(fdtaf_is_block_begin_callback_needed(tb->pc)) {
         TCGv_ptr tmpCs = tcg_const_ptr((tcg_target_ulong)cpu);
         TCGv_ptr tmpTb = tcg_const_ptr((tcg_target_ulong)tb);
-        gen_helper_decaf_invoke_block_begin_callback(tmpCs, tmpTb);
+        gen_helper_fdtaf_invoke_block_begin_callback(tmpCs, tmpTb);
         tcg_temp_free_ptr(tmpCs);
         tcg_temp_free_ptr(tmpTb);
     }
+
+#if 0
+    if(taint_start) {
+        fdtaf_register_callback(FDTAF_INSN_BEFORE_CB, insn_msg, 1);
+        taint_start = false;
+    }
+#endif
 
     /* Start translating.  */
     gen_tb_start(db->tb);
@@ -101,8 +109,8 @@ void translator_loop(const TranslatorOps *ops, DisasContextBase *db,
 
     while (true) {
         // /* Running callback function when gen a new instruction */
-        // if (decaf_is_callback_needed(DECAF_INSN_BEGIN_CB)) {
-        //     gen_helper_decaf_invoke_insn_begin_callback(cpu_env);
+        // if (fdtaf_is_callback_needed(FDTAF_INSN_BEGIN_CB)) {
+        //     gen_helper_fdtaf_invoke_insn_before_callback(cpu_env);
         // }   
         db->num_insns++;
         ops->insn_start(db, cpu);
@@ -124,9 +132,6 @@ void translator_loop(const TranslatorOps *ops, DisasContextBase *db,
             /* we should only see CF_MEMI_ONLY for io_recompile */
             tcg_debug_assert(!(cflags & CF_MEMI_ONLY));
             ops->translate_insn(db, cpu);
-            // if (taint_tracking_enabled) {
-            //     optimize_taint(old_first_op);
-            // }
         }
 
         /* Stop translation if translate_insn so indicated.  */
@@ -150,8 +155,8 @@ void translator_loop(const TranslatorOps *ops, DisasContextBase *db,
         }
 
         // /* Running callback function when gen a new instruction */
-        // if (decaf_is_callback_needed(DECAF_INSN_END_CB)) {
-        //     gen_helper_decaf_invoke_insn_end_callback(cpu_env);
+        // if (fdtaf_is_callback_needed(FDTAF_INSN_END_CB)) {
+        //     gen_helper_fdtaf_invoke_insn_after_callback(cpu_env);
         // }
     }
 
@@ -159,7 +164,7 @@ void translator_loop(const TranslatorOps *ops, DisasContextBase *db,
     ops->tb_stop(db, cpu);
     gen_tb_end(db->tb, db->num_insns);
 
-    old_first_op = QTAILQ_FIRST(&s->ops); 
+    old_first_op = QTAILQ_FIRST(&s->ops);
     if (taint_tracking_enabled) {
         optimize_taint(old_first_op);
     }

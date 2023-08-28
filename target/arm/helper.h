@@ -1,6 +1,7 @@
 DEF_HELPER_3(taint_ld_mmu, void, env, tl, i32)
 DEF_HELPER_3(taint_st_mmu, void, env, tl, i32)
-DEF_HELPER_2(decaf_invoke_block_begin_callback, void, cs, tb)
+DEF_HELPER_2(fdtaf_invoke_block_begin_callback, void, cs, tb)
+DEF_HELPER_3(fdtaf_invoke_insn_before_callback, void, cs, i32, i32)
 
 DEF_HELPER_FLAGS_1(sxtb16, TCG_CALL_NO_RWG_SE, i32, i32)
 DEF_HELPER_FLAGS_1(uxtb16, TCG_CALL_NO_RWG_SE, i32, i32)

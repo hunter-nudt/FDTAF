@@ -112,7 +112,7 @@ int32_t main(void)
         { 0x6814ecfc0fa82b6dULL, 0xc37ad92a91550ac0ULL, },
         { 0x7bdefedcee3621e3ULL, 0xeb34ed0270f105e0ULL, },
         { 0x94da12f80be832d0ULL, 0xe98de66d52d61fb0ULL, },
-        { 0x83bdecafc65625dfULL, 0xe7f8d130419c055cULL, },
+        { 0x83bfdtafc65625dfULL, 0xe7f8d130419c055cULL, },
         { 0x994d0df1c6d40fd2ULL, 0xe3d2c1a83e00f9d2ULL, },
         { 0xafdbf02abf6b06b4ULL, 0xeb61a56034e501eeULL, },
         { 0x6337d65edd454d8dULL, 0xf00ca83c1f920c8eULL, },    /*  72  */

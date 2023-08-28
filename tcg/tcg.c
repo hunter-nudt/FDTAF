@@ -65,6 +65,9 @@
 #include <ffi.h>
 #endif
 
+#include "shared/fdtaf-taint-tcg.h"
+#include "shared/fdtaf-taint-propagate-msg.h"
+
 /* Forward declarations for functions declared in tcg-target.c.inc and
    used here. */
 static void tcg_target_init(TCGContext *s);
@@ -1025,6 +1028,8 @@ void tcg_temp_free_internal(TCGTemp *ts)
 
     /* In order to simplify users of tcg_constant_*, silently ignore free. */
     if (ts->kind == TEMP_CONST) {
+        idx = temp_idx(ts);
+        shadow_arg_list[idx] = 0;
         return;
     }
 
@@ -1035,16 +1040,18 @@ void tcg_temp_free_internal(TCGTemp *ts)
     }
 #endif
 
-#ifdef CONFIG_TCG_TAINT
-    if (taint_tracking_enabled) 
-        return;
-#endif /* CONFIG_TCG_TAINT */
-
     tcg_debug_assert(ts->kind < TEMP_GLOBAL);
     tcg_debug_assert(ts->temp_allocated != 0);
     ts->temp_allocated = 0;
 
     idx = temp_idx(ts);
+    shadow_arg_list[idx] = 0;
+
+#ifdef CONFIG_TCG_TAINT
+    if (taint_tracking_enabled) 
+        return;
+#endif /* CONFIG_TCG_TAINT */
+
     k = ts->base_type + (ts->kind == TEMP_NORMAL ? 0 : TCG_TYPE_COUNT);
     set_bit(idx, s->free_temps[k].l);
 }
@@ -4177,12 +4184,15 @@ int tcg_gen_code(TCGContext *s, TranslationBlock *tb)
 
 #if 0
     if (taint_tracking_enabled) {
-        printf("\nall ops, not optimized\n");
+        FILE *fp;
+        fp = fopen("/home/mypc/tttt", "a");
+        fprintf(fp,"\nall ops, not optimized\n");
         QTAILQ_FOREACH(op, &s->ops, link) {
             TCGOpcode opc = op->opc;
-            printf("%p\t%x\t%lx\t%lx\t%lx\n", op, opc, op->args[0],op->args[1],op->args[2]);
+            fprintf(fp, "%p\t%x\t%lx\t%lx\t%lx\n", op, opc, op->args[0],op->args[1],op->args[2]);
         }
-        printf("\n\n\n");
+        fprintf(fp,"\n\n\n");
+        fclose(fp);
     }
 #endif
 
@@ -4217,6 +4227,12 @@ int tcg_gen_code(TCGContext *s, TranslationBlock *tb)
     }
 #endif
 
+#ifdef CONFIG_TCG_TAINT
+    if(taint_start && taint_tracking_enabled) {
+        show_tcg_ops(s);
+    }
+#endif  /* CONFIG_TCG_TAINT */
+
 #ifdef CONFIG_DEBUG_TCG
     /* Ensure all labels referenced have been emitted.  */
     {
@@ -4240,6 +4256,20 @@ int tcg_gen_code(TCGContext *s, TranslationBlock *tb)
 
 #ifdef USE_TCG_OPTIMIZATIONS
     tcg_optimize(s);
+#endif
+
+#if 0
+    if (taint_tracking_enabled) {
+        FILE *fp;
+        fp = fopen("/home/mypc/tttt", "a");
+        fprintf(fp, "\n optimized\n");
+        QTAILQ_FOREACH(op, &s->ops, link) {
+            TCGOpcode opc = op->opc;
+            fprintf(fp, "%p\t%x\t%lx\t%lx\t%lx\n", op, opc, op->args[0],op->args[1],op->args[2]);
+        }
+        fprintf(fp,"\n\n\n");
+        fclose(fp);
+    }
 #endif
 
 #ifdef CONFIG_PROFILER
@@ -4283,6 +4313,11 @@ int tcg_gen_code(TCGContext *s, TranslationBlock *tb)
     }
 #endif
 
+#ifdef CONFIG_TCG_TAINT
+    if(taint_start && taint_tracking_enabled) {
+        show_tcg_ops(s);
+    }
+#endif  /* CONFIG_TCG_TAINT */
     tcg_reg_alloc_start(s);
 
     /*

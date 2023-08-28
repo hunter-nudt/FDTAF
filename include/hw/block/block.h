@@ -103,6 +103,6 @@ void hd_geometry_guess(BlockBackend *blk,
 int hd_bios_chs_auto_trans(uint32_t cyls, uint32_t heads, uint32_t secs);
 
 /* read elf info */
-// void decaf_blocks_init(void);
+// void fdtaf_blocks_init(void);
 
 #endif

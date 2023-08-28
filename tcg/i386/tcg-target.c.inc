@@ -1607,7 +1607,8 @@ static void tcg_out_nopn(TCGContext *s, int n)
 
 #if defined(CONFIG_SOFTMMU)
 #include "../tcg-ldst.c.inc"
-#include "shared/decaf-taint-memory.h"
+#include "shared/fdtaf-taint-memory-basic.h"
+#include "shared/fdtaf-taint-memory.h"
 
 /* helper signature: helper_ret_ld_mmu(CPUState *env, target_ulong addr,
  *                                     int mmu_idx, uintptr_t ra)

@@ -45,9 +45,15 @@ typedef struct CPUMIPSFPUContext CPUMIPSFPUContext;
 struct CPUMIPSFPUContext {
     /* Floating point registers */
     fpr_t fpr[32];
+#ifdef CONFIG_TCG_TAINT
+    fpr_t taint_fpr[32];
+#endif 	/* CONFIG_TCG_TAINT */
     float_status fp_status;
     /* fpu implementation/revision register (fir) */
     uint32_t fcr0;
+#ifdef CONFIG_TCG_TAINT
+    uint32_t taint_fcr0;
+#endif 	/* CONFIG_TCG_TAINT */
 #define FCR0_FREP 29
 #define FCR0_UFRP 28
 #define FCR0_HAS2008 23
@@ -63,6 +69,9 @@ struct CPUMIPSFPUContext {
     /* fcsr */
     uint32_t fcr31_rw_bitmask;
     uint32_t fcr31;
+#ifdef CONFIG_TCG_TAINT
+    uint32_t taint_fcr31;
+#endif 	/* CONFIG_TCG_TAINT */
 #define FCR31_FS 24
 #define FCR31_ABS2008 19
 #define FCR31_NAN2008 18
@@ -460,6 +469,9 @@ typedef struct mips_def_t mips_def_t;
 typedef struct TCState TCState;
 struct TCState {
     target_ulong gpr[32];
+#ifdef CONFIG_TCG_TAINT
+    target_ulong taint_gpr[32];
+#endif /* CONFIG_TCG_TAINT */
 #if defined(TARGET_MIPS64)
     /*
      * For CPUs using 128-bit GPR registers, we put the lower halves in gpr[])
@@ -469,13 +481,21 @@ struct TCState {
 #endif /* TARGET_MIPS64 */
     target_ulong PC;
 #ifdef CONFIG_TCG_TAINT
-    target_ulong taint_gpr[32];
     target_ulong taint_PC;
 #endif /* CONFIG_TCG_TAINT */
     target_ulong HI[MIPS_DSP_ACC];
+#ifdef CONFIG_TCG_TAINT
+    target_ulong taint_HI[MIPS_DSP_ACC];
+#endif /* CONFIG_TCG_TAINT */    
     target_ulong LO[MIPS_DSP_ACC];
+#ifdef CONFIG_TCG_TAINT
+    target_ulong taint_LO[MIPS_DSP_ACC];
+#endif /* CONFIG_TCG_TAINT */       
     target_ulong ACX[MIPS_DSP_ACC];
     target_ulong DSPControl;
+#ifdef CONFIG_TCG_TAINT
+    target_ulong taint_DSPControl;
+#endif /* CONFIG_TCG_TAINT */       
     int32_t CP0_TCStatus;
 #define CP0TCSt_TCU3    31
 #define CP0TCSt_TCU2    30
@@ -518,7 +538,13 @@ struct TCState {
 
 #define NUMBER_OF_MXU_REGISTERS 16
     target_ulong mxu_gpr[NUMBER_OF_MXU_REGISTERS - 1];
+#ifdef CONFIG_TCG_TAINT
+    target_ulong taint_mxu_gpr[NUMBER_OF_MXU_REGISTERS - 1];
+#endif 	/* CONFIG_TCG_TAINT */
     target_ulong mxu_cr;
+#ifdef CONFIG_TCG_TAINT
+    target_ulong taint_mxu_cr;
+#endif 	/* CONFIG_TCG_TAINT */
 #define MXU_CR_LC       31
 #define MXU_CR_RC       30
 #define MXU_CR_BIAS     2
@@ -997,7 +1023,13 @@ struct CPUMIPSState {
  * CP0 Register 17
  */
     target_ulong lladdr; /* LL virtual address compared against SC */
+#ifdef CONFIG_TCG_TAINT
+    target_ulong taint_lladdr;
+#endif 	/* CONFIG_TCG_TAINT */
     target_ulong llval;
+#ifdef CONFIG_TCG_TAINT
+    target_ulong taint_llval;
+#endif 	/* CONFIG_TCG_TAINT */
     uint64_t llval_wp;
     uint32_t llnewval_wp;
     uint64_t CP0_LLAddr_rw_bitmask;
@@ -1081,6 +1113,9 @@ struct CPUMIPSState {
 #define EXCP_TLB_NOMATCH   0x1
 #define EXCP_INST_NOTAVAIL 0x2 /* No valid instruction word for BadInstr */
     uint32_t hflags;    /* CPU State */
+#ifdef CONFIG_TCG_TAINT
+    uint32_t taint_hflags;
+#endif 	/* CONFIG_TCG_TAINT */    
     /* TMASK defines different execution modes */
 #define MIPS_HFLAG_TMASK  0x1F5807FF
 #define MIPS_HFLAG_MODE   0x00007 /* execution modes                    */
@@ -1141,8 +1176,13 @@ struct CPUMIPSState {
 #define MIPS_HFLAG_ITC_CACHE  0x8000000 /* CACHE instr. operates on ITC tag */
 #define MIPS_HFLAG_ERL   0x10000000 /* error level flag */
     target_ulong btarget;        /* Jump / branch target               */
+#ifdef CONFIG_TCG_TAINT
+    target_ulong taint_btarget;
+#endif 	/* CONFIG_TCG_TAINT */
     target_ulong bcond;          /* Branch condition (if needed)       */
-
+#ifdef CONFIG_TCG_TAINT
+    target_ulong taint_bcond;
+#endif 	/* CONFIG_TCG_TAINT */
     int SYNCI_Step; /* Address step size for SYNCI */
     int CCRes; /* Cycle count resolution/divisor */
     uint32_t CP0_Status_rw_bitmask; /* Read/write bits in CP0_Status */

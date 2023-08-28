@@ -19,6 +19,7 @@
 #include "tcg/tcg-op.h"
 #include "exec/helper-gen.h"
 #include "translate.h"
+#include "shared/fdtaf-taint-tcg.h"
 
 /*
  *
@@ -446,11 +447,21 @@ enum {
 /* MXU registers */
 static TCGv mxu_gpr[NUMBER_OF_MXU_REGISTERS - 1];
 static TCGv mxu_CR;
+#ifdef CONFIG_TCG_TAINT
+static TCGv shadow_mxu_gpr[NUMBER_OF_MXU_REGISTERS - 1];
+static TCGv shadow_mxu_CR;
+#endif 	/* CONFIG_TCG_TAINT */
 
 static const char mxuregnames[][4] = {
     "XR1",  "XR2",  "XR3",  "XR4",  "XR5",  "XR6",  "XR7",  "XR8",
     "XR9",  "XR10", "XR11", "XR12", "XR13", "XR14", "XR15", "XCR",
 };
+#ifdef CONFIG_TCG_TAINT
+static const char taint_mxuregnames[][10] = {
+    "taint_XR1",  "taint_XR2",  "taint_XR3",  "taint_XR4",  "taint_XR5",  "taint_XR6",  "taint_XR7",  "taint_XR8",
+    "taint_XR9",  "taint_XR10", "taint_XR11", "taint_XR12", "taint_XR13", "taint_XR14", "taint_XR15", "taint_XCR",
+};
+#endif 	/* CONFIG_TCG_TAINT */
 
 void mxu_translate_init(void)
 {
@@ -458,11 +469,23 @@ void mxu_translate_init(void)
         mxu_gpr[i] = tcg_global_mem_new(cpu_env,
                                         offsetof(CPUMIPSState, active_tc.mxu_gpr[i]),
                                         mxuregnames[i]);
+#ifdef CONFIG_TCG_TAINT
+        shadow_mxu_gpr[i] = tcg_global_mem_new(cpu_env,
+                                        offsetof(CPUMIPSState, active_tc.taint_mxu_gpr[i]),
+                                        taint_mxuregnames[i]);
+        shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)mxu_gpr[i]))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_mxu_gpr[i]));
+#endif 	/* CONFIG_TCG_TAINT */
     }
 
     mxu_CR = tcg_global_mem_new(cpu_env,
                                 offsetof(CPUMIPSState, active_tc.mxu_cr),
                                 mxuregnames[NUMBER_OF_MXU_REGISTERS - 1]);
+#ifdef CONFIG_TCG_TAINT
+    shadow_mxu_CR = tcg_global_mem_new(cpu_env,
+                                offsetof(CPUMIPSState, active_tc.taint_mxu_cr),
+                                taint_mxuregnames[NUMBER_OF_MXU_REGISTERS - 1]);
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)mxu_CR))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_mxu_CR));
+#endif 	/* CONFIG_TCG_TAINT */
 }
 
 /* MXU General purpose registers moves. */

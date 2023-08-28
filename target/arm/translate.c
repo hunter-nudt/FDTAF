@@ -50,6 +50,7 @@
 
 #include "translate.h"
 #include "translate-a32.h"
+#include "shared/fdtaf-taint-tcg.h"
 
 /* These are TCG temporaries used only by the legacy iwMMXt decoder */
 static TCGv_i64 cpu_V0, cpu_V1, cpu_M0;
@@ -58,13 +59,25 @@ static TCGv_i32 cpu_R[16];
 TCGv_i32 cpu_CF, cpu_NF, cpu_VF, cpu_ZF;
 TCGv_i64 cpu_exclusive_addr;
 TCGv_i64 cpu_exclusive_val;
+#ifdef CONFIG_TCG_TAINT
+TCGv_i32 shadow_cpu_R[16];
+TCGv_i32 shadow_cpu_CF, shadow_cpu_NF, shadow_cpu_VF, shadow_cpu_ZF;
+TCGv_i64 shadow_cpu_exclusive_addr;
+TCGv_i64 shadow_cpu_exclusive_val;
+#endif /* CONFIG_TCG_TAINT */
+
 
 #include "exec/gen-icount.h"
 
 static const char * const regnames[] =
     { "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7",
       "r8", "r9", "r10", "r11", "r12", "r13", "r14", "pc" };
-
+#ifdef CONFIG_TCG_TAINT
+    static const char * const taint_regnames[] =
+    { "taint_r0", "taint_r1", "taint_r2", "taint_r3", "taint_r4",
+      "taint_r5", "taint_r6", "taint_r7", "taint_r8", "taint_r9", 
+      "taint_r10", "taint_r11", "taint_r12", "taint_r13", "taint_r14", "taint_pc" };
+#endif
 
 /* initialize TCG globals.  */
 void arm_translate_init(void)
@@ -75,16 +88,44 @@ void arm_translate_init(void)
         cpu_R[i] = tcg_global_mem_new_i32(cpu_env,
                                           offsetof(CPUARMState, regs[i]),
                                           regnames[i]);
+#ifdef CONFIG_TCG_TAINT
+        shadow_cpu_R[i] = tcg_global_mem_new_i32(cpu_env,
+                                          offsetof(CPUARMState, taint_regs[i]),
+                                          taint_regnames[i]);
+        shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_R[i]))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_R[i]));
+#endif /* CONFIG_TCG_TAINT */
     }
     cpu_CF = tcg_global_mem_new_i32(cpu_env, offsetof(CPUARMState, CF), "CF");
     cpu_NF = tcg_global_mem_new_i32(cpu_env, offsetof(CPUARMState, NF), "NF");
     cpu_VF = tcg_global_mem_new_i32(cpu_env, offsetof(CPUARMState, VF), "VF");
     cpu_ZF = tcg_global_mem_new_i32(cpu_env, offsetof(CPUARMState, ZF), "ZF");
+#ifdef CONFIG_TCG_TAINT
+    shadow_cpu_CF = tcg_global_mem_new_i32(cpu_env, offsetof(CPUARMState, taint_CF), "taint_CF");
+    shadow_cpu_NF = tcg_global_mem_new_i32(cpu_env, offsetof(CPUARMState, taint_NF), "taint_NF");
+    shadow_cpu_VF = tcg_global_mem_new_i32(cpu_env, offsetof(CPUARMState, taint_VF), "taint_VF");
+    shadow_cpu_ZF = tcg_global_mem_new_i32(cpu_env, offsetof(CPUARMState, taint_ZF), "taint_ZF");
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_CF))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_CF));
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_NF))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_NF));
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_VF))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_VF));
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_ZF))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_ZF));
+#endif /* CONFIG_TCG_TAINT */
 
     cpu_exclusive_addr = tcg_global_mem_new_i64(cpu_env,
         offsetof(CPUARMState, exclusive_addr), "exclusive_addr");
     cpu_exclusive_val = tcg_global_mem_new_i64(cpu_env,
         offsetof(CPUARMState, exclusive_val), "exclusive_val");
+#ifdef CONFIG_TCG_TAINT
+    shadow_cpu_exclusive_addr = tcg_global_mem_new_i64(cpu_env,
+        offsetof(CPUARMState, taint_exclusive_addr), "taint_exclusive_addr");
+    shadow_cpu_exclusive_val = tcg_global_mem_new_i64(cpu_env,
+        offsetof(CPUARMState, taint_exclusive_val), "taint_exclusive_val");
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_exclusive_addr))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_exclusive_addr));
+    shadow_arg_list[temp_idx(tcgv_i32_temp((TCGv_i32)cpu_exclusive_val))] = temp_idx(tcgv_i32_temp((TCGv_i32)shadow_cpu_exclusive_val));
+#endif /* CONFIG_TCG_TAINT */
+
+#ifdef CONFIG_TCG_TAINT  
+    taint_temps = tcg_global_mem_new_i64(cpu_env, offsetof(CPUARMState, taint_temps), "taint_temps");
+#endif
 
     a64_translate_init();
 }

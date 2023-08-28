@@ -23,3 +23,12 @@ const char fregnames[32][4] = {
     "f16", "f17", "f18", "f19", "f20", "f21", "f22", "f23",
     "f24", "f25", "f26", "f27", "f28", "f29", "f30", "f31",
 };
+
+#ifdef CONFIG_TCG_TAINT
+const char taint_fregnames[32][10] = {
+    "taint_f0",  "taint_f1",  "taint_f2",  "taint_f3",  "taint_f4",  "taint_f5",  "taint_f6",  "taint_f7",
+    "taint_f8",  "taint_f9",  "taint_f10", "taint_f11", "taint_f12", "taint_f13", "taint_f14", "taint_f15",
+    "taint_f16", "taint_f17", "taint_f18", "taint_f19", "taint_f20", "taint_f21", "taint_f22", "taint_f23",
+    "taint_f24", "taint_f25", "taint_f26", "taint_f27", "taint_f28", "taint_f29", "taint_f30", "taint_f31",
+};
+#endif 	/* CONFIG_TCG_TAINT */

@@ -236,7 +236,6 @@ typedef struct CPUARMState {
     uint8_t taint_temps[8];
     /* Regs for current mode.  */
     uint32_t regs[16];
-
 #ifdef CONFIG_TCG_TAINT
     uint32_t taint_regs[16];
 #endif /* CONFIG_TCG_TAINT */
@@ -292,6 +291,13 @@ typedef struct CPUARMState {
     uint32_t condexec_bits; /* IT bits.  cpsr[15:10,26:25].  */
     uint32_t btype;  /* BTI branch type.  spsr[11:10].  */
     uint64_t daif; /* exception masks, in the bits they are in PSTATE */
+
+#ifdef CONFIG_TCG_TAINT
+    uint32_t taint_CF; /* 0 or 1 */
+    uint32_t taint_VF; /* V is the bit 31. All other bits are undefined */
+    uint32_t taint_NF; /* N is bit 31. All other bits are undefined.  */
+    uint32_t taint_ZF; /* Z set if zero.  */
+#endif /* CONFIG_TCG_TAINT */
 
     uint64_t elr_el[4]; /* AArch64 exception link regs  */
     uint64_t sp_el[4]; /* AArch64 banked stack pointers */
@@ -664,6 +670,10 @@ typedef struct CPUARMState {
     } vfp;
     uint64_t exclusive_addr;
     uint64_t exclusive_val;
+#ifdef CONFIG_TCG_TAINT
+    uint64_t taint_exclusive_addr;
+    uint64_t taint_exclusive_val;
+#endif /* CONFIG_TCG_TAINT */
     uint64_t exclusive_high;
 
     /* iwMMXt coprocessor state.  */

@@ -106,9 +106,9 @@ c448_error_t c448_ed448_derive_public_key(
 
     /*
      * Since we are going to mul_by_cofactor during encoding, divide by it
-     * here. However, the EdDSA base point is not the same as the decaf base
+     * here. However, the EdDSA base point is not the same as the fdtaf base
      * point if the sigma isogeny is in use: the EdDSA base point is on
-     * Etwist_d/(1-d) and the decaf base point is on Etwist_d, and when
+     * Etwist_d/(1-d) and the fdtaf base point is on Etwist_d, and when
      * converted it effectively picks up a factor of 2 from the isogenies.  So
      * we might start at 2 instead of 1.
      */

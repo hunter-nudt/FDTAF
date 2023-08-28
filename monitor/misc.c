@@ -78,9 +78,11 @@
 #include "qapi/qmp-event.h"
 #include "sysemu/cpus.h"
 #include "qemu/cutils.h"
-#include "shared/decaf-vmi-msg-warpper.h"
-#include "shared/decaf-taint-memory.h"
-#include "shared/decaf-main.h"
+#include "shared/fdtaf-vmi-msg-warpper.h"
+#include "shared/fdtaf-taint-memory-basic.h"
+#include "shared/fdtaf-taint-memory.h"
+#include "shared/fdtaf-main.h"
+#include "shared/fdtaf-taint-tcg.h"
 
 #if defined(TARGET_S390X)
 #include "hw/s390x/storage-keys.h"
@@ -205,11 +207,12 @@ static void do_enable_tainting_internal(Monitor *mon, const QDict *qdict)
 {
     if (!taint_tracking_enabled) {
         CPUState *cs = mon_get_cpu(mon);
-        decaf_stop_vm();
+        fdtaf_stop_vm();
         tb_flush(cs);
-        allocate_taint_memory_page_table();
+        allocate_taint_memory();
+        clean_shadow_arg();
         taint_tracking_enabled = true;
-        decaf_start_vm();
+        fdtaf_start_vm();
     }
 }
 
@@ -217,11 +220,12 @@ static void do_disable_tainting_internal(Monitor *mon, const QDict *qdict)
 {
     if (taint_tracking_enabled) {
         CPUState *cs = mon_get_cpu(mon);
-        decaf_stop_vm();
+        fdtaf_stop_vm();
         tb_flush(cs);
-        free_taint_memory_page_table();
+        free_taint_memory();
+        clean_shadow_arg();
         taint_tracking_enabled = false;
-        decaf_start_vm();
+        fdtaf_start_vm();
     }
 }
 

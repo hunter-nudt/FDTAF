@@ -126,7 +126,7 @@
 #include "qapi/qmp/qerror.h"
 #include "sysemu/iothread.h"
 #include "qemu/guest-random.h"
-#include "shared/decaf-main-internal.h"
+#include "shared/fdtaf-main-internal.h"
 
 #include "config-host.h"
 
@@ -3697,8 +3697,8 @@ void qemu_init(int argc, char **argv, char **envp)
     }
     trace_init_file();
 
-    // decaf init
-    decaf_init();
+    // fdtaf init
+    fdtaf_init();
 
     qemu_init_main_loop(&error_fatal);
     cpu_timers_init();

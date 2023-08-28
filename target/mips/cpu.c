@@ -42,6 +42,19 @@ const char regnames[32][3] = {
     "t8", "t9", "k0", "k1", "gp", "sp", "s8", "ra",
 };
 
+#ifdef CONFIG_TCG_TAINT
+const char taint_regnames[32][9] = {
+    "taint_r0", "taint_at", "taint_v0", "taint_v1",
+    "taint_a0", "taint_a1", "taint_a2", "taint_a3",
+    "taint_t0", "taint_t1", "taint_t2", "taint_t3",
+    "taint_t4", "taint_t5", "taint_t6", "taint_t7",
+    "taint_s0", "taint_s1", "taint_s2", "taint_s3",
+    "taint_s4", "taint_s5", "taint_s6", "taint_s7",
+    "taint_t8", "taint_t9", "taint_k0", "taint_k1",
+    "taint_gp", "taint_sp", "taint_s8", "taint_ra",
+};
+#endif 	/* CONFIG_TCG_TAINT */
+
 static void fpu_dump_fpr(fpr_t *fpr, FILE *f, bool is_fpu64)
 {
     if (is_fpu64) {

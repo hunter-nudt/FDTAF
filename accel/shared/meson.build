@@ -1,19 +1,21 @@
-decaf_ss = ss.source_set()
+fdtaf_ss = ss.source_set()
 
-decaf_ss.add(files(
-  'decaf-output.c',
-  'decaf-basic-callback.c',
-  'decaf-main.c',
-  'decaf-callback.c',
-  'decaf-target.c',
-  'decaf-hashtable-wrapper.cpp',
-  'decaf-vmi-common.cpp',
-  'decaf-linux-vmi.cpp',
-  'decaf-linux-procinfo.cpp',
-  'decaf-vmi-msg-wrapper.cpp',
-  'decaf-taint-memory.c',
-  'decaf-taintcheck-opt.c',
-  'decaf-taint-tcg.c'
+fdtaf_ss.add(files(
+  'fdtaf-output.c',
+  'fdtaf-basic-callback.c',
+  'fdtaf-main.c',
+  'fdtaf-callback.c',
+  'fdtaf-target.c',
+  'fdtaf-hashtable-wrapper.cpp',
+  'fdtaf-vmi-common.cpp',
+  'fdtaf-linux-vmi.cpp',
+  'fdtaf-linux-procinfo.cpp',
+  'fdtaf-vmi-msg-wrapper.cpp',
+  'fdtaf-taint-memory.c',
+  'fdtaf-taintcheck-opt.c',
+  'fdtaf-taint-tcg.c',
+  'fdtaf-tcpip-parser.c',
+  'fdtaf-taint-propagate-msg.c'
 ))
 
-specific_ss.add_all(when: 'CONFIG_TCG', if_true: decaf_ss)
+specific_ss.add_all(when: 'CONFIG_TCG', if_true: fdtaf_ss)

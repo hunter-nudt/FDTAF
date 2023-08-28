@@ -1,27 +1,27 @@
 /*
 Copyright (C) <2012> <Syracuse System Security (Sycure) Lab>
 
-DECAF is based on QEMU, a whole-system emulator. You can redistribute
+FDTAF is based on QEMU, a whole-system emulator. You can redistribute
 and modify it under the terms of the GNU GPL, version 3 or later,
 but it is made available WITHOUT ANY WARRANTY. See the top-level
 README file for more details.
 
-For more information about DECAF and other softwares, see our
+For more information about FDTAF and other softwares, see our
 web site at:
 http://sycurelab.ecs.syr.edu/
 
-If you have any questions about DECAF,please post it on
-http://code.google.com/p/decaf-platform/
+If you have any questions about FDTAF,please post it on
+http://code.google.com/p/fdtaf-platform/
 */
 /**
- * DECAF_types.h
+ * FDTAF_types.h
  * Some defines for commonly used types
  * @author: Lok Yan
  * @date: 19 SEP 2012
 */
 
-#ifndef DECAF_TYPES_H
-#define DECAF_TYPES_H
+#ifndef FDTAF_TYPES_H
+#define FDTAF_TYPES_H
 #ifdef __cplusplus
 #define __STDC_LIMIT_MACROS 1
 #endif /* __cplusplus */
@@ -46,8 +46,8 @@ typedef target_ulong gpa_t;
     typedef uint32_t hpa_t;
 #endif
 
-typedef uintptr_t DECAF_Handle;
-#define DECAF_NULL_HANDLE ((uintptr_t)NULL)
+typedef uintptr_t FDTAF_Handle;
+#define FDTAF_NULL_HANDLE ((uintptr_t)NULL)
 
 //Used for addresses since -1 is a rarely used-if ever 32-bit address
 #define INV_ADDR (-1) //0xFFFFFFFF is only for 32-bit
@@ -56,7 +56,7 @@ typedef uintptr_t DECAF_Handle;
  * ERRORCODES
  */
 
-typedef int DECAF_errno_t;
+typedef int FDTAF_errno_t;
 /**
  * Returned when a pointer is NULL when it should not have been
  */
