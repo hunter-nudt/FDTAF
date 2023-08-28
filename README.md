@@ -21,6 +21,7 @@ ninja --version
 
 ```
 cd fdtaf
+./install_depends.sh
 ./configure --enable-debug --target-list=i386-softmmu,mips-softmmu,arm-softmmu,mipsel-softmmu
 make -j3
 ```
