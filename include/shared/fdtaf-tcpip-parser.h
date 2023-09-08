@@ -36,3 +36,4 @@ typedef struct TCPHeader        /* TCP数据报头 */
 
 int match_http_data(uint8_t *data, uint8_t *url, int *http_head, int *http_len);
 int match_taint_data(uint8_t *data, int *taint_head, int *taint_len);
+int match_taint_data_ip110(uint8_t *data, int *taint_head, int *taint_len);

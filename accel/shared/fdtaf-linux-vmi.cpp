@@ -83,7 +83,6 @@ void traverse_module_list(CPUState *cs)
             mod->name[31] = '\0';
             mod->size = module_size;
             mod->inode_number = 0;
-            mod->symbols_extracted = 1;
 
 			//printf("kernel module %s base %x\n", module_name, module_base);
             vmi_add_module(mod, module_name);
@@ -300,7 +299,6 @@ void traverse_mmap(CPUState *cs, void *opaque)
             mod->name[31] = '\0';
             mod->size = vma_vm_end - vma_vm_start;
             mod->inode_number = inode_number;
-            mod->symbols_extracted = 0;
             vmi_add_module(mod, key);
         }
 

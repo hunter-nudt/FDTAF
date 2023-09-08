@@ -126,3 +126,52 @@ int match_taint_data(uint8_t *data, int *taint_head, int *taint_len)
     }
     return 0;
 }
+
+int match_taint_data_ip110(uint8_t *data, int *taint_head, int *taint_len)
+{
+    uint8_t *data_ptr;
+	FrameHeader_t *frame_header;
+	IPHeader_t *ip_header;
+	TCPHeader_t *tcp_header;
+	int ip_len;
+	int taint_len_t;
+	int taint_head_t;
+
+	data_ptr = data;
+	frame_header = (FrameHeader_t *)malloc(sizeof(FrameHeader_t));
+	ip_header = (IPHeader_t *)malloc(sizeof(IPHeader_t));
+	tcp_header = (TCPHeader_t *)malloc(sizeof(TCPHeader_t));
+
+	memcpy(frame_header, data_ptr, sizeof(FrameHeader_t));
+	data_ptr += sizeof(FrameHeader_t);
+	memcpy(ip_header, data_ptr, sizeof(IPHeader_t));
+	data_ptr += sizeof(IPHeader_t);
+	memcpy(tcp_header, data_ptr, sizeof(TCPHeader_t));
+	data_ptr += sizeof(TCPHeader_t);
+
+	ip_len = ntohs(ip_header->total_len);
+	taint_len_t = ip_len - 40;
+	taint_head_t = 54;
+
+    while (taint_len_t != 0)
+	{
+        if (data_ptr[0] == 0x6C && data_ptr[1] == 0x61) {
+            if (!strncmp((char *)data_ptr, "languse=", 8)) {
+                *taint_head = taint_head_t + 8;
+				*taint_len = taint_len_t - 8;
+                return 1;
+            }
+            else {
+                data_ptr++;
+				taint_len_t--;
+				taint_head_t++;
+            }
+        }
+        else {
+            data_ptr++;
+            taint_len_t--;
+            taint_head_t++;
+        }
+    }
+    return 0;
+}

@@ -147,28 +147,6 @@ extern int FDTAF_emulation_started; //will be removed
 // No matter what the decision, flushing can occur using the CPUState as in QEMU
 // or using FDTAF's wrappers.
 
- #if 0
-/**
- * Flush - or invalidate - the translation block for address addr in the env context.
- * @param env The cpu context
- * @param addr The block's address
- */
-void fdtaf_flush_translation_block_fast(CPUState *cs, gva_t pc);
-void fdtaf_flush_translation_block_fast_all(CPUState *cs, gva_t pc);
-
-/**
- * Flush - or invalidate - all translation blocks for the page in addr.
- * Note that in most cases TARGET_PAGE_SIZE is 4k in size, which is expected.
- * However, in some cases it might only be 1k (in ARM). We use TARGET_PAGE_SIZE
- * as the mask in this function
- *
- * @param env The cpu context
- * @param addr The page address
- */
-void fdtaf_flush_translation_page_fast(CPUState *cs, gva_t pc);
-void fdtaf_flush_translation_block_fast_all(CPUState *cs, gva_t pc);
-#endif
-
 //These are FDTAF wrappers that does flushing for all VCPUs
 //Iterates through all virtual cpus and flushes the blocks
 extern void fdtaf_flush_translation_block(CPUState *cs, gva_t pc);

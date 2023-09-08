@@ -35,14 +35,9 @@ public:
 	uint32_t checksum;
 	uint16_t major;
 	uint16_t minor;
-	bool symbols_extracted;
 	unordered_map < fdtaf_target_ulong, string> function_map_offset;
 	unordered_map < string, uint32_t> function_map_name;
 	unsigned int inode_number;
-
-	module() : symbols_extracted(false), inode_number(0)
-	{
-	}
 };
 
 class process{

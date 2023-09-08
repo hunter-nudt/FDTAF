@@ -913,16 +913,18 @@ static void fdtaf_taint_mark(const struct iovec *iov, hwaddr ba)
     uint8_t *url;
     url = (uint8_t *)g_malloc0(200);
     is_http = match_http_data(iov->iov_base, url, &http_head, &http_len);
-    is_url_right = strncmp((char *)url, "/cgi-bin/New_GUI/Set/Diagnostics.asp", 
-                                sizeof("/cgi-bin/New_GUI/Set/Diagnostics.asp"));
+    // is_url_right = strncmp((char *)url, "/cgi-bin/New_GUI/Set/Diagnostics.asp", 
+    //                             sizeof("/cgi-bin/New_GUI/Set/Diagnostics.asp"));
+    is_url_right = strncmp((char *)url, "/admin/system.cgi", 
+                                sizeof("/admin/system.cgi"));                               
     if(is_http && !is_url_right) {
-        is_taint = match_taint_data(iov->iov_base, &taint_head, &taint_len);
+        is_taint = match_taint_data_ip110(iov->iov_base, &taint_head, &taint_len);
         if (is_taint) {
             // fresh_taint_memory();
             if(repeat == 0) {
                 taint = (uint8_t *)malloc(taint_len);
                 memset(taint, 0xFF, taint_len);
-                taint_mem(ba + taint_head + 88, 4, taint);
+                taint_mem(ba + taint_head + 268, 4, taint);
                 printf("TAINT MARKED!\n");
                 free(taint);
                 taint = NULL;
